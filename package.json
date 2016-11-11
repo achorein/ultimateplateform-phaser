@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start":       "budo src/main.js:bundle.js --live -- -d -e src/main.js -t [babelify --comments false --presets es2015]",
+    "start":       "budo src/main.js:bundle.js --live -p 80 -- -d -e src/main.js -t [babelify --comments false --presets es2015]",
     "prebuild":    "mkdirp build",
     "build":       "npm run build:js && npm run build:css && npm run build:html && npm run copy:all",
     "build:js":    "browserify -d -e src/main.js -t [babelify --comments false --presets es2015] | uglifyjs -cm > build/bundle.min.js",

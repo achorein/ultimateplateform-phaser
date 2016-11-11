@@ -24,8 +24,13 @@ class Menu extends Phaser.State {
     });
     this.menuText.anchor.set(0.5);
 
-    this.input.onDown.add(this.onInputDown, this);
+    //setup audio
+    //this.music = this.game.add.audio('musicMenu');
+    //this.music.play();
+
     this.canContinueToNextState = true;
+    this.input.onDown.add(this.onInputDown, this);
+
   }
 
   update() {}
@@ -39,6 +44,10 @@ class Menu extends Phaser.State {
     this.canContinueToNextState = false;
     this.ready.visible = true;
     this.menuText.visible = false;
+
+    //this.music.stop();
+    this.game.state.start('game');
+/*
     this.go.angle = -15;
 
     //create some tweens - http://phaser.io/docs/2.5.0/Phaser.Tween.html#to
@@ -56,6 +65,7 @@ class Menu extends Phaser.State {
       go_tween_repeat_num -= 0.5;
       if(go_tween_repeat_num < 1){
         this.go.visible = false;
+        this.music.stop();
         this.game.state.start('game');
       }
     };
@@ -71,8 +81,8 @@ class Menu extends Phaser.State {
     ready_tween.onLoop.add(ready_tween_loop, this);
     go_tween.onLoop.add(go_tween_loop, this);
 
-
     ready_tween.start();
+    */
   }
 
 }
