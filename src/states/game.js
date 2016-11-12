@@ -8,16 +8,7 @@ class Game extends Phaser.State {
   }
   
   create() {
-    //add background image
-    this.background = this.game.add.sprite(0,0,'background');
-    this.background.height = this.game.world.height;
-    this.background.width = this.game.world.width;
-
-    this.tile = this.game.add.tileSprite(
-        0, this.game.world.bottom-256, // x y
-        8*256, this.game.world.bottom-256, // width height
-        'world', 1); // sprite + frame
-
+    // commons
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.time.desiredFps = 30;
     this.game.physics.arcade.gravity.y = 250;
@@ -25,15 +16,34 @@ class Game extends Phaser.State {
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+    // Sprites
+    this.background = this.game.add.sprite(0,0,'background');
+    this.background.height = this.game.world.height;
+    this.background.width = this.game.world.width;
+
+    var tilesize=128;
+    this.tilesprite = this.game.add.tileSprite(
+        0, this.game.world.bottom-tilesize, // x y
+        this.game.world.width*2, this.game.world.bottom-tilesize, // width height
+        'world', 1); // sprite + frame
+    this.tilesprite.scale.setTo(0.5, 0.5);
+
     this.player = this.game.add.sprite(32, 32, 'dude');
-    this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+    this.player.animations.add('left', [0, 1, 2, 3], 10, true);
+    this.player.animations.add('turn', [4], 20, true);
+    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+    // Physics
+    this.game.physics.enable([this.player, this.tilesprite], Phaser.Physics.ARCADE);
     this.player.body.bounce.y = 0.2;
     this.player.body.collideWorldBounds = true;
     this.player.body.setSize(20, 32, 5, 16);
 
-    this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-    this.player.animations.add('turn', [4], 20, true);
-    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+    //this.tilesprite.body.collideWorldBounds = true;
+    this.tilesprite.body.immovable = true;
+    this.tilesprite.body.allowGravity = false;
+    this.tilesprite.body.setSize(this.game.world.width*2, tilesize, 0, tilesize);
+
 
     //setup UI
     /*
@@ -55,7 +65,7 @@ class Game extends Phaser.State {
     //this.game.add.existing(this.crosshairs);
     //this.game.add.existing(this.target);
 
-    //this.tile.visible=true;
+    //this.tilesprite.visible=true;
 
     //setup a timer to end the game
     //this.endGameTimer = this.game.time.create();
@@ -65,6 +75,10 @@ class Game extends Phaser.State {
 
 
   update() {
+    this.game.physics.arcade.collide(this.player, this.tilesprite);
+    //this.game.debug.body(this.tilesprite);
+
+
     this.player.body.velocity.x = 0;
 
     if (this.cursors.left.isDown)
@@ -106,10 +120,10 @@ class Game extends Phaser.State {
       }
     }
 
-    if (this.jumpButton.isDown && this.player.body.onFloor() && this.game.time.now > this.jumpTimer)
+    if (this.jumpButton.isDown || this.cursors.up.isDown /*&& this.player.body.onFloor()*/ && this.game.time.now > this.jumpTimer)
     {
       this.player.body.velocity.y = -250;
-      this.jumpTimer = game.time.now + 750;
+      this.jumpTimer = this.game.time.now + 750;
     }
   }
 
