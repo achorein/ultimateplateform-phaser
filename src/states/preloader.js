@@ -17,17 +17,20 @@ class Preloader extends Phaser.State {
   }
 
   loadResources() {
+    this.game.load.image('fonts', 'assets/fonts/070.png');
     this.game.load.image('background','assets/background.png');
 
     this.game.load.tilemap('tilemap', 'assets/tilesmap/world.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.spritesheet('world','assets/tilesmap/world.png', 64, 64);
 
-    this.game.load.image('text_go', 'assets/text_go.png');
-    this.game.load.image('text_ready', 'assets/text_ready.png');
-    this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    this.game.load.spritesheet('dude', 'assets/player_spritesheet.png', 32, 48);
+    this.game.load.image('coin', 'assets/hud_coins.png');
+    this.game.load.image('heart', 'assets/hud_heartFull.png');
+    this.game.load.image('gem', 'assets/hud_gem_green.png');
+    this.game.load.image('star', 'assets/hud_star.png');
 
-    this.game.load.audio('musicMenu','assets/menu.mp3');
-    this.game.load.audio('musicGame','assets/game.mp3');
+    this.game.load.audio('musicMenu','assets/sounds/menu.mp3');
+    this.game.load.audio('musicGame','assets/sounds/game.mp3');
   }
 
   onLoadComplete() {

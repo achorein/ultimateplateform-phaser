@@ -5,18 +5,27 @@ class Menu extends Phaser.State {
   }
 
   create() {
+    var self = this;
     //add background image
     this.background = this.game.add.sprite(0,0,'background');
     this.background.height = this.game.world.height;
     this.background.width = this.game.world.width;
+    this.background.alpha = 0.1;
 
-    //add intro text
-    this.gameoverText = this.add.text(this.game.world.centerX,this.game.world.centerY, "Score = "+this.game.global.score, {
-      font: '42px Arial', fill: '#ffffff', align: 'center'
-    });
-    this.gameoverText.anchor.set(0.5);
+    // Ajout du score
+    this.gameover = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
+    this.gameover.text = 'GAME OVER';
+    this.game.add.image(this.game.world.centerX,this.game.world.centerY-20, this.gameover);
 
-    this.input.onDown.add(this.onInputDown, this);
+    // Ajout du score
+    this.score = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
+    this.score.text = 'SCORE '+ this.game.global.score;
+    this.game.add.image(this.game.world.centerX,this.game.world.centerY+20, this.score);
+
+    // press any key
+    this.game.input.keyboard.onDownCallback = function(e) {
+      self.onInputDown(self);
+    }
 
     //prevent accidental click-thru by not allowing state transition for a short time
     this.canContinueToNextState = false;
