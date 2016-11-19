@@ -8,6 +8,9 @@ class Menu extends Phaser.State {
   
   create() {
     var self = this;
+
+    this.game.physics.startSystem(Phaser.Physics.P2JS);
+
     //add background image
     this.background = this.game.add.sprite(0,0, 'background');
     this.background.height = this.game.world.height;
@@ -24,7 +27,7 @@ class Menu extends Phaser.State {
       self.onInputDown(self);
     }
 
-    this.player = new Player(this.game, -32, this.game.world.height * 0.75);
+    this.player = new Player(this.game, -32, this.game.world.height * 0.75);//this.player.body.setSize(20, 32, 5, 16);
     this.player.body.collideWorldBounds = false;
     this.game.add.existing(this.player);
     this.player.body.velocity.x = 150;

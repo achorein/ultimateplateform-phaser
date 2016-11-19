@@ -32,7 +32,8 @@ class Boot extends Phaser.State {
 
   initGlobalVariables(){
     this.game.global = {
-      score: 0
+      score: 0,
+      gravity: 200
     };
   }
 

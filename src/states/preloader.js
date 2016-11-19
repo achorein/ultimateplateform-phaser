@@ -21,6 +21,7 @@ class Preloader extends Phaser.State {
     this.game.load.image('background','assets/background.png');
 
     this.game.load.tilemap('tilemap', 'assets/tilesmap/world.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.physics('physicsData', 'assets/tilesmap/world.json');
     this.game.load.spritesheet('world','assets/tilesmap/world.png', 64, 64);
 
     this.game.load.spritesheet('dude', 'assets/player_spritesheet.png', 32, 48);
@@ -31,6 +32,7 @@ class Preloader extends Phaser.State {
 
     this.game.load.audio('musicMenu','assets/sounds/menu.mp3');
     this.game.load.audio('musicGame','assets/sounds/game.mp3');
+    this.game.load.audio('jumpSound','assets/sounds/jump.ogg');
   }
 
   onLoadComplete() {

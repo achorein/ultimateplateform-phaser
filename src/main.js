@@ -3,7 +3,7 @@
  import Menu from './states/menu';
  import Preloader from './states/preloader';
  import Gameover from './states/gameover';
-
+ import Victory from './states/victory';
 
 const game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'phaserdemo-game');
 
@@ -12,5 +12,6 @@ const game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO,
  game.state.add('menu', new Menu());
  game.state.add('preloader', new Preloader());
  game.state.add('gameover', new Gameover());
+ game.state.add('victory', new Victory());
 
 game.state.start('boot');
