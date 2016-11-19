@@ -25,7 +25,7 @@ class Preloader extends Phaser.State {
     this.game.load.physics('physicsData', 'assets/tilesmap/world.json');
     this.game.load.spritesheet('world','assets/tilesmap/world.png', 64, 64);
 
-    this.game.load.spritesheet('dude', 'assets/player_spritesheet.png', 32, 48);
+    this.game.load.spritesheet('dude', 'assets/player-1-spritesheet.png', 64, 54);
     this.game.load.image('coin', 'assets/hud_coins.png');
     this.game.load.image('heart', 'assets/hud_heartFull.png');
     this.game.load.image('gem', 'assets/hud_gem_green.png');
@@ -34,6 +34,9 @@ class Preloader extends Phaser.State {
     this.game.load.audio('musicMenu','assets/sounds/menu.mp3');
     this.game.load.audio('musicGame','assets/sounds/game.mp3');
     this.game.load.audio('jumpSound','assets/sounds/jump.ogg');
+    this.game.load.audio('winnerSound','assets/sounds/winner.wav');
+    this.game.load.audio('failedSound','assets/sounds/failed.wav');
+    this.game.load.audio('deadSound','assets/sounds/dead.wav');
   }
 
   onLoadComplete() {

@@ -20,11 +20,12 @@ class Menu extends Phaser.State {
     this.menu = ['NEW GAME', 'CREDITS'];
     for (var i=0; i<this.menu.length; i++) {
         var font = self.createFont(this.menu[i]);
-        self.game.add.image(self.game.world.centerX - font.width/2,self.computePosition(i+1), font);
+        var img = self.game.add.image(self.game.world.centerX ,self.computePosition(i+1), font);
+        img.anchor.set(0.5);
     }
 
     this.menuCursor = this.game.add.sprite(self.game.world.centerX - 128, this.computePosition(this.cursorPos), 'coin');
-    this.menuCursor.y = this.menuCursor.y - this.menuCursor.height/2;
+    this.menuCursor.anchor.set(0.5);
 
     this.canContinueToNextState = true;
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -38,14 +39,14 @@ class Menu extends Phaser.State {
           if (this.cursorPos>this.menu.length){
             this.cursorPos = 1;
           }
-          this.menuCursor.y = this.computePosition(this.cursorPos, this.menuCursor.height/2);
+          this.menuCursor.y = this.computePosition(this.cursorPos);
           this.timer = this.game.time.now + 250;
       } else if (this.cursors.down.isDown) { // fleche du bas
           this.cursorPos--;
           if (this.cursorPos<1){
               this.cursorPos = this.menu.length;
           }
-          this.menuCursor.y = this.computePosition(this.cursorPos, this.menuCursor.height/2);
+          this.menuCursor.y = this.computePosition(this.cursorPos);
           this.timer = this.game.time.now + 250;
       } else if(this.okButton.isDown) {
           if (this.cursorPos === 1) {
@@ -63,11 +64,8 @@ class Menu extends Phaser.State {
       return font;
   }
 
-  computePosition(value, offset) {
+  computePosition(value) {
     var pos = this.game.world.centerY - 48 + (value-1)*48;
-    if (offset) {
-      pos -= offset;
-    }
     return pos;
   }
 

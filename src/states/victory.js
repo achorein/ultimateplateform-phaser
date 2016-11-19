@@ -13,23 +13,25 @@ class Victory extends Phaser.State {
         this.background.alpha = 0.1;
 
         // Ajout du score
-        this.gameover = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-        this.gameover.text = 'VICTORY';
-        this.game.add.image(this.game.world.centerX,this.game.world.centerY-20, this.gameover);
+        this.gameover = this.createFont('VICTORY');
+        var img = this.game.add.image(this.game.world.centerX,this.game.world.centerY-20, this.gameover);
+        img.anchor.set(0.5);
 
         // Ajout du score
-        this.score = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-        this.score.text = 'SCORE '+ this.game.global.score;
-        this.game.add.image(this.game.world.centerX,this.game.world.centerY+20, this.score);
+        this.score = this.createFont('SCORE '+ this.game.global.score);
+        img = this.game.add.image(this.game.world.centerX,this.game.world.centerY+20, this.score);
+        img.anchor.set(0.5);
 
         // press any key
         this.game.input.keyboard.onDownCallback = function(e) {
             self.onInputDown(self);
         }
 
+        this.game.add.audio('winnerSound').play();
+
         //prevent accidental click-thru by not allowing state transition for a short time
         this.canContinueToNextState = false;
-        this.game.time.events.add(Phaser.Timer.SECOND * .5, function(){ this.canContinueToNextState = true; }, this);
+        this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){ this.canContinueToNextState = true; }, this);
 
         this.saveVarsToLocalStorage();
         this.resetGlobalVariables();
@@ -44,6 +46,12 @@ class Victory extends Phaser.State {
         this.game.global.score = 0;
     }
     update() {}
+
+    createFont(text) {
+        var font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
+        font.text = text;
+        return font;
+    }
 
     onInputDown () {
         if(this.canContinueToNextState){

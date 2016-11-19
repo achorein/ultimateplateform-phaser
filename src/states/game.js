@@ -7,7 +7,6 @@ class Game extends Phaser.State {
 
   constructor()  {
     super();
-    this.jumpTimer = 0; // temps entre deux sauts
   }
   
   create() {
@@ -64,22 +63,26 @@ class Game extends Phaser.State {
         function(sprite, tile) {
           sprite.body.velocity.y = -500;
           self.game.add.audio('jumpSound').play();
-          tile.frameName = '';
+          // on met une image de jumper activé
+          self.map.replace(tile.index, 234, tile.x, tile.y, 1, 1, self.backLayer);
+          self.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
+              // on remet une image de jumper désactivé
+            self.map.replace(234, 242, tile.x, tile.y, 1, 1, self.backLayer);
+          });
         },
         this, this.backLayer);
     // Gestion des pics
     this.map.setTileIndexCallback(250,
-        function(sprite, tile) { self.gameOver(self) },
+        function(sprite, tile) { self.endGame(self, 'gameover') },
         this, this.backLayer);
     // Gestion de l'eau
     this.map.setTileIndexCallback(130,
-        function(sprite, tile) { self.gameOver(self) },
+        function(sprite, tile) { self.endGame(self, 'gameover') },
         this, this.backLayer);
     // Gestion des echelles
     this.map.setTileIndexCallback([156, 164, 188],
         function(sprite, tile) {
           // quand le joueur touche un sprite d'echelle, incrémente un compteur
-          /*if (echelle <= 0) { console.log('echelle debut !' + echelle); }*/
           echelle++;
           self.game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
             // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
@@ -99,19 +102,29 @@ class Game extends Phaser.State {
     collectableLayer.data.forEach(function(row) {
       row.forEach(function(data){
         if (data.index > 0) {
-          var star = self.starsGroup.create(data.x*data.width, data.y*data.height, 'coin');
+        var offset = 16;
+          var star = self.starsGroup.create(data.x*data.width+offset, data.y*data.height+offset, (data.properties.points=='100')?'gem':'coin');
+          star.points = parseInt(data.properties.points);
+          star.body.moves = false; // ne subit pas la gravité
         }
       });
+    });
+
+    //setup prefabs
+    var gameLayer = this.map.layers[this.map.getLayer('game')];
+    gameLayer.data.forEach(function(row) {
+        row.forEach(function(data){
+            if (data.index > 0 && data.properties.start) {
+                self.player = new Player(self.game, data.x*data.width, data.y*data.height);
+                self.game.add.existing(self.player);
+            }
+        });
     });
 
     // Ajout du score
     this.font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
     this.font.text =  'SCORE 0';
     this.game.add.image(5,5, this.font);
-
-    //setup prefabs
-    this.player = new Player(this.game, 16, this.game.world.centerY);
-    this.game.add.existing(this.player);
 
     //setup audio
     this.music = this.game.add.audio('musicGame');
@@ -127,8 +140,8 @@ class Game extends Phaser.State {
     // Debug : mise en couleur des blocs invisibles
     /*this.stairGroup.forEachAlive(function(member) {
       self.game.debug.spriteBounds(member);
-    });
-    self.game.debug.body(this.player);*/
+    });*/
+    self.game.debug.body(this.player);
   }
 
   update() {
@@ -150,80 +163,55 @@ class Game extends Phaser.State {
       // gestion du joueur
     this.player.body.velocity.x = 0;
 
+    var onEchelle = echelle>0;
     if (this.cursors.left.isDown) { // fleche de gauche
-      if (echelle>0) { // si on est sur une echelle
-        this.player.x -= 5;
-      } else {
-        this.player.body.velocity.x = -150;
-      }
-
-      if (this.facing != 'left') {
-        this.player.animations.play('left');
-        this.facing = 'left';
-      }
-
+      this.player.left(onEchelle);
     } else if (this.cursors.right.isDown) { // fleche de droite
-      if (echelle>0) { // si on est sur une echelle
-        this.player.x += 5;
-      } else {
-        this.player.body.velocity.x = 150;
-      }
-      if (this.facing != 'right') {
-        this.player.animations.play('right');
-        this.facing = 'right';
-      }
-
+      this.player.right(onEchelle);
     } else if (this.cursors.up.isDown) { // fleche du haut
-      if (echelle > 0) { // si on est sur une echelle
-        this.player.body.velocity.y = 0;
-        this.game.physics.arcade.gravity.y = 0.1;
-        this.player.y -= 5;
-      }
-
+        this.player.up(onEchelle);
     } else if (this.cursors.down.isDown) { // fleche du bas
-        if (echelle > 0) { // si on est sur une echelle
-            this.player.body.velocity.y = 0;
-            this.game.physics.arcade.gravity.y = 0.1;
-            this.player.y += 5;
-        }
+        this.player.down(onEchelle);
     } else if (this.escapeButton.isDown) {
-      this.game.state.start('menu');
+      this.endGame(this, 'menu');
     } else { // si aucune touche appuyée
-      if (this.facing != 'idle')  {
-        this.player.animations.stop();
-
-        if (this.facing == 'left') {
-          this.player.frame = 0;
-        } else {
-          this.player.frame = 5;
-        }
-
-        this.facing = 'idle';
-      }
+      this.player.idle(onEchelle);
     }
 
-    if (this.jumpButton.isDown && this.player.body.onFloor()) {
-      this.player.body.velocity.y = -250;
-      this.jumpTimer = this.game.time.now + 1500;
+    if (this.jumpButton.isDown) {
+      this.player.jump(onEchelle);
     }
   }
 
-  gameOver(self) {
-    self.music.stop();
-    self.game.state.start('gameover');
+  endGame(self, state) {
+      if (state == 'gameover') {
+        if (self.player.action != 'dead') {
+            self.player.die();
+            self.game.add.audio('deadSound').play();
+            self.game.time.events.add(Phaser.Timer.SECOND * 0.7, function () {
+                self.music.stop();
+                self.game.state.start('gameover');
+            });
+        }
+      } else {
+          self.music.stop();
+          self.game.state.start(state);
+      }
+  }
+
+  gameOver() {
+
   }
 
   collectStar(player, star) {
     // Removes the star from the screen
     star.kill();
-
     //  Add and update the score
-    this.game.global.score += 10;
+    this.game.global.score += star.points;
     this.font.text = 'SCORE ' + this.game.global.score;
 
     if (this.starsGroup.countLiving() <= 0) {
-      self.music.stop();
-      self.game.state.start('victory');
+      this.endGame(this, 'victory');
     }
   }
 }

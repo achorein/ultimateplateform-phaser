@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-up" width="16" height="12" tilewidth="64" tileheight="64" nextobjectid="171">
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="16" height="12" tilewidth="64" tileheight="64" nextobjectid="172">
  <tileset firstgid="1" name="world-spritesheet" tilewidth="64" tileheight="64" tilecount="256" columns="8">
   <image source="world.png" width="512" height="2048"/>
+  <tile id="153">
+   <properties>
+    <property name="start" type="bool" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="257" name="hud_star" tilewidth="64" tileheight="64" margin="1" tilecount="1" columns="1">
   <image source="../hud_star.png" width="70" height="70"/>
+  <tile id="0">
+   <properties>
+    <property name="points" value="10"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="258" name="hud_gem_green" tilewidth="46" tileheight="36" tilecount="1" columns="1">
+  <image source="../hud_gem_green.png" width="46" height="36"/>
+  <tile id="0">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="back" width="16" height="12">
   <data encoding="csv">
@@ -18,8 +36,8 @@
 0,0,0,0,250,250,250,0,0,0,0,0,0,0,0,164,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,164,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,
-244,163,0,0,0,0,0,0,0,0,0,0,0,25,73,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,130,130
+0,163,244,0,0,0,0,0,0,0,0,0,0,25,73,0,
+130,0,0,0,0,0,0,0,0,0,0,0,0,0,130,130
 </data>
  </layer>
  <layer name="blocs" width="16" height="12">
@@ -38,7 +56,7 @@
 0,0,0,0,57,49,41,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,
-9,9,9,9,9,9,9,9,9,9,9,9,9,73,2,2
+0,17,9,9,9,9,9,9,9,9,9,9,9,73,2,2
 </data>
  </layer>
  <layer name="collectable" width="16" height="12">
@@ -47,13 +65,29 @@
 0,0,0,0,0,0,0,0,257,0,0,0,0,0,0,0,
 0,0,0,257,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,257,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+257,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,257,0,0,0,0,0,0,0,0,257,0,0,0,0,0,
+0,0,0,0,0,258,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,257,0,0,
-0,0,0,257,0,257,0,257,0,257,0,257,0,0,0,0,
+258,0,0,257,0,257,0,257,0,257,0,257,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="game" width="16" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,154,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
