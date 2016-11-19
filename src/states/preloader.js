@@ -18,6 +18,7 @@ class Preloader extends Phaser.State {
 
   loadResources() {
     this.game.load.image('fonts', 'assets/fonts/070.png');
+    this.game.load.image('swirl','assets/fonts/swirl1.jpg');
     this.game.load.image('background','assets/background.png');
 
     this.game.load.tilemap('tilemap', 'assets/tilesmap/world.json', null, Phaser.Tilemap.TILED_JSON);

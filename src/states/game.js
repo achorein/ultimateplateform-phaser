@@ -119,6 +119,7 @@ class Game extends Phaser.State {
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
   }
 
   render() {
@@ -180,12 +181,13 @@ class Game extends Phaser.State {
       }
 
     } else if (this.cursors.down.isDown) { // fleche du bas
-      if (echelle > 0) { // si on est sur une echelle
-        this.player.body.velocity.y = 0;
-        this.game.physics.arcade.gravity.y = 0.1;
-        this.player.y += 5;
-      }
-
+        if (echelle > 0) { // si on est sur une echelle
+            this.player.body.velocity.y = 0;
+            this.game.physics.arcade.gravity.y = 0.1;
+            this.player.y += 5;
+        }
+    } else if (this.escapeButton.isDown) {
+      this.game.state.start('menu');
     } else { // si aucune touche appuyée
       if (this.facing != 'idle')  {
         this.player.animations.stop();

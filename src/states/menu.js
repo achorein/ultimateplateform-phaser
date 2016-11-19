@@ -1,90 +1,74 @@
-import Player from '../prefabs/player';
 
 class Menu extends Phaser.State {
 
   constructor() {
     super();
+    this.cursorPos = 1;
+    this.timer = 0;
   }
   
   create() {
     var self = this;
-
-    this.game.physics.startSystem(Phaser.Physics.P2JS);
-
     //add background image
     this.background = this.game.add.sprite(0,0, 'background');
     this.background.height = this.game.world.height;
     this.background.width = this.game.world.width;
     this.background.alpha = 0.1;
 
+    this.cursorPos = 1;
     // Ajout du score
-    this.font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-    this.font.text = 'PRESS ANY KEY';
-    this.game.add.image(this.game.world.centerX,this.game.world.centerY, this.font);
-
-    // press any key
-    this.game.input.keyboard.onDownCallback = function(e) {
-      self.onInputDown(self);
+    this.menu = ['NEW GAME', 'CREDITS'];
+    for (var i=0; i<this.menu.length; i++) {
+        var font = self.createFont(this.menu[i]);
+        self.game.add.image(self.game.world.centerX - font.width/2,self.computePosition(i+1), font);
     }
 
-    this.player = new Player(this.game, -32, this.game.world.height * 0.75);//this.player.body.setSize(20, 32, 5, 16);
-    this.player.body.collideWorldBounds = false;
-    this.game.add.existing(this.player);
-    this.player.body.velocity.x = 150;
-    this.player.animations.play('right');
+    this.menuCursor = this.game.add.sprite(self.game.world.centerX - 128, this.computePosition(this.cursorPos), 'coin');
+    this.menuCursor.y = this.menuCursor.y - this.menuCursor.height/2;
 
     this.canContinueToNextState = true;
+    this.cursors = this.game.input.keyboard.createCursorKeys();
+    this.okButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
   }
 
-  update() {}
+  update() {
+    if ( this.game.time.now > this.timer)
+      if (this.cursors.up.isDown) { // fleche du haut
+          this.cursorPos++;
+          if (this.cursorPos>this.menu.length){
+            this.cursorPos = 1;
+          }
+          this.menuCursor.y = this.computePosition(this.cursorPos, this.menuCursor.height/2);
+          this.timer = this.game.time.now + 250;
+      } else if (this.cursors.down.isDown) { // fleche du bas
+          this.cursorPos--;
+          if (this.cursorPos<1){
+              this.cursorPos = this.menu.length;
+          }
+          this.menuCursor.y = this.computePosition(this.cursorPos, this.menuCursor.height/2);
+          this.timer = this.game.time.now + 250;
+      } else if(this.okButton.isDown) {
+          if (this.cursorPos === 1) {
+              this.game.state.start('game');
+          } else {
+              this.game.state.start('menucredits');
+          }
+      }
 
-  //create some cool tweens and apply them to 'this.ready' and 'this.go'
-  onInputDown (self) {
-    if( ! self.canContinueToNextState){ //do not allow tweens to be created multiple times simultaneously
-      return;
+  }
+
+  createFont(text) {
+      var font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
+      font.text = text;
+      return font;
+  }
+
+  computePosition(value, offset) {
+    var pos = this.game.world.centerY - 48 + (value-1)*48;
+    if (offset) {
+      pos -= offset;
     }
-
-    self.canContinueToNextState = false;
-    self.font.visible = false;
-
-    //self.music.stop();
-    self.game.state.start('game');
-/*
-    self.go.angle = -15;
-
-    //create some tweens - http://phaser.io/docs/2.5.0/Phaser.Tween.html#to
-    const ready_tween = self.game.add.tween(self.ready.scale)
-      .to({ x: 1.5, y: 1.5}, 500, Phaser.Easing.Linear.In,false,0,-1,true);
-
-    const go_tween = self.game.add.tween(self.go)
-      .to({ angle: 15}, 200, Phaser.Easing.Linear.In,false,0,-1,true);
-
-    //when the 'ready' tween is done, hide it and show 'go'. perform a shaking/rotating tween on 'go'. When 'go' is done, start the game
-    var go_tween_repeat_num = 3; //how many times these tweens should loop
-    var ready_tween_repeat_num = 3;
-
-    const go_tween_loop = function(){
-      go_tween_repeat_num -= 0.5;
-      if(go_tween_repeat_num < 1){
-        self.go.visible = false;
-        self.music.stop();
-        self.game.state.start('game');
-      }
-    };
-    const ready_tween_loop = function(){
-      ready_tween_repeat_num -= 0.5;
-      if(ready_tween_repeat_num < 1){
-        self.ready.visible = false;
-        self.go.visible = true;
-
-        go_tween.start();
-      }
-    };
-    ready_tween.onLoop.add(ready_tween_loop, self);
-    go_tween.onLoop.add(go_tween_loop, self);
-
-    ready_tween.start();
-    */
+    return pos;
   }
 
 }
