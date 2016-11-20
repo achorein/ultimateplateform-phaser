@@ -9,9 +9,10 @@
     "build:js": "browserify -d -e src/main.js -t [babelify --comments false --presets es2015] | uglifyjs -cm > build/bundle.min.js",
     "build:css": "cleancss css/main.css -o build/main.min.css",
     "build:html": "htmlprocessor index.html -o build/index.html",
-    "copy:all": "npm run copy:assets && npm run copy:phaser",
+    "copy:all": "npm run copy:assets && npm run copy:phaser && npm run copy:bootsrap",
     "copy:assets": "cp -rf assets build/",
-    "copy:phaser": "cp -rf node_modules/phaser/build/phaser.min.js build/phaser.min.js"
+    "copy:phaser": "cp -rf node_modules/phaser/build/phaser.min.js build/phaser.min.js",
+    "copy:bootsrap": "cp -rf node_modules/bootstrap/dist/css/bootstrap.min.css build/bootstrap.min.css"
   },
   "keywords": [],
   "author": "",
