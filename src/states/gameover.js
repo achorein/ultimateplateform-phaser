@@ -13,16 +13,21 @@ class GameOver extends Phaser.State {
     this.background.alpha = 0.1;
 
     // Ajout du score
-    this.gameover = this.createFont('GAME OVER! YOU LOSE!');
-    var img = this.game.add.image(this.game.world.centerX,this.game.world.centerY-20, this.gameover);
+    this.gameover = this.createFont('YOU LOSE!');
+    var img = this.game.add.image(this.game.world.centerX, this.game.world.centerY - 200, this.gameover);
     img.anchor.set(0.5);
 
     // Ajout du score
     this.score = this.createFont('SCORE '+ this.game.global.score);
-    img = this.game.add.image(this.game.world.centerX,this.game.world.centerY+20, this.score);
+    img = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 200, this.score);
     img.anchor.set(0.5);
 
-    // press any key
+    var sprite = self.game.add.sprite(self.game.world.centerX, self.game.world.centerY, this.game.global.playerSprite, 'idle/01');
+    sprite.anchor.set(0.5);
+    sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
+    sprite.animations.play('dead');
+
+      // press any key
     this.game.input.keyboard.onDownCallback = function(e) {
       self.onInputDown(self);
     }
@@ -55,7 +60,7 @@ class GameOver extends Phaser.State {
 
   onInputDown () {
     if(this.canContinueToNextState){
-      this.game.state.start('menu');
+      //this.game.state.start('menu', true, false);
     }
   }
 

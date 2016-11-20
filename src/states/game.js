@@ -141,7 +141,7 @@ class Game extends Phaser.State {
     /*this.stairGroup.forEachAlive(function(member) {
       self.game.debug.spriteBounds(member);
     });*/
-    self.game.debug.body(this.player);
+    //self.game.debug.body(this.player);
   }
 
   update() {
@@ -151,6 +151,7 @@ class Game extends Phaser.State {
     this.game.physics.arcade.collide(this.player, this.stairGroup, function(player, stair) {
       if (player.body.touching.left || player.body.touching.right) {
         player.y -= 1;
+        player.body.velocity.x += 10;
       }
     });
     // type decors
@@ -199,8 +200,8 @@ class Game extends Phaser.State {
       }
   }
 
-  gameOver() {
-
+  shutdown() {
+    this.game.world.removeAll();
   }
 
   collectStar(player, star) {

@@ -25,7 +25,11 @@ class Preloader extends Phaser.State {
     this.game.load.physics('physicsData', 'assets/tilesmap/world.json');
     this.game.load.spritesheet('world','assets/tilesmap/world.png', 64, 64);
 
-    this.game.load.spritesheet('dude', 'assets/player-1-spritesheet.png', 64, 54);
+    this.game.load.atlasJSONHash('adventurePlayer', 'assets/adventure_girl.png', 'assets/adventure_girl.json');
+    this.game.load.atlasJSONHash('knightPlayer', 'assets/knight.png', 'assets/knight.json');
+    this.game.load.atlasJSONHash('robotPlayer', 'assets/robot.png', 'assets/robot.json');
+    this.game.load.atlasJSONHash('ninjaPlayer', 'assets/ninja.png', 'assets/ninja.json');
+
     this.game.load.image('coin', 'assets/hud_coins.png');
     this.game.load.image('heart', 'assets/hud_heartFull.png');
     this.game.load.image('gem', 'assets/hud_gem_green.png');

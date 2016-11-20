@@ -14,12 +14,12 @@ class Victory extends Phaser.State {
 
         // Ajout du score
         this.gameover = this.createFont('VICTORY');
-        var img = this.game.add.image(this.game.world.centerX,this.game.world.centerY-20, this.gameover);
+        var img = this.game.add.image(this.game.world.centerX,this.game.world.centerY-200, this.gameover);
         img.anchor.set(0.5);
 
         // Ajout du score
         this.score = this.createFont('SCORE '+ this.game.global.score);
-        img = this.game.add.image(this.game.world.centerX,this.game.world.centerY+20, this.score);
+        img = this.game.add.image(this.game.world.centerX,this.game.world.centerY+200, this.score);
         img.anchor.set(0.5);
 
         // press any key
@@ -28,6 +28,11 @@ class Victory extends Phaser.State {
         }
 
         this.game.add.audio('winnerSound').play();
+
+        var sprite = self.game.add.sprite(self.game.world.centerX, self.game.world.centerY, this.game.global.playerSprite, 'idle/01');
+        sprite.anchor.set(0.5);
+        sprite.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, true, false);
+        sprite.animations.play('jump');
 
         //prevent accidental click-thru by not allowing state transition for a short time
         this.canContinueToNextState = false;
@@ -55,7 +60,7 @@ class Victory extends Phaser.State {
 
     onInputDown () {
         if(this.canContinueToNextState){
-            this.game.state.start('menu');
+            //this.game.state.start('menu');
         }
     }
 

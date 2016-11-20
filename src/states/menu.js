@@ -1,3 +1,9 @@
+var line = [];
+var wordIndex = 0;
+var lineIndex = 0;
+
+var wordDelay = 180;
+var lineDelay = 500;
 
 class Menu extends Phaser.State {
 
@@ -6,26 +12,53 @@ class Menu extends Phaser.State {
     this.cursorPos = 1;
     this.timer = 0;
   }
-  
+
   create() {
     var self = this;
     //add background image
     this.background = this.game.add.sprite(0,0, 'background');
     this.background.height = this.game.world.height;
     this.background.width = this.game.world.width;
-    this.background.alpha = 0.1;
+    this.background.alpha = 0.25;
 
     this.cursorPos = 1;
-    // Ajout du score
-    this.menu = ['NEW GAME', 'CREDITS'];
-    for (var i=0; i<this.menu.length; i++) {
-        var font = self.createFont(this.menu[i]);
-        var img = self.game.add.image(self.game.world.centerX ,self.computePosition(i+1), font);
-        img.anchor.set(0.5);
-    }
 
-    this.menuCursor = this.game.add.sprite(self.game.world.centerX - 128, this.computePosition(this.cursorPos), 'coin');
-    this.menuCursor.anchor.set(0.5);
+    // Ajout personnages
+    this.menu = [
+      {index: 1, name:'SB', description:[
+          'Se faufiller dans des situations peu confortable est votre quotidien,',
+          'vous allez devoir user de votre agilité pour réussir à bien votre mission.'
+      ], texture:'ninjaPlayer'},
+      {index: 2, name:'ARC', description:[
+          'A la recherche des meilleurs artefacts permettant de construire des applications',
+          'toujours plus évoluées, vous aller braver les dangers qui vous attendent.'
+      ], texture:'robotPlayer'},
+      {index: 3, name:'BA', description:[
+          'Vous partez à l\'aventure à la recherche des parchemins sacrés,',
+          'décrivant les besoins cachés d\'utilisateurs toujours plus vicieux.'
+      ], texture:'adventurePlayer'},
+      {index: 4, name:'PM', description:[
+          'Afin de financer votre projet vous partez vous battre contre une armée de problèmes',
+          'afin de collecter un trésor qui n\'a d\'égale que votre ambition.'
+      ], texture:'knightPlayer'}
+    ];
+
+    var font = self.createFont('CHOOSE YOUR PLAYER');
+    var img = self.game.add.image(self.game.world.centerX, 128, font);
+    img.anchor.set(0.5);
+
+    var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+    this.menu.forEach(function(player) {
+      var sprite = self.game.add.sprite(self.computePosition(self, player.index), self.game.world.centerY, player.texture, 'idle/01');
+      sprite.anchor.set(0.5);
+      sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
+      sprite.scale.setTo(0.7);
+      player.sprite = sprite;
+      var text = self.game.add.text(self.computePosition(self, player.index), self.game.world.centerY + 150, player.name, style);
+      text.anchor.set(0.5);
+    });
+
+    this.selectPlayer();
 
     this.canContinueToNextState = true;
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -34,28 +67,40 @@ class Menu extends Phaser.State {
 
   update() {
     if ( this.game.time.now > this.timer)
-      if (this.cursors.up.isDown) { // fleche du haut
+      if (this.cursors.right.isDown) { // fleche de droite
           this.cursorPos++;
           if (this.cursorPos>this.menu.length){
             this.cursorPos = 1;
           }
-          this.menuCursor.y = this.computePosition(this.cursorPos);
+          this.selectPlayer();
           this.timer = this.game.time.now + 250;
-      } else if (this.cursors.down.isDown) { // fleche du bas
+      } else if (this.cursors.left.isDown) { // fleche du gauche
           this.cursorPos--;
           if (this.cursorPos<1){
               this.cursorPos = this.menu.length;
           }
-          this.menuCursor.y = this.computePosition(this.cursorPos);
+          this.selectPlayer();
           this.timer = this.game.time.now + 250;
       } else if(this.okButton.isDown) {
-          if (this.cursorPos === 1) {
-              this.game.state.start('game');
-          } else {
-              this.game.state.start('menucredits');
-          }
+          this.game.global.playerSprite = this.menu[this.cursorPos-1].texture;
+          this.game.state.start('game', true, false);
       }
+  }
 
+  selectPlayer() {
+      var self = this;
+      this.menu.forEach(function(player){
+          if (player.index == self.cursorPos) {
+            player.sprite.scale.setTo(1);
+            player.sprite.animations.play('idle');
+            wordIndex = -1;
+            lineIndex = -1;
+            self.game.time.events.add(lineDelay, self.writeText, self);
+          } else {
+            player.sprite.animations.stop();
+            player.sprite.scale.setTo(0.7);
+          }
+      });
   }
 
   createFont(text) {
@@ -64,10 +109,67 @@ class Menu extends Phaser.State {
       return font;
   }
 
-  computePosition(value) {
-    var pos = this.game.world.centerY - 48 + (value-1)*48;
+  computePosition(self, index) {
+    var squareWidth = 250;
+    var min = self.menu.length/2 * squareWidth/2;
+    var value = self.cursorPos;
+    if (index) {
+        value = index;
+    }
+    var pos = (self.game.world.centerY - min) + (value-1)*squareWidth;
     return pos;
   }
+
+  writeText(){
+      var barX = 128;
+      var barY = this.game.world.height - 128;
+      var bar = this.game.add.graphics();
+      bar.beginFill(0x666666, 1);
+      bar.drawRoundedRect(barX, barY, 800, 100, 5);
+      this.text = this.game.add.text(barX + 18, barY + 18, '', { font: "18px Arial", fill: "#FFF" });
+      this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+      line = [];
+      wordIndex = 0;
+      lineIndex = 0;
+      this.nextLine();
+  }
+
+  nextLine() {
+    var content = this.menu[this.cursorPos-1].description;
+    if (lineIndex<0 || lineIndex >= content.length) {
+        //  We're finished
+        return;
+    }
+    //  Split the current line on spaces, so one word per array element
+    line = content[lineIndex].split(' ');
+    //  Reset the word index to zero (the first word in the line)
+    wordIndex = 0;
+    //  Call the 'nextWord' function once for each word in the line (line.length)
+    this.game.time.events.repeat(wordDelay, line.length, this.nextWord, this);
+    //  Advance to the next line
+    lineIndex++;
+  }
+
+  nextWord() {
+    if (wordIndex<0 || !line[wordIndex]) {
+      return;
+    }
+    //  Add the next word onto the text string, followed by a space
+    this.text.text = this.text.text.concat(line[wordIndex] + " ");
+    //  Advance the word index to the next word in the line
+    wordIndex++;
+    //  Last word?
+    if (wordIndex >= line.length) {
+        //  Add a carriage return
+        this.text.text = this.text.text.concat("\n");
+        //  Get the next line after the lineDelay amount of ms has elapsed
+        this.game.time.events.add(lineDelay, this.nextLine, this);
+    }
+  }
+
+   shutdown() {
+    this.game.world.removeAll();
+   }
 
 }
 

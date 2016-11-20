@@ -2,21 +2,27 @@ class Player extends Phaser.Sprite {
 
   //initialization code in the constructor
   constructor(game, x, y, frame) {
-    super(game, x, y, 'dude', frame);
+    super(game, x, y, game.global.playerSprite, 'idle/01');
+    this.scale.setTo(0.33);
 
     //setup physics properties
     this.game.physics.arcade.enableBody(this);
 
     this.body.bounce.y = 0.1;
     this.body.collideWorldBounds = true;
-    this.body.setSize(40, 32, 5, 16);
+    if (game.global.playerSprite == 'ninjaPlayer' || game.global.playerSprite == 'knightPlayer') {
+        this.body.setSize(120, 200, 0, 16);
+    } else {
+        this.body.setSize(120, 200, 96, 32);
+    }
+
     this.anchor.setTo(.5,.5);
 
     // add animations from spritesheets
-    this.animations.add('dead', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 6, false);
-    this.animations.add('idle', [10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 20, true);
-    this.animations.add('jump', [20, 21, 22, 23, 24, 25, 26, 27, 28, 29], 10, false);
-    this.animations.add('run', [30, 31, 32, 33, 34, 35, 36, 37], 10, true);
+    this.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
+    this.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
+    this.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, false, false);
+    this.animations.add('run', Phaser.Animation.generateFrameNames('run/', 1, 10, '', 2), 10, true, false);
 
     this.jumpTimer = 0; // temps entre deux sauts
     this.facing = 'right';
