@@ -26,6 +26,7 @@ class GameOver extends Phaser.State {
     sprite.anchor.set(0.5);
     sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
     sprite.animations.play('dead');
+    this.game.camera.follow(sprite);
 
       // press any key
     this.game.input.keyboard.onDownCallback = function(e) {

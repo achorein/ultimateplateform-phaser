@@ -21,9 +21,10 @@ class Game extends Phaser.State {
     this.background = this.game.add.sprite(0,0,'background');
     this.background.height = this.game.world.height;
     this.background.width = this.game.world.width;
+    this.background.fixedToCamera = true;
 
     // tilemap
-    this.map = this.game.add.tilemap('tilemap');
+    this.map = this.game.add.tilemap('tilemap-level-'+this.game.global.level);
     this.map.addTilesetImage('world-spritesheet', 'world');
     // réupération des layers pour la construction du monde
     this.backLayer = this.map.createLayer('back');
@@ -33,7 +34,7 @@ class Game extends Phaser.State {
 
     // gestion des collisions sur tile
     this.map.setLayer(this.blocsLayer);
-    this.map.setCollisionBetween(1, 128);
+    this.map.setCollisionBetween(1, 256);
 
     // Ajoute des zonnes de collision spécifiques à la main (car fonction this.map.createFromObjects impossible sans gid non généré par Tiled)
     // gestion des pentes
@@ -80,7 +81,7 @@ class Game extends Phaser.State {
         function(sprite, tile) { self.endGame(self, 'gameover') },
         this, this.backLayer);
     // Gestion des echelles
-    this.map.setTileIndexCallback([156, 164, 188],
+    this.map.setTileIndexCallback([156, 164, 188, 228],
         function(sprite, tile) {
           // quand le joueur touche un sprite d'echelle, incrémente un compteur
           echelle++;
@@ -123,7 +124,7 @@ class Game extends Phaser.State {
 
     // Ajout du score
     this.font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-    this.font.text =  'SCORE 0';
+    this.font.text =  'SCORE ' + this.game.global.score;
     this.game.add.image(5,5, this.font);
 
     //setup audio
@@ -170,7 +171,12 @@ class Game extends Phaser.State {
     } else if (this.cursors.right.isDown) { // fleche de droite
       this.player.right(onEchelle);
     } else if (this.cursors.up.isDown) { // fleche du haut
-        this.player.up(onEchelle);
+        var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.backLayer);
+        if (tile && tile.index == 204) { // sur une porte
+            this.endGame(this, 'victory');
+        } else {
+            this.player.up(onEchelle, this.map);
+        }
     } else if (this.cursors.down.isDown) { // fleche du bas
         this.player.down(onEchelle);
     } else if (this.escapeButton.isDown) {

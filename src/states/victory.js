@@ -13,7 +13,12 @@ class Victory extends Phaser.State {
         this.background.alpha = 0.1;
 
         // Ajout du score
-        this.gameover = this.createFont('VICTORY');
+        if (this.game.global.level == this.game.global.levelmax) {
+            this.gameover = this.createFont('GAME FINISHED');
+        } else {
+            this.gameover = this.createFont('VICTORY');
+        }
+
         var img = this.game.add.image(this.game.world.centerX,this.game.world.centerY-200, this.gameover);
         img.anchor.set(0.5);
 
@@ -33,6 +38,7 @@ class Victory extends Phaser.State {
         sprite.anchor.set(0.5);
         sprite.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, true, false);
         sprite.animations.play('jump');
+        this.game.camera.follow(sprite);
 
         //prevent accidental click-thru by not allowing state transition for a short time
         this.canContinueToNextState = false;
@@ -48,7 +54,7 @@ class Victory extends Phaser.State {
     }
 
     resetGlobalVariables(){
-        this.game.global.score = 0;
+        //this.game.global.score = 0;
     }
     update() {}
 
@@ -60,7 +66,10 @@ class Victory extends Phaser.State {
 
     onInputDown () {
         if(this.canContinueToNextState){
-            //this.game.state.start('menu');
+            if (this.game.global.level < this.game.global.levelmax) {
+                this.game.global.level++;
+                this.game.state.start('game');
+            }
         }
     }
 

@@ -7,6 +7,7 @@ class Player extends Phaser.Sprite {
 
     //setup physics properties
     this.game.physics.arcade.enableBody(this);
+    this.game.camera.follow(this);
 
     this.body.bounce.y = 0.1;
     this.body.collideWorldBounds = true;
@@ -73,7 +74,7 @@ class Player extends Phaser.Sprite {
       this.action = 'move';
   }
 
-  up(onEchelle) {
+  up(onEchelle, map) {
       if (onEchelle) { // si on est sur une echelle
           this.body.velocity.y = 0;
           this.game.physics.arcade.gravity.y = 0.1;

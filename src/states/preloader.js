@@ -21,8 +21,10 @@ class Preloader extends Phaser.State {
     this.game.load.image('swirl','assets/fonts/swirl1.jpg');
     this.game.load.image('background','assets/background.png');
 
-    this.game.load.tilemap('tilemap', 'assets/tilesmap/world.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.physics('physicsData', 'assets/tilesmap/world.json');
+    for (var i=1;i<=this.game.global.levelmax;i++) {
+        this.game.load.tilemap('tilemap-level-'+i, 'assets/tilesmap/level-'+i+'.json', null, Phaser.Tilemap.TILED_JSON);
+    }
+
     this.game.load.spritesheet('world','assets/tilesmap/world.png', 64, 64);
 
     this.game.load.atlasJSONHash('adventurePlayer', 'assets/adventure_girl.png', 'assets/adventure_girl.json');
