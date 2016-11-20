@@ -63,7 +63,7 @@ class Game extends Phaser.State {
     this.map.setTileIndexCallback(242,
         function(sprite, tile) {
           sprite.body.velocity.y = -500;
-          self.game.add.audio('jumpSound').play();
+          self.game.add.audio('jumpSound').play('', 0, 0.25);
           // on met une image de jumper activé
           self.map.replace(tile.index, 234, tile.x, tile.y, 1, 1, self.backLayer);
           self.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
@@ -128,7 +128,7 @@ class Game extends Phaser.State {
     this.game.add.image(5,5, this.font);
 
     //setup audio
-    this.music = this.game.add.audio('musicGame');
+    this.music = this.game.add.audio('musicGame', 2, true);
     this.music.play();
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -211,6 +211,7 @@ class Game extends Phaser.State {
   }
 
   collectStar(player, star) {
+    this.game.add.audio('collectSound').play('', 0, 0.25);
     // Removes the star from the screen
     star.kill();
     //  Add and update the score

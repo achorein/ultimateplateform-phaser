@@ -37,12 +37,15 @@ class Preloader extends Phaser.State {
     this.game.load.image('gem', 'assets/hud_gem_green.png');
     this.game.load.image('star', 'assets/hud_star.png');
 
-    this.game.load.audio('musicMenu','assets/sounds/menu.mp3');
+    this.game.load.audio('musicMenu','assets/sounds/menu_music.mp3');
+    this.game.load.audio('miscMenu','assets/sounds/menu_misc.wav');
+    this.game.load.audio('okMenu','assets/sounds/menu_ok.wav');
     this.game.load.audio('musicGame','assets/sounds/game.mp3');
     this.game.load.audio('jumpSound','assets/sounds/jump.ogg');
-    this.game.load.audio('winnerSound','assets/sounds/winner.wav');
-    this.game.load.audio('failedSound','assets/sounds/failed.wav');
-    this.game.load.audio('deadSound','assets/sounds/dead.wav');
+    this.game.load.audio('winnerSound','assets/sounds/winner.mp3');
+    this.game.load.audio('failedSound','assets/sounds/lose.mp3');
+    this.game.load.audio('deadSound','assets/sounds/dead.mp3');
+    this.game.load.audio('collectSound','assets/sounds/collect.mp3');
   }
 
   onLoadComplete() {

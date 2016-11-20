@@ -58,7 +58,11 @@ class Menu extends Phaser.State {
       text.anchor.set(0.5);
     });
 
-    this.selectPlayer();
+    //setup audio
+    this.music = this.game.add.audio('musicMenu', 0.5, true);
+    this.music.play();
+
+    this.selectPlayer(true);
 
     this.canContinueToNextState = true;
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -82,17 +86,22 @@ class Menu extends Phaser.State {
           this.selectPlayer();
           this.timer = this.game.time.now + 250;
       } else if(this.okButton.isDown) {
+          this.game.add.audio('okMenu').play('', 0, 0.5);
           this.game.global.playerSprite = this.menu[this.cursorPos-1].texture;
+          this.music.stop();
           this.game.state.start('game', true, false);
       }
   }
 
-  selectPlayer() {
+  selectPlayer(ignoreSound) {
       var self = this;
       this.menu.forEach(function(player){
           if (player.index == self.cursorPos) {
             player.sprite.scale.setTo(1);
             player.sprite.animations.play('idle');
+            if (!ignoreSound) {
+                self.game.add.audio('miscMenu').play();
+            }
             wordIndex = -1;
             lineIndex = -1;
             self.game.time.events.add(lineDelay, self.writeText, self);

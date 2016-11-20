@@ -37,7 +37,7 @@ class GameOver extends Phaser.State {
     this.canContinueToNextState = false;
     this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){ this.canContinueToNextState = true; }, this);
 
-    this.game.add.audio('failedSound').play();
+    this.game.add.audio('failedSound').play('', 0, 0.5);
     this.saveVarsToLocalStorage();
     this.resetGlobalVariables();
   }
