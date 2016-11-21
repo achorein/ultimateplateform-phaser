@@ -43,7 +43,7 @@ class Player extends Phaser.Sprite {
       if (onEchelle) { // si on est sur une echelle
           this.x -= 5;
       } else {
-          this.body.velocity.x = -150;
+          this.body.velocity.x = -this.game.global.speed;
       }
 
       if (this.facing != 'left') {
@@ -62,7 +62,7 @@ class Player extends Phaser.Sprite {
       if (onEchelle) { // si on est sur une echelle
           this.x += 5;
       } else {
-          this.body.velocity.x = 150;
+          this.body.velocity.x = this.game.global.speed;
       }
       if (this.facing != 'right') {
           this.scale.x *= -1; // symetrie verticale

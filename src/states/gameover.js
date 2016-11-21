@@ -10,23 +10,30 @@ class GameOver extends Phaser.State {
     this.background = this.game.add.sprite(0,0,'background');
     this.background.height = this.game.world.height;
     this.background.width = this.game.world.width;
-    this.background.alpha = 0.1;
+    this.background.alpha = 0.25;
 
     // Ajout du score
     this.gameover = this.createFont('YOU LOSE!');
     var img = this.game.add.image(this.game.world.centerX, this.game.world.centerY - 200, this.gameover);
     img.anchor.set(0.5);
 
+    // Ajout temps écoulé
+    var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+    var text = self.game.add.text(self.game.world.centerX, self.game.world.centerY - 150, this.game.global.elapsedTime + ' seconde' + ((this.game.global.elapsedTime>1)?'s':''), style);
+    text.anchor.set(0.5);
+
     // Ajout du score
     this.score = this.createFont('SCORE '+ this.game.global.score);
     img = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 200, this.score);
     img.anchor.set(0.5);
+    console.log(this.game.global.collected);
 
     var sprite = self.game.add.sprite(self.game.world.centerX, self.game.world.centerY, this.game.global.playerSprite, 'idle/01');
     sprite.anchor.set(0.5);
     sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
     sprite.animations.play('dead');
     this.game.camera.follow(sprite);
+
 
       // press any key
     this.game.input.keyboard.onDownCallback = function(e) {

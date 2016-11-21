@@ -27,7 +27,7 @@ class Menu extends Phaser.State {
     this.menu = [
       {index: 1, name:'SB', description:[
           'Se faufiller dans des situations peu confortable est votre quotidien,',
-          'vous allez devoir user de votre agilité pour réussir à bien votre mission.'
+          'vous allez devoir user de votre agilité pour mener à bien votre mission.'
       ], texture:'ninjaPlayer'},
       {index: 2, name:'ARC', description:[
           'A la recherche des meilleurs artefacts permettant de construire des applications',
@@ -58,6 +58,9 @@ class Menu extends Phaser.State {
       text.anchor.set(0.5);
     });
 
+    var temps = this.game.add.text(this.game.world.width, 0, this.game.time.elapsed , style);
+    temps.anchor.set(1);
+
     //setup audio
     this.music = this.game.add.audio('musicMenu', 0.5, true);
     this.music.play();
@@ -70,7 +73,8 @@ class Menu extends Phaser.State {
   }
 
   update() {
-    if ( this.game.time.now > this.timer)
+
+      if ( this.game.time.now > this.timer)
       if (this.cursors.right.isDown) { // fleche de droite
           this.cursorPos++;
           if (this.cursorPos>this.menu.length){
