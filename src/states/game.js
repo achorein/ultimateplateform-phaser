@@ -1,5 +1,4 @@
 import LevelMap from '../prefabs/level';
-import Player from '../prefabs/player';
 
 class Game extends Phaser.State {
 
@@ -11,7 +10,7 @@ class Game extends Phaser.State {
     var self = this; // pour utilisation simple dans les callback
 
     // Sprites
-    this.background = this.game.add.sprite(0,0,'background');
+    this.background = this.game.add.sprite(0,0,'background-level-'+this.game.global.level);
     this.background.height = this.game.world.height;
     this.background.width = this.game.world.width;
     this.background.fixedToCamera = true;
@@ -24,16 +23,6 @@ class Game extends Phaser.State {
     this.game.physics.arcade.gravity.y = this.game.global.gravity;
     this.game.time.desiredFps = 30;
 
-    // Ajout du joueur
-    var gameLayer = this.map.layers[this.map.getLayer('game')];
-    gameLayer.data.forEach(function(row) {
-      row.forEach(function(data){
-          if (data.index > 0 && data.properties.start) {
-              self.player = new Player(self.game, data.x*data.width, data.y*data.height);
-              self.game.add.existing(self.player);
-          }
-      });
-    });
     this.game.global.collected = {
           coin: {
               count: 0
@@ -87,7 +76,7 @@ class Game extends Phaser.State {
       this.player.right(onEchelle);
     } else if (this.cursors.up.isDown) { // fleche du haut
         var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
-        if (tile && tile.index == 204) { // sur une porte
+        if (tile && tile.index == 57) { // sur une porte
             this.endGame(this, 'victory');
         } else {
             this.player.up(onEchelle, this.map);

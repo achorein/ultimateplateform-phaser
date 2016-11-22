@@ -1,3 +1,5 @@
+import Player from '../prefabs/player';
+
 /* variables globales */
 var echelle = 0;
 
@@ -44,11 +46,11 @@ class Level extends Phaser.Tilemap {
 
     // Gestion des collisions avec le décors (ajout des callback)
     // gestion des jumper
-    this.setTileIndexCallback(242, this.jumperCallback, this, this.backLayer);
+    this.setTileIndexCallback(557, this.jumperCallback, this, this.backLayer);
     // Gestion des pics et de l'eau
-    this.setTileIndexCallback([130, 250], state.killPlayerCallback, this, this.backLayer);
+    this.setTileIndexCallback([555, 556, 81, 82, 83, 84, 85, 86, 170, 171, 176,177], state.killPlayerCallback, this, this.backLayer);
     // Gestion des echelles
-    this.setTileIndexCallback([156, 164, 188, 228], this.echelleCallback, this, this.backLayer);
+    this.setTileIndexCallback([79, 80, 93, 94, 95], this.echelleCallback, this, this.backLayer);
 
     // Ajout des bonus
     this.bonusGroup = this.game.add.group();
@@ -65,6 +67,19 @@ class Level extends Phaser.Tilemap {
       });
     });
 
+    // Ajout du joueur
+    var gameLayer = this.layers[this.getLayer('game')];
+    gameLayer.data.forEach(function(row) {
+      row.forEach(function(data){
+          if (data.index > 0 && data.properties.start) {
+              state.player = new Player(self.game, data.x*data.width, data.y*data.height);
+              self.game.add.existing(state.player);
+          }
+      });
+    });
+
+    this.frontLayer = this.createLayer('front');
+    this.frontLayer.resizeWorld();
   }
 
   update(state) {
@@ -89,10 +104,10 @@ class Level extends Phaser.Tilemap {
     sprite.body.velocity.y = -this.game.global.jump;
     this.game.add.audio('jumpSound').play('', 0, 0.25);
     // on met une image de jumper activé
-    this.replace(tile.index, 234, tile.x, tile.y, 1, 1, this.backLayer);
+    this.replace(tile.index, 558, tile.x, tile.y, 1, 1, this.backLayer);
     this.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
         // on remet une image de jumper désactivé
-        self.replace(234, 242, tile.x, tile.y, 1, 1, self.backLayer);
+        self.replace(558, 557, tile.x, tile.y, 1, 1, self.backLayer);
     });
   }
 
