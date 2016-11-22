@@ -37,7 +37,8 @@ class Preloader extends Phaser.State {
     this.game.load.image('bullet', 'assets/bullet.png');
 
     this.game.load.image('coin', 'assets/hud_coins.png');
-    this.game.load.image('heart', 'assets/hud_heartFull.png');
+    this.game.load.image('heartFull', 'assets/hud_heartFull.png');
+    this.game.load.image('heartEmpty', 'assets/hud_heartEmpty.png');
     this.game.load.image('gem', 'assets/hud_gem_green.png');
     this.game.load.image('star', 'assets/hud_star.png');
 

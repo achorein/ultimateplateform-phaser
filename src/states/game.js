@@ -40,6 +40,9 @@ class Game extends Phaser.State {
     this.timeText.text =  'TIME 0';
     this.game.add.image(5, 32, this.timeText);
 
+    // Ajout des vies
+    this.updateLives();
+
     // Setup audio
     this.music = this.game.add.audio('musicGame', 2, true);
     this.music.play();
@@ -98,6 +101,15 @@ class Game extends Phaser.State {
 
   }
 
+  updateLives() {
+      for (var i=0; i<this.game.global.life; i++) {
+          this.game.add.sprite(5 + 30*i, 59, 'heartFull').scale.setTo(0.5);
+      }
+      for (;i<this.game.global.maxlife;i++) {
+          this.game.add.sprite(5 + 30*i, 59, 'heartEmpty').scale.setTo(0.5);
+      }
+  }
+
   elapseSeconds() {
       return Math.floor((this.game.time.now - this.startTime)/1000);
   }
@@ -106,15 +118,16 @@ class Game extends Phaser.State {
       self.game.global.elapsedTime = self.elapseSeconds();
       if (state == 'gameover') {
         if (self.player.action != 'dead') {
+            this.game.global.life--;
             self.player.die();
             self.game.add.audio('deadSound').play();
             self.music.stop();
-            self.game.state.start('gameover');
+            self.game.state.start('gameover', true, false);
             return;
         }
       }
       self.music.stop();
-      self.game.state.start(state);
+      self.game.state.start(state, true, false);
   }
 
   shutdown() {

@@ -93,6 +93,8 @@ class Menu extends Phaser.State {
           this.game.add.audio('okMenu').play('', 0, 0.5);
           this.game.global.playerSprite = this.menu[this.cursorPos-1].texture;
           this.music.stop();
+          this.game.global.level = 1;
+          this.game.global.life = 3;
           this.game.state.start('game', true, false);
       }
   }

@@ -42,7 +42,9 @@ class Boot extends Phaser.State {
       speed: 250,
       jump: 750,
       level: 1,
-      levelmax: 2
+      levelmax: 2,
+      life: 2,
+      maxlife: 3
     };
   }
 

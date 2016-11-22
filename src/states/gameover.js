@@ -13,49 +13,48 @@ class GameOver extends Phaser.State {
     this.background.alpha = 0.25;
 
     // Ajout du score
-    this.gameover = this.createFont('YOU LOSE!');
-    var img = this.game.add.image(this.game.world.centerX, this.game.world.centerY - 200, this.gameover);
+    this.gameoverText = this.createFont('YOU LOSE!');
+    var img = this.game.add.image(this.game.world.centerX, this.computePos(1), this.gameoverText);
     img.anchor.set(0.5);
 
     // Ajout temps écoulé
-    var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-    var text = self.game.add.text(self.game.world.centerX, self.game.world.centerY - 150, this.game.global.elapsedTime + ' seconde' + ((this.game.global.elapsedTime>1)?'s':''), style);
+    var style = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+    var text = self.game.add.text(self.game.world.centerX, this.computePos(2), this.game.global.elapsedTime + ' seconde' + ((this.game.global.elapsedTime>1)?'s':''), style);
     text.anchor.set(0.5);
+
+    // ajout des vies restantes
+    for (var i=0; i<this.game.global.life; i++) {
+        var sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartFull');
+        sprite.scale.setTo(0.5);
+        sprite.anchor.setTo(0.5);
+    }
+    for (;i<this.game.global.maxlife;i++) {
+        sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartEmpty');
+        sprite.scale.setTo(0.5);
+        sprite.anchor.setTo(0.5);
+    }
 
     // Ajout du score
     this.score = this.createFont('SCORE '+ this.game.global.score);
     img = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 200, this.score);
     img.anchor.set(0.5);
-    console.log(this.game.global.collected);
 
-    var sprite = self.game.add.sprite(self.game.world.centerX, self.game.world.centerY, this.game.global.playerSprite, 'idle/01');
+    sprite = self.game.add.sprite(self.game.world.centerX, self.game.world.centerY, this.game.global.playerSprite, 'idle/01');
     sprite.anchor.set(0.5);
     sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
     sprite.animations.play('dead');
     this.game.camera.follow(sprite);
-
-
-      // press any key
-    this.game.input.keyboard.onDownCallback = function(e) {
-      self.onInputDown(self);
-    }
 
     //prevent accidental click-thru by not allowing state transition for a short time
     this.canContinueToNextState = false;
     this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){ this.canContinueToNextState = true; }, this);
 
     this.game.add.audio('failedSound').play('', 0, 0.5);
-    this.saveVarsToLocalStorage();
-    this.resetGlobalVariables();
-  }
 
-  saveVarsToLocalStorage(){
-    var max = localStorage["maxScore"] || 0; //default value of 0 is it does not exist
-    if (this.game.global.score > max){ localStorage["maxScore"] = this.game.global.score; }
-  }
-
-  resetGlobalVariables(){
-    this.game.global.score = 0;
+    // press any key
+    this.game.input.keyboard.onDownCallback = function(e) {
+        self.onInputDown(self);
+    }
   }
 
   update() {}
@@ -68,10 +67,18 @@ class GameOver extends Phaser.State {
 
   onInputDown () {
     if(this.canContinueToNextState){
-      //this.game.state.start('menu', true, false);
+      this.canContinueToNextState = false;
+      if (this.game.global.life > 0) {
+          this.game.state.start('game', true, false);
+      } else {
+          this.game.state.start('menu', true, false);
+      }
     }
   }
 
+  computePos(index) {
+      return this.game.world.centerY - 200 + ((index - 1) * 48);
+  }
 }
 
 export default GameOver;

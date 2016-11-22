@@ -14,43 +14,56 @@ class Victory extends Phaser.State {
 
         // Ajout du score
         if (this.game.global.level == this.game.global.levelmax) {
-            this.gameover = this.createFont('GAME FINISHED');
+            this.vitoryText = this.createFont('GAME FINISHED');
         } else {
-            this.gameover = this.createFont('VICTORY');
+            this.vitoryText = this.createFont('VICTORY');
         }
 
-        var img = this.game.add.image(this.game.world.centerX,this.game.world.centerY - 250, this.gameover);
+        var img = this.game.add.image(this.game.world.centerX, this.computePos(1), this.vitoryText);
         img.anchor.set(0.5);
 
         // Ajout temps écoulé
         var style = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-        var text = self.game.add.text(self.game.world.centerX, self.game.world.centerY - 200, this.game.global.elapsedTime + ' seconde' + ((this.game.global.elapsedTime>1)?'s':''), style);
+        var text = self.game.add.text(self.game.world.centerX, this.computePos(2), this.game.global.elapsedTime + ' seconde' + ((this.game.global.elapsedTime>1)?'s':''), style);
         text.anchor.set(0.5);
 
-        // Ajout résumé des bonus
-        console.log(this.game.global.collected);
-        var sprite = this.game.add.sprite(this.game.world.centerX - 32, this.game.world.centerY - 150, 'coin');
-        sprite.scale.setTo(0.7);
-        sprite.anchor.setTo(0.5);
-        this.game.add.text(this.game.world.centerX + 32, this.game.world.centerY - 150, this.game.global.collected.coin.count, style).anchor.set(0.5);
+        // ajout des vies restantes
+        for (var i=0; i<this.game.global.life; i++) {
+            var sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartFull');
+            sprite.scale.setTo(0.5);
+            sprite.anchor.setTo(0.5);
+        }
+        for (;i<this.game.global.maxlife;i++) {
+            sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartEmpty');
+            sprite.scale.setTo(0.5);
+            sprite.anchor.setTo(0.5);
+        }
 
-        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.game.world.centerY - 100, 'gem');
+        // Ajout résumé des bonus
+        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.computePos(4), 'coin');
         sprite.scale.setTo(0.7);
         sprite.anchor.setTo(0.5);
-        this.game.add.text(this.game.world.centerX + 32, this.game.world.centerY - 100, this.game.global.collected.gem.count, style).anchor.set(0.5);
+        this.game.add.text(this.game.world.centerX + 32, this.computePos(4), this.game.global.collected.coin.count, style).anchor.set(0.5);
+
+        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.computePos(5), 'gem');
+        sprite.scale.setTo(0.7);
+        sprite.anchor.setTo(0.5);
+        this.game.add.text(this.game.world.centerX + 32, this.computePos(5), this.game.global.collected.gem.count, style).anchor.set(0.5);
+
+        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.computePos(6), 'spider', 0);
+        sprite.scale.setTo(0.7);
+        sprite.anchor.setTo(0.5);
+        this.game.add.text(this.game.world.centerX + 32, this.computePos(6), this.game.global.collected.enemy.count, style).anchor.set(0.5);
 
         // Ajout du bonus de temps
         this.game.global.score += Math.floor(1500 / this.game.global.elapsedTime);
+        // Ajout du bonus de vie
+        this.game.global.score += 50 * this.game.global.life;
 
         // Ajout du score
         this.score = this.createFont('SCORE '+ this.game.global.score);
         img = this.game.add.image(this.game.world.centerX,this.game.world.centerY+200, this.score);
         img.anchor.set(0.5);
-
-        // press any key
-        this.game.input.keyboard.onDownCallback = function(e) {
-            self.onInputDown(self);
-        }
 
         this.game.add.audio('winnerSound').play();
 
@@ -65,7 +78,11 @@ class Victory extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){ this.canContinueToNextState = true; }, this);
 
         this.saveVarsToLocalStorage();
-        this.resetGlobalVariables();
+
+        // press any key
+        this.game.input.keyboard.onDownCallback = function(e) {
+            self.onInputDown(self);
+        }
     }
 
     saveVarsToLocalStorage(){
@@ -73,9 +90,6 @@ class Victory extends Phaser.State {
         if (this.game.global.score > max){ localStorage["maxScore"] = this.game.global.score; }
     }
 
-    resetGlobalVariables(){
-        //this.game.global.score = 0;
-    }
     update() {}
 
     createFont(text) {
@@ -86,11 +100,18 @@ class Victory extends Phaser.State {
 
     onInputDown () {
         if(this.canContinueToNextState){
+            this.canContinueToNextState = false;
             if (this.game.global.level < this.game.global.levelmax) {
                 this.game.global.level++;
-                this.game.state.start('game');
+                this.game.state.start('game', true, false);
+            } else {
+                this.game.state.start('menu', true, false);
             }
         }
+    }
+
+    computePos(index) {
+        return this.game.world.centerY - 350 + ((index - 1) * 48);
     }
 
 }

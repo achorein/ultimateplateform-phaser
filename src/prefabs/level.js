@@ -71,8 +71,8 @@ class Level extends Phaser.Tilemap {
     // ENEMY
     this.enemiesGroup = this.game.add.group();
     this.enemiesGroup.enableBody = true;
-    if (this.getLayer('enemies') >= 0) { // si il y a un layer enemies
-        var enemiesLayer = this.layers[this.getLayer('enemies')];
+    var enemiesLayer = this.layers[this.getLayer('enemies')];
+    if (enemiesLayer) { // si il y a un layer enemies
         enemiesLayer.data.forEach(function (row) {
             row.forEach(function (data) {
                 if (data.index > 0) {
