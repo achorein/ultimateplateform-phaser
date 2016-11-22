@@ -33,7 +33,7 @@ class Level extends Phaser.Tilemap {
       sprite.body.setSize(object.width, object.height);
       self.stairGroup.add(sprite);
     });
-    // gestion des collisions sur les obejetcs plus petit qu'un sprite
+    // gestion des collisions sur les objets plus petit qu'un sprite
     this.collisionGroup = this.game.add.group();
     this.collisionGroup.enableBody = true;
     this.objects.collision.forEach(function(object){
@@ -49,7 +49,7 @@ class Level extends Phaser.Tilemap {
     this.jumperSprites = [573, 574];
     this.setTileIndexCallback(this.jumperSprites[0], this.jumperCallback, this, this.backLayer);
     // Gestion des pics et de l'eau
-    this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176,177], state.killPlayerCallback, this, this.backLayer);
+    this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176,177], state.killPlayerCallback, state, this.backLayer);
     // Gestion des echelles
     this.setTileIndexCallback([79, 80, 93, 94, 95, 540], this.echelleCallback, this, this.backLayer);
 
@@ -67,6 +67,39 @@ class Level extends Phaser.Tilemap {
           }
       });
     });
+
+    // ENEMY
+    this.enemiesGroup = this.game.add.group();
+    this.enemiesGroup.enableBody = true;
+    if (this.getLayer('enemies') >= 0) { // si il y a un layer enemies
+        var enemiesLayer = this.layers[this.getLayer('enemies')];
+        enemiesLayer.data.forEach(function (row) {
+            row.forEach(function (data) {
+                if (data.index > 0) {
+                    var offset = 16;
+                    var enemy = self.enemiesGroup.create(data.x * data.width + offset, data.y * data.height + offset, 'spider', 1);
+                    enemy.animations.add('walk', [1,2], 2, true);
+                    enemy.animations.add('dead', [0], 2, false);
+                    enemy.animations.play('walk');
+                    enemy.anchor.setTo(.5,0);
+                    enemy.body.velocity.x = -75;
+                    enemy.body.collideWorldBounds = true;
+                }
+            });
+        });
+    }
+    // gestion des collisions sur les enemies (limitation des mouvements)
+    this.enemiesCollisionGroup = this.game.add.group();
+    this.enemiesCollisionGroup.enableBody = true;
+    if (this.objects.enemiesCollision) {
+        this.objects.enemiesCollision.forEach(function (object) {
+            var sprite = self.game.add.sprite(object.x, object.y);
+            self.game.physics.arcade.enableBody(sprite);
+            sprite.body.moves = false;
+            sprite.body.setSize(object.width, object.height);
+            self.enemiesCollisionGroup.add(sprite);
+        });
+    }
 
     // Ajout du joueur
     var gameLayer = this.layers[this.getLayer('game')];
@@ -86,6 +119,12 @@ class Level extends Phaser.Tilemap {
   update(state) {
       // gestion des collisions (type terrain)
       this.game.physics.arcade.collide(state.player, this.blocsLayer);
+      this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer);
+      this.game.physics.arcade.collide(this.enemiesGroup, this.enemiesCollisionGroup, function(enemy, bloc) {
+          enemy.scale.x *= -1; // symetrie verticale
+          enemy.body.velocity.x *= -1.25;
+
+      });
       // hack pour gérer les pentes
       this.game.physics.arcade.collide(state.player, this.stairGroup, function(player, stair) {
           if (player.body.touching.left || player.body.touching.right) {
@@ -96,7 +135,13 @@ class Level extends Phaser.Tilemap {
       // type decors
       this.game.physics.arcade.collide(state.player, this.backLayer); // nécessaire pour les callback sur tile
       // type bonus
-      this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, this); // quand le joueur touche une étoile
+      this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, state); // quand le joueur touche une étoile
+      // type enemie
+      this.game.physics.arcade.overlap(state.player, this.enemiesGroup, function(player, enemy) {
+          if (enemy.alive) {
+              state.killPlayerCallback(player, enemy);
+          }
+      }, null, state); // quand le joueur touche un enemie
       return echelle>0;
   }
 

@@ -24,10 +24,32 @@ class Player extends Phaser.Sprite {
     this.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
     this.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, false, false);
     this.animations.add('run', Phaser.Animation.generateFrameNames('run/', 1, 10, '', 2), 10, true, false);
+    this.animations.add('attack', Phaser.Animation.generateFrameNames('attack/', 1, 3, '', 2), 10, false, false);
+
+    //  Creates 30 bullets, using the 'bullet' graphic
+    this.weapon = game.add.weapon(3, 'bullet');
+    //  The bullet will be automatically killed when it leaves the world bounds
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
+    this.weapon.bulletLifespan = 2000; // en milisecondes
+    //  The speed at which the bullet is fired
+    this.weapon.bulletSpeed = 600;
+    //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
+    this.weapon.fireRate = 200;
+    //  Tell the Weapon to track the 'player' Sprite
+    //  With no offsets from the position
+    //  But the 'true' argument tells the weapon to track sprite rotation
+    this.weapon.trackSprite(this, 0, 0);
+    this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
 
     this.jumpTimer = 0; // temps entre deux sauts
     this.facing = 'right';
-    this.action = 'idle';
+    this.status = 'idle';
+  }
+
+  action(onEchelle) {
+      this.animations.play('attack');
+      //this.game.add.audio('attackSound').play();
+      this.weapon.fire();
   }
 
   jump(onEchelle) {
@@ -35,7 +57,7 @@ class Player extends Phaser.Sprite {
           this.animations.play('jump');
           this.body.velocity.y = -250;
           this.jumpTimer = this.game.time.now + 1500;
-          this.action = 'jump';
+          this.status = 'jump';
       }
   }
 
@@ -48,6 +70,7 @@ class Player extends Phaser.Sprite {
 
       if (this.facing != 'left') {
           this.scale.x *= -1; // symetrie verticale
+          this.weapon.fireAngle = Phaser.ANGLE_LEFT;
       }
 
       if (this.body.onFloor()) {
@@ -55,7 +78,7 @@ class Player extends Phaser.Sprite {
       }
 
       this.facing = 'left';
-      this.action = 'move';
+      this.status = 'move';
   }
 
   right(onEchelle) {
@@ -66,12 +89,13 @@ class Player extends Phaser.Sprite {
       }
       if (this.facing != 'right') {
           this.scale.x *= -1; // symetrie verticale
+          this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
       }
       if (this.body.onFloor()) {
           this.animations.play('run');
       }
       this.facing = 'right';
-      this.action = 'move';
+      this.status = 'move';
   }
 
   up(onEchelle, map) {
@@ -91,15 +115,15 @@ class Player extends Phaser.Sprite {
   }
 
   idle(onEchelle) {
-      if (this.action != 'idle' && (this.body.onFloor() || onEchelle) )  {
+      if (this.status != 'idle' && (this.body.onFloor() || onEchelle) )  {
           this.animations.stop();
           this.animations.play('idle');
-          this.action = 'idle';
+          this.status = 'idle';
       }
   }
 
   die() {
-      this.action = 'dead';
+      this.status = 'dead';
       this.animations.play('dead');
   }
 

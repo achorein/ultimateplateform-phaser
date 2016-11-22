@@ -24,12 +24,9 @@ class Game extends Phaser.State {
     this.game.time.desiredFps = 30;
 
     this.game.global.collected = {
-          coin: {
-              count: 0
-          },
-          gem: {
-              count: 0
-          }
+          coin: {count: 0},
+          gem: {count: 0},
+          enemy: {count: 0}
       };
 
     // Ajout du score
@@ -50,6 +47,7 @@ class Game extends Phaser.State {
     // Inputs
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
     this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
   }
 
@@ -64,6 +62,9 @@ class Game extends Phaser.State {
 
   update() {
     var onEchelle = this.map.update(this); // gestion des collisions
+    this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer);
+    this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup);
+    this.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, this.killEnemy, null, this);
 
     // Mise à jour du temps
     this.timeText.text =  'TIME ' + this.elapseSeconds();
@@ -75,23 +76,26 @@ class Game extends Phaser.State {
     } else if (this.cursors.right.isDown) { // fleche de droite
       this.player.right(onEchelle);
     } else if (this.cursors.up.isDown) { // fleche du haut
+        this.player.up(onEchelle, this.map);
+    } else if (this.cursors.down.isDown) { // fleche du bas
+        this.player.down(onEchelle);
+    } else if (this.escapeButton.isDown) {
+        this.endGame(this, 'menu');
+    } else { // si aucune touche appuyée
+      this.player.idle(onEchelle);
+    }
+    if (this.jumpButton.isDown) {
+      this.player.jump(onEchelle);
+    }
+    if (this.actionButton.isDown) {
         var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
         if (tile && tile.index == 57) { // sur une porte
             this.endGame(this, 'victory');
         } else {
-            this.player.up(onEchelle, this.map);
+            this.player.action(onEchelle);
         }
-    } else if (this.cursors.down.isDown) { // fleche du bas
-        this.player.down(onEchelle);
-    } else if (this.escapeButton.isDown) {
-      this.endGame(this, 'menu');
-    } else { // si aucune touche appuyée
-      this.player.idle(onEchelle);
     }
 
-    if (this.jumpButton.isDown) {
-      this.player.jump(onEchelle);
-    }
   }
 
   elapseSeconds() {
@@ -122,7 +126,7 @@ class Game extends Phaser.State {
    */
 
   killPlayerCallback(sprite, tile) {
-    this.levelState.endGame(this.levelState, 'gameover');
+    this.endGame(this, 'gameover');
   }
 
   collectBonus(player, bonus) {
@@ -130,14 +134,31 @@ class Game extends Phaser.State {
     bonus.kill(); // Removes the bonus from the screen
 
     //  Add and update the score
-    this.game.global.score += bonus.points;
-    this.game.global.collected[bonus.key].count++;
-    this.game.global.collected[bonus.key].points = bonus.points;
-    this.levelState.scoreText.text = 'SCORE ' + this.game.global.score;
+    this.updateScore(bonus.points, bonus.key);
 
-    if (this.bonusGroup.countLiving() <= 0) {
-      this.levelState.endGame(this.levelState, 'victory');
+    if (this.map.bonusGroup.countLiving() <= 0) {
+      this.endGame(this, 'victory');
     }
+  }
+
+  updateScore(points, key) {
+      this.game.global.score += points;
+      this.game.global.collected[key].count++;
+      this.game.global.collected[key].points = points;
+      this.scoreText.text = 'SCORE ' + this.game.global.score;
+  }
+
+  killEnemy(bullet, enemy) {
+      bullet.kill();
+      enemy.body.velocity.x = 0;
+      enemy.animations.play('dead');
+      enemy.alive = false;
+      this.game.add.audio('hitSound').play();
+      this.updateScore(25, 'enemy');
+      this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+      this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
+          enemy.kill();
+      });
   }
 }
 

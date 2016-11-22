@@ -32,6 +32,9 @@ class Preloader extends Phaser.State {
     this.game.load.atlasJSONHash('knightPlayer', 'assets/knight.png', 'assets/knight.json');
     this.game.load.atlasJSONHash('robotPlayer', 'assets/robot.png', 'assets/robot.json');
     this.game.load.atlasJSONHash('ninjaPlayer', 'assets/ninja.png', 'assets/ninja.json');
+    this.game.load.spritesheet('spider', 'assets/enemy-spider.png', 77, 53);
+
+    this.game.load.image('bullet', 'assets/bullet.png');
 
     this.game.load.image('coin', 'assets/hud_coins.png');
     this.game.load.image('heart', 'assets/hud_heartFull.png');
@@ -47,6 +50,8 @@ class Preloader extends Phaser.State {
     this.game.load.audio('failedSound','assets/sounds/lose.mp3');
     this.game.load.audio('deadSound','assets/sounds/dead.mp3');
     this.game.load.audio('collectSound','assets/sounds/collect.mp3');
+    this.game.load.audio('attackSound','assets/sounds/attack.mp3');
+    this.game.load.audio('hitSound','assets/sounds/hit.mp3');
   }
 
   onLoadComplete() {
