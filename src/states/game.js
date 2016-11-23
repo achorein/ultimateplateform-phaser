@@ -110,7 +110,7 @@ class Game extends Phaser.State {
           sprite.fixedToCamera = true;
       }
       for (;i<this.game.global.maxlife;i++) {
-          sprite = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty').scale.setTo(0.5);
+          sprite = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
           sprite.scale.setTo(0.5);
           sprite.fixedToCamera = true;
       }
