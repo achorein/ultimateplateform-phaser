@@ -29,31 +29,29 @@ class Victory extends Phaser.State {
 
         // ajout des vies restantes
         for (var i=0; i<this.game.global.life; i++) {
-            var sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartFull');
+            var sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30 * i, this.computePos(3), 'heartFull');
             sprite.scale.setTo(0.5);
             sprite.anchor.setTo(0.5);
         }
         for (;i<this.game.global.maxlife;i++) {
-            sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartEmpty');
+            sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30 * i, this.computePos(3), 'heartEmpty');
             sprite.scale.setTo(0.5);
             sprite.anchor.setTo(0.5);
         }
 
         // Ajout résumé des bonus
-        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.computePos(4), 'coin');
-        sprite.scale.setTo(0.7);
-        sprite.anchor.setTo(0.5);
-        this.game.add.text(this.game.world.centerX + 32, this.computePos(4), this.game.global.collected.coin.count, style).anchor.set(0.5);
-
-        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.computePos(5), 'gem');
-        sprite.scale.setTo(0.7);
-        sprite.anchor.setTo(0.5);
-        this.game.add.text(this.game.world.centerX + 32, this.computePos(5), this.game.global.collected.gem.count, style).anchor.set(0.5);
-
-        sprite = this.game.add.sprite(this.game.world.centerX - 32, this.computePos(6), 'spider', 0);
-        sprite.scale.setTo(0.7);
-        sprite.anchor.setTo(0.5);
-        this.game.add.text(this.game.world.centerX + 32, this.computePos(6), this.game.global.collected.enemy.count, style).anchor.set(0.5);
+        var curPos = 4; i=1;
+        console.log(this.game.global.collected);
+        this.game.global.collected.forEach(function(bonus) {
+            sprite = self.game.add.sprite(self.computePos(curPos, i) - 24, self.computePos(curPos), bonus.sprite, bonus.frame);
+            console.log(curPos + ' -> ' + bonus.frame + ' x:' +sprite.x + ',y:'+sprite.y);
+            sprite.scale.setTo(0.7);
+            sprite.anchor.setTo(0.5);
+            self.game.add.text(self.computePos(curPos, i++) + 24, self.computePos(curPos), bonus.count, style).anchor.set(0.5);
+            if (i%2 != 0) {
+                curPos++;
+            }
+        });
 
         // Ajout du bonus de temps
         this.game.global.score += Math.floor(1500 / this.game.global.elapsedTime);
@@ -110,9 +108,19 @@ class Victory extends Phaser.State {
         }
     }
 
-    computePos(index) {
-        return this.game.world.centerY - 350 + ((index - 1) * 48);
+    computePos(posY, posX) {
+        if (posX) {
+            if (posX%2 == 0) {
+                return this.game.world.centerX - 60;
+            } else {
+                return this.game.world.centerX + 60;
+            }
+        } else {
+            return this.game.world.centerY - 350 + ((posY - 1) * 48);
+        }
     }
+
+
 
 }
 

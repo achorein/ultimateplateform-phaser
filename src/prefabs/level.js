@@ -20,7 +20,7 @@ class Level extends Phaser.Tilemap {
 
     // gestion des collisions sur tile
     this.setLayer(this.blocsLayer);
-    this.setCollisionBetween(1, 256);
+    this.setCollisionBetween(1, 680);
 
     // Ajoute des zonnes de collision spécifiques à la main (car fonction this.createFromObjects impossible sans gid non généré par Tiled)
     // gestion des pentes
@@ -60,10 +60,12 @@ class Level extends Phaser.Tilemap {
     collectableLayer.data.forEach(function(row) {
       row.forEach(function(data){
           if (data.index > 0) {
-              var offset = 16;
-              var star = self.bonusGroup.create(data.x*data.width+offset, data.y*data.height+offset, (data.properties.points=='100')?'gem':'coin');
-              star.points = parseInt(data.properties.points);
-              star.body.moves = false; // ne subit pas la gravité
+              var bonus = self.game.add.sprite(data.x*data.width, data.y*data.height, "world", data.index-1);
+              self.game.physics.arcade.enableBody(bonus);
+              bonus.points = parseInt(data.properties.points);
+              bonus.body.moves = false; // ne subit pas la gravité
+              self.bonusGroup.add(bonus);
+              self.getCollectedObject('world', data.index-1, bonus.points); // le créé si existe pas
           }
       });
     });
@@ -84,6 +86,7 @@ class Level extends Phaser.Tilemap {
                     enemy.anchor.setTo(.5,0);
                     enemy.body.velocity.x = -75;
                     enemy.body.collideWorldBounds = true;
+                    self.getCollectedObject('spider', 0, 25); // le créé si existe pas
                 }
             });
         });
@@ -98,6 +101,19 @@ class Level extends Phaser.Tilemap {
             sprite.body.moves = false;
             sprite.body.setSize(object.width, object.height);
             self.enemiesCollisionGroup.add(sprite);
+        });
+    }
+
+    // gestion des collisions sur les objets plus petit qu'un sprite
+    this.deathGroup = this.game.add.group();
+    this.deathGroup.enableBody = true
+    if (this.objects.deathCollision) {
+        this.objects.deathCollision.forEach(function (object) {
+            var sprite = self.game.add.sprite(object.x, object.y);
+            self.game.physics.arcade.enableBody(sprite);
+            sprite.body.moves = false;
+            sprite.body.setSize(object.width, object.height);
+            self.deathGroup.add(sprite);
         });
     }
 
@@ -119,12 +135,6 @@ class Level extends Phaser.Tilemap {
   update(state) {
       // gestion des collisions (type terrain)
       this.game.physics.arcade.collide(state.player, this.blocsLayer);
-      this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer);
-      this.game.physics.arcade.collide(this.enemiesGroup, this.enemiesCollisionGroup, function(enemy, bloc) {
-          enemy.scale.x *= -1; // symetrie verticale
-          enemy.body.velocity.x *= -1.25;
-
-      });
       // hack pour gérer les pentes
       this.game.physics.arcade.collide(state.player, this.stairGroup, function(player, stair) {
           if (player.body.touching.left || player.body.touching.right) {
@@ -132,16 +142,29 @@ class Level extends Phaser.Tilemap {
               player.body.velocity.x += 10;
           }
       });
-      // type decors
-      this.game.physics.arcade.collide(state.player, this.backLayer); // nécessaire pour les callback sur tile
-      // type bonus
-      this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, state); // quand le joueur touche une étoile
-      // type enemie
+
+      // gestion des collisions sur objets donnant la mort
+      this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, state);
+
+      // gestion des collisions des ennemies (terrain)
+      this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer);
+      // gestion des collisions des ennemies (barriere virtuelle)
+      this.game.physics.arcade.collide(this.enemiesGroup, this.enemiesCollisionGroup, function(enemy, bloc) {
+          enemy.scale.x *= -1; // symetrie verticale
+          enemy.body.velocity.x *= -1.25;
+      });
+      // quand le joueur touche un enemie
       this.game.physics.arcade.overlap(state.player, this.enemiesGroup, function(player, enemy) {
           if (enemy.alive) {
               state.killPlayerCallback(player, enemy);
           }
-      }, null, state); // quand le joueur touche un enemie
+      }, null, state);
+
+      // type decors (nécessaire pour les callback sur tile)
+      this.game.physics.arcade.collide(state.player, this.backLayer);
+      // type bonus, quand le joueur touche une étoile
+      this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, state);
+
       return echelle>0;
   }
 
@@ -168,6 +191,29 @@ class Level extends Phaser.Tilemap {
               this.game.physics.arcade.gravity.y = this.game.global.gravity;
           }
       }, this);
+  }
+
+  getCollectedObject(sprite, frame, points) {
+      for (var i=0; i<this.game.global.collected.length; i++){
+          if (this.game.global.collected[i].sprite == sprite && this.game.global.collected[i].frame == frame) {
+              if (points) {
+                  this.game.global.collected[i].count = 0;
+              }
+              return this.game.global.collected[i];
+          }
+      }
+      if (points) {
+          // création d'un nouveau type d'objet à collecter
+          var object = {
+              sprite: 'world',
+              frame: frame,
+              points: points,
+              count: 0
+          };
+          this.game.global.collected.push(object);
+          return object;
+      }
+      return null;
   }
 }
 

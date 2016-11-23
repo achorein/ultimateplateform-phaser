@@ -8,6 +8,7 @@ class Game extends Phaser.State {
   
   create() {
     var self = this; // pour utilisation simple dans les callback
+    this.game.global.collected = [];
 
     // Sprites
     this.background = this.game.add.sprite(0,0,'background-level-'+this.game.global.level);
@@ -22,12 +23,6 @@ class Game extends Phaser.State {
     this.game.physics.startSystem(Phaser.Physics.ARCADE); // gestion simple des collision : carré et cercle
     this.game.physics.arcade.gravity.y = this.game.global.gravity;
     this.game.time.desiredFps = 30;
-
-    this.game.global.collected = {
-          coin: {count: 0},
-          gem: {count: 0},
-          enemy: {count: 0}
-      };
 
     // Ajout du score
     this.scoreText = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
@@ -52,6 +47,7 @@ class Game extends Phaser.State {
     this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
     this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
   }
 
   render() {
@@ -99,6 +95,10 @@ class Game extends Phaser.State {
         }
     }
 
+    // permet de rapidement passer au niveau suivant
+    if (this.cheatCodeButton.isDown) {
+        this.endGame(this, 'victory');
+    }
   }
 
   updateLives() {
@@ -147,17 +147,17 @@ class Game extends Phaser.State {
     bonus.kill(); // Removes the bonus from the screen
 
     //  Add and update the score
-    this.updateScore(bonus.points, bonus.key);
+    this.updateScore(bonus.key, bonus.frame);
 
     if (this.map.bonusGroup.countLiving() <= 0) {
       this.endGame(this, 'victory');
     }
   }
 
-  updateScore(points, key) {
-      this.game.global.score += points;
-      this.game.global.collected[key].count++;
-      this.game.global.collected[key].points = points;
+  updateScore(sprite, index) {
+      var collected = this.map.getCollectedObject(sprite, index);
+      this.game.global.score += collected.points;
+      collected.count++;
       this.scoreText.text = 'SCORE ' + this.game.global.score;
   }
 
@@ -167,7 +167,7 @@ class Game extends Phaser.State {
       enemy.animations.play('dead');
       enemy.alive = false;
       this.game.add.audio('hitSound').play();
-      this.updateScore(25, 'enemy');
+      this.updateScore(enemy.key, enemy.frame);
       this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
       this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
           enemy.kill();

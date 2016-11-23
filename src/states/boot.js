@@ -37,7 +37,7 @@ class Boot extends Phaser.State {
     this.game.global = {
       score: 0,
       elapsedTime: 0,
-      collected: {},
+      collected: [],
       gravity: 500,
       speed: 250,
       jump: 750,
