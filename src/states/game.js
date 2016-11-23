@@ -25,15 +25,16 @@ class Game extends Phaser.State {
     this.game.time.desiredFps = 30;
 
     // Ajout du score
-    this.scoreText = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-    this.scoreText.text =  'SCORE ' + this.game.global.score;
-    this.game.add.image(5,5, this.scoreText);
+    var style = { font: "bold 18px Arial", fill: "#333", boundsAlignH: "center", boundsAlignV: "middle" };
+    this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);
+    //this.scoreText.anchor.set(0.5);
+    this.scoreText.fixedToCamera = true;
 
     // Ajout du temps écoulé
     this.startTime = this.game.time.now;
-    this.timeText = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-    this.timeText.text =  'TIME 0';
-    this.game.add.image(5, 32, this.timeText);
+    this.timeText = this.game.add.text(5, 32, 'TIME 0' + this.game.global.score, style);
+    //this.timeText.anchor.set(0.5);
+    this.timeText.fixedToCamera = true;
 
     // Ajout des vies
     this.updateLives();
@@ -102,11 +103,16 @@ class Game extends Phaser.State {
   }
 
   updateLives() {
+      var sprite;
       for (var i=0; i<this.game.global.life; i++) {
-          this.game.add.sprite(5 + 30*i, 59, 'heartFull').scale.setTo(0.5);
+          sprite = this.game.add.sprite(5 + 30*i, 59, 'heartFull');
+          sprite.scale.setTo(0.5);
+          sprite.fixedToCamera = true;
       }
       for (;i<this.game.global.maxlife;i++) {
-          this.game.add.sprite(5 + 30*i, 59, 'heartEmpty').scale.setTo(0.5);
+          sprite = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty').scale.setTo(0.5);
+          sprite.scale.setTo(0.5);
+          sprite.fixedToCamera = true;
       }
   }
 
@@ -162,16 +168,18 @@ class Game extends Phaser.State {
   }
 
   killEnemy(bullet, enemy) {
-      bullet.kill();
-      enemy.body.velocity.x = 0;
-      enemy.animations.play('dead');
-      enemy.alive = false;
-      this.game.add.audio('hitSound').play();
-      this.updateScore(enemy.key, enemy.frame);
-      this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
-      this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
-          enemy.kill();
-      });
+      if (enemy.alive) {
+          bullet.kill();
+          enemy.body.velocity.x = 0;
+          enemy.animations.play('dead');
+          enemy.alive = false;
+          this.game.add.audio('hitSound').play();
+          this.updateScore(enemy.key, enemy.frame);
+          this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+          this.game.time.events.add(Phaser.Timer.SECOND * 2, function () {
+              enemy.kill();
+          });
+      }
   }
 }
 

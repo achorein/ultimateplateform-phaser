@@ -35,6 +35,8 @@ class Level extends Phaser.Tilemap {
 
     // Ajoute des zonnes de collision spécifiques
     this.addCollisionObjects(self);
+    // Ajout des blocs mobiles
+    this.addLevelSpecialBlocs(self);
 
     // Ajou des pièges/lasers
     this.addLevelTraps(self);
@@ -76,6 +78,10 @@ class Level extends Phaser.Tilemap {
           player.body.velocity.x += 10;
       }
     });
+    // blocs mobiles
+    this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.specialBlocsCollisionCallBack);
+    this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.specialBlocsCollisionCallBack);
+    this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.echelleCallback, null, this);
 
     // gestion des collisions sur objets donnant la mort
     this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
@@ -93,7 +99,7 @@ class Level extends Phaser.Tilemap {
     // gestion des collisions des ennemies (terrain)
     this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer, this.enemyCollisionCallBack);
     // gestion des collisions des ennemies (barriere virtuelle)
-    this.game.physics.arcade.collide(this.enemiesGroup, this.enemiesCollisionGroup, this.enemyCollisionCallBack);
+    this.game.physics.arcade.collide(this.enemiesGroup, this.gameCollisionGroup, this.enemyCollisionCallBack);
     // quand le joueur touche un enemie
     this.game.physics.arcade.overlap(state.player, this.enemiesGroup, function(player, enemy) {
       if (enemy.alive) {
@@ -116,7 +122,7 @@ class Level extends Phaser.Tilemap {
     });
   }
 
-  echelleCallback(sprite, tile) {
+  echelleCallback(player) {
       // quand le joueur touche un sprite d'echelle, incrémente un compteur
       echelle++;
       this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
@@ -124,17 +130,25 @@ class Level extends Phaser.Tilemap {
           echelle--;
           if (echelle <= 0) {
               // sortie de l'echelle, restauration de la gravité
-              this.game.physics.arcade.gravity.y = this.game.global.gravity;
+              player.body.gravity.set(0);
           }
       }, this);
   }
 
-  enemyCollisionCallBack(enemy, bloc) {
+    specialBlocsCollisionCallBack(special, bloc) {
+        if (special.body.touching.left || special.body.touching.right) {
+            special.body.velocity.x *= -1;
+        } else if (special.body.touching.up || special.body.touching.down) {
+            special.body.velocity.y *= -1;
+        }
+    }
+
+    enemyCollisionCallBack(enemy, bloc) {
       if (enemy.body.touching.left || enemy.body.touching.right) {
           enemy.scale.x *= -1; // symetrie verticale
-          enemy.body.velocity.x *= -1.25;
+          enemy.body.velocity.x *= -1;
       }
-  }
+    }
 
     /**
      *
@@ -143,7 +157,7 @@ class Level extends Phaser.Tilemap {
      * @param points nombre de points affecté au bonus (si value créé l'objet dans l'inventaire)
      * @returns {*}
      */
-  getCollectedObject(sprite, frame, points) {
+    getCollectedObject(sprite, frame, points) {
       for (var i=0; i<this.game.global.collected.length; i++){
           if (this.game.global.collected[i].sprite == sprite && this.game.global.collected[i].frame == frame) {
               if (points) {
@@ -164,7 +178,7 @@ class Level extends Phaser.Tilemap {
           return object;
       }
       return null;
-  }
+    }
 
     /**
      * à la main (car fonction this.createFromObjects impossible sans gid non généré par Tiled)
@@ -174,24 +188,28 @@ class Level extends Phaser.Tilemap {
         // gestion des pentes
         this.stairGroup = this.game.add.group();
         this.stairGroup.enableBody = true;
-        this.objects.stair.forEach(function (object) {
-            var sprite = self.game.add.sprite(object.x, object.y);
-            self.game.physics.arcade.enableBody(sprite);
-            sprite.body.moves = false;
-            sprite.body.setSize(object.width, object.height);
-            self.stairGroup.add(sprite);
-        });
+        if (this.objects.stairCollision) {
+            this.objects.stairCollision.forEach(function (object) {
+                var sprite = self.game.add.sprite(object.x, object.y);
+                self.game.physics.arcade.enableBody(sprite);
+                sprite.body.moves = false;
+                sprite.body.setSize(object.width, object.height);
+                self.stairGroup.add(sprite);
+            });
+        }
 
         // gestion des collisions sur les objets plus petit qu'un sprite
         this.collisionGroup = this.game.add.group();
         this.collisionGroup.enableBody = true;
-        this.objects.collision.forEach(function (object) {
-            var sprite = self.game.add.sprite(object.x, object.y);
-            self.game.physics.arcade.enableBody(sprite);
-            sprite.body.moves = false;
-            sprite.body.setSize(object.width, object.height);
-            self.collisionGroup.add(sprite);
-        });
+        if (this.objects.playerCollision) {
+            this.objects.playerCollision.forEach(function (object) {
+                var sprite = self.game.add.sprite(object.x, object.y);
+                self.game.physics.arcade.enableBody(sprite);
+                sprite.body.moves = false;
+                sprite.body.setSize(object.width, object.height);
+                self.collisionGroup.add(sprite);
+            });
+        }
 
         // gestion des collisions sur les objets plus petit qu'un sprite
         this.deathGroup = this.game.add.group();
@@ -205,6 +223,47 @@ class Level extends Phaser.Tilemap {
                 self.deathGroup.add(sprite);
             });
         }
+
+        // gestion des collisions sur les enemies (limitation des mouvements)
+        this.gameCollisionGroup = this.game.add.group();
+        this.gameCollisionGroup.enableBody = true;
+        if (this.objects.gameCollision) {
+            this.objects.gameCollision.forEach(function (object) {
+                var sprite = self.game.add.sprite(object.x, object.y);
+                self.game.physics.arcade.enableBody(sprite);
+                sprite.body.moves = false;
+                sprite.body.setSize(object.width, object.height);
+                self.gameCollisionGroup.add(sprite);
+            });
+        }
+    }
+
+    addLevelSpecialBlocs(self) {
+        // gestion des blocs qui bouges
+        this.specialBlocsGroup = this.game.add.group();
+        this.specialBlocsGroup.enableBody = true;
+        var collectableLayer = this.layers[this.getLayer('game')];
+        collectableLayer.data.forEach(function (row) {
+            row.forEach(function (tile) {
+                if (tile.index > 0 && tile.properties.moves) {
+                    var bloc = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
+                    self.game.physics.arcade.enableBody(bloc);
+                    if (tile.properties.x) bloc.body.velocity.x = parseInt(tile.properties.x);
+                    if (tile.properties.y) bloc.body.velocity.y = parseInt(tile.properties.y);
+                    bloc.body.maxVelocity.set(self.game.global.maxVelocity);
+
+                    if (!tile.properties.pushable) {
+                        bloc.body.gravity.set(0, -self.game.global.gravity);
+                        bloc.body.immovable = true;
+                    } else {
+                        bloc.body.bounce.set(0.5);
+                        //bloc.body.friction.set(1000);
+                    }
+                    bloc.body.collideWorldBounds = true;
+                    self.specialBlocsGroup.add(bloc);
+                }
+            });
+        });
     }
 
     /**
@@ -214,36 +273,28 @@ class Level extends Phaser.Tilemap {
     addLevelEnemies(self) {
         this.enemiesGroup = this.game.add.group();
         this.enemiesGroup.enableBody = true;
-        var enemiesLayer = this.layers[this.getLayer('enemies')];
+        var enemiesLayer = this.layers[this.getLayer('game')];
         if (enemiesLayer) { // si il y a un layer enemies
             enemiesLayer.data.forEach(function (row) {
                 row.forEach(function (tile) {
-                    if (tile.index > 0) {
+                    if (tile.index > 0 && tile.properties.enemy) {
+                        var sprite = 'spider';
+                        if (tile.properties.sprite) {
+                            sprite = tile.properties.sprite;
+                        }
                         var offset = 16;
-                        var enemy = self.enemiesGroup.create(tile.x * tile.width + offset, tile.y * tile.height + offset, 'spider', 1);
+                        var enemy = self.enemiesGroup.create(tile.x * tile.width + offset, tile.y * tile.height + offset, sprite, 1);
                         enemy.animations.add('walk', [1, 2], 2, true);
                         enemy.animations.add('dead', [0], 2, false);
                         enemy.animations.play('walk');
                         enemy.anchor.setTo(.5, 0);
                         enemy.body.velocity.x = -75;
                         enemy.body.maxVelocity.set(self.game.global.maxVelocity);
+                        enemy.body.gravity.set(0, -self.game.global.gravity);
                         enemy.body.collideWorldBounds = true;
-                        self.getCollectedObject('spider', 0, 25); // le créé si existe pas
+                        self.getCollectedObject(sprite, 0, 25); // le créé si existe pas
                     }
                 });
-            });
-        }
-
-        // gestion des collisions sur les enemies (limitation des mouvements)
-        this.enemiesCollisionGroup = this.game.add.group();
-        this.enemiesCollisionGroup.enableBody = true;
-        if (this.objects.enemiesCollision) {
-            this.objects.enemiesCollision.forEach(function (object) {
-                var sprite = self.game.add.sprite(object.x, object.y);
-                self.game.physics.arcade.enableBody(sprite);
-                sprite.body.moves = false;
-                sprite.body.setSize(object.width, object.height);
-                self.enemiesCollisionGroup.add(sprite);
             });
         }
     }
@@ -258,7 +309,11 @@ class Level extends Phaser.Tilemap {
         trapLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
                 if (tile.properties.bulletSpeed) {
-                    var trap = self.game.add.weapon(30, 'bullet-trap');
+                    var sprite = 'bullet-fire';
+                    if (tile.properties.sprite){
+                        sprite = tile.properties.sprite;
+                    }
+                    var trap = self.game.add.weapon(30, sprite);
                     var offset = 32;
                     trap.x = tile.x * tile.width + offset;
                     trap.y = tile.y * tile.height + offset;
@@ -266,13 +321,28 @@ class Level extends Phaser.Tilemap {
                     trap.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
                     trap.bulletSpeed = tile.properties.bulletSpeed;
                     trap.fireRate = tile.properties.fireRate;
-                    trap.bulletGravity.set(0, -self.game.global.gravity);
+                    var gravity = -self.game.global.gravity;
+                    if (tile.properties.gravity) {
+                        gravity += tile.properties.gravity;
+                    }
+                    trap.bulletGravity.set(0, gravity);
                     if (tile.properties.fireAngle == 'left') {
                         trap.fireAngle = Phaser.ANGLE_LEFT;
                         trap.x -= 32;
+                    } else if (tile.properties.fireAngle == 'up') {
+                        trap.fireAngle = Phaser.ANGLE_UP;
+                        trap.y -= 32;
+                    } else if (tile.properties.fireAngle == 'down') {
+                        trap.fireAngle = Phaser.ANGLE_DOWN;
+                        trap.y += 32;
                     } else {
                         trap.fireAngle = Phaser.ANGLE_RIGHT;
                         trap.x += 32;
+                    }
+                    if (tile.properties.angularVelocity) {
+                        trap.onFire.add(function (bullet, weapon) {
+                            bullet.body.angularVelocity = tile.properties.angularVelocity;
+                        });
                     }
                     self.traps.push(trap);
                 }
@@ -287,10 +357,10 @@ class Level extends Phaser.Tilemap {
     addLevelBonus(self) {
         this.bonusGroup = this.game.add.group();
         this.bonusGroup.enableBody = true;
-        var collectableLayer = this.layers[this.getLayer('collectable')];
+        var collectableLayer = this.layers[this.getLayer('game')];
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
-                if (tile.index > 0) {
+                if (tile.index > 0 && tile.properties.points) {
                     var bonus = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
                     self.game.physics.arcade.enableBody(bonus);
                     bonus.points = parseInt(tile.properties.points);

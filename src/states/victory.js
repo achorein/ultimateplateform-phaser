@@ -41,10 +41,8 @@ class Victory extends Phaser.State {
 
         // Ajout résumé des bonus
         var curPos = 4; i=1;
-        console.log(this.game.global.collected);
         this.game.global.collected.forEach(function(bonus) {
             sprite = self.game.add.sprite(self.computePos(curPos, i) - 24, self.computePos(curPos), bonus.sprite, bonus.frame);
-            console.log(curPos + ' -> ' + bonus.frame + ' x:' +sprite.x + ',y:'+sprite.y);
             sprite.scale.setTo(0.7);
             sprite.anchor.setTo(0.5);
             self.game.add.text(self.computePos(curPos, i++) + 24, self.computePos(curPos), bonus.count, style).anchor.set(0.5);

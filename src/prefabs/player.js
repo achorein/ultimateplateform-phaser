@@ -9,7 +9,7 @@ class Player extends Phaser.Sprite {
         this.game.physics.arcade.enableBody(this);
         this.game.camera.follow(this);
 
-        this.body.bounce.y = 0.1;
+        //this.body.bounce.y = 0.1;
         this.body.maxVelocity.set(this.game.global.maxVelocity);
         this.body.collideWorldBounds = true;
         if (this.game.global.playerSprite == 'ninjaPlayer' || this.game.global.playerSprite == 'knightPlayer') {
@@ -29,7 +29,7 @@ class Player extends Phaser.Sprite {
 
         this.addWeapon();
 
-        this.jumpTimer = 0; // temps entre deux sauts
+        this.jumpTimer = 0; // temps entre deux auts
         this.facing = 'right';
         this.status = 'idle';
     }
@@ -41,10 +41,10 @@ class Player extends Phaser.Sprite {
     }
 
     jump(onEchelle) {
-      if (this.body.onFloor() || onEchelle) {
+      if (this.jumpTimer <  this.game.time.now && (this.body.onFloor() || onEchelle)) {
           this.animations.play('jump');
           this.body.velocity.y = -250;
-          this.jumpTimer = this.game.time.now + 1500;
+          this.jumpTimer = this.game.time.now + 1000;
           this.status = 'jump';
       }
     }
@@ -86,10 +86,10 @@ class Player extends Phaser.Sprite {
       this.status = 'move';
     }
 
-    up(onEchelle, map) {
+    up(onEchelle) {
       if (onEchelle) { // si on est sur une echelle
           this.body.velocity.y = 0;
-          this.game.physics.arcade.gravity.y = 0.1;
+          this.body.gravity.set(0, -this.game.global.gravity);
           this.y -= 5;
       }
     }
@@ -97,7 +97,7 @@ class Player extends Phaser.Sprite {
     down(onEchelle) {
       if (onEchelle) { // si on est sur une echelle
           this.body.velocity.y = 0;
-          this.game.physics.arcade.gravity.y = 0.1;
+          this.body.gravity.set(0, -this.game.global.gravity);
           this.y += 5;
       }
     }
@@ -117,7 +117,7 @@ class Player extends Phaser.Sprite {
 
     addWeapon() {
         //  Creates 3 bullets, using the 'bullet' graphic
-        this.weapon = this.game.add.weapon(3, 'bullet');
+        this.weapon = this.game.add.weapon(3, 'bullet-fire');
         this.weapon.bulletGravity.set(0, -this.game.global.gravity);
         //  The bullet will be automatically killed when it leaves the world bounds
         this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
@@ -131,6 +131,9 @@ class Player extends Phaser.Sprite {
         //  But the 'true' argument tells the weapon to track sprite rotation
         this.weapon.trackSprite(this, 0, 0);
         this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
+        this.weapon.onFire.add(function(bullet, weapon) {
+            bullet.body.angularVelocity = 720;
+        });
     }
 
 }
