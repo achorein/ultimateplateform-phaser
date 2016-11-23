@@ -40,7 +40,7 @@ class Boot extends Phaser.State {
       collected: [],
       gravity: 500,
       speed: 250,
-      jump: 750,
+      maxVelocity: 600,
       level: 1,
       levelmax: 2,
       life: 2,

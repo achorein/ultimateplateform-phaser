@@ -47,7 +47,7 @@ class GameOver extends Phaser.State {
 
     //prevent accidental click-thru by not allowing state transition for a short time
     this.canContinueToNextState = false;
-    this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){ this.canContinueToNextState = true; }, this);
+    this.game.time.events.add(Phaser.Timer.SECOND*0.5, function(){ this.canContinueToNextState = true; }, this);
 
     this.game.add.audio('failedSound').play('', 0, 0.5);
 
