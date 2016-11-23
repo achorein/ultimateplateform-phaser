@@ -134,6 +134,18 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":12,
+         "name":"deathCollision",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
         }],
  "nextobjectid":174,
  "orientation":"orthogonal",

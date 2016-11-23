@@ -61,8 +61,8 @@ class Game extends Phaser.State {
 
   update() {
     var onEchelle = this.map.update(this); // gestion des collisions
-    this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer);
-    this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup);
+    this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
+    this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
     this.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, this.killEnemy, null, this);
 
     // Mise à jour du temps

@@ -52,20 +52,47 @@ class Level extends Phaser.Tilemap {
     this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176,177], state.killPlayerCallback, state, this.backLayer);
     // Gestion des echelles
     this.setTileIndexCallback([79, 80, 93, 94, 95, 540], this.echelleCallback, this, this.backLayer);
+    // pièges
+    this.traps = [];
+    var trapLayer = this.layers[this.getLayer('blocs')];
+    trapLayer.data.forEach(function(row) {
+      row.forEach(function(tile){
+          if (tile.properties.bulletSpeed) {
+              var trap = self.game.add.weapon(30, 'bullet-trap');
+              var offset = 32;
+              trap.x = tile.x * tile.width + offset;
+              trap.y = tile.y * tile.height + offset;
+              trap.autofire = true
+              trap.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
+              //trap.bulletLifespan = 2000; // en milisecondes;
+              trap.bulletSpeed = tile.properties.bulletSpeed;
+              trap.fireRate = tile.properties.fireRate;
+              trap.bulletGravity.set(0, -self.game.global.gravity);
+              if (tile.properties.fireAngle == 'left') {
+                  trap.fireAngle = Phaser.ANGLE_LEFT;
+                  trap.x -= 32;
+              } else {
+                  trap.fireAngle = Phaser.ANGLE_RIGHT;
+                  trap.x += 32;
+              }
+              self.traps.push(trap);
+          }
+      });
+    });
 
     // Ajout des bonus
     this.bonusGroup = this.game.add.group();
     this.bonusGroup.enableBody = true;
     var collectableLayer = this.layers[this.getLayer('collectable')];
     collectableLayer.data.forEach(function(row) {
-      row.forEach(function(data){
-          if (data.index > 0) {
-              var bonus = self.game.add.sprite(data.x*data.width, data.y*data.height, "world", data.index-1);
+      row.forEach(function(tile){
+          if (tile.index > 0) {
+              var bonus = self.game.add.sprite(tile.x*tile.width, tile.y*tile.height, "world", tile.index-1);
               self.game.physics.arcade.enableBody(bonus);
-              bonus.points = parseInt(data.properties.points);
+              bonus.points = parseInt(tile.properties.points);
               bonus.body.moves = false; // ne subit pas la gravité
               self.bonusGroup.add(bonus);
-              self.getCollectedObject('world', data.index-1, bonus.points); // le créé si existe pas
+              self.getCollectedObject('world', tile.index-1, bonus.points); // le créé si existe pas
           }
       });
     });
@@ -76,10 +103,10 @@ class Level extends Phaser.Tilemap {
     var enemiesLayer = this.layers[this.getLayer('enemies')];
     if (enemiesLayer) { // si il y a un layer enemies
         enemiesLayer.data.forEach(function (row) {
-            row.forEach(function (data) {
-                if (data.index > 0) {
+            row.forEach(function (tile) {
+                if (tile.index > 0) {
                     var offset = 16;
-                    var enemy = self.enemiesGroup.create(data.x * data.width + offset, data.y * data.height + offset, 'spider', 1);
+                    var enemy = self.enemiesGroup.create(tile.x * tile.width + offset, tile.y * tile.height + offset, 'spider', 1);
                     enemy.animations.add('walk', [1,2], 2, true);
                     enemy.animations.add('dead', [0], 2, false);
                     enemy.animations.play('walk');
@@ -144,7 +171,7 @@ class Level extends Phaser.Tilemap {
       });
 
       // gestion des collisions sur objets donnant la mort
-      this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, state);
+      this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
 
       // gestion des collisions des ennemies (terrain)
       this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer);
@@ -164,6 +191,13 @@ class Level extends Phaser.Tilemap {
       this.game.physics.arcade.collide(state.player, this.backLayer);
       // type bonus, quand le joueur touche une étoile
       this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, state);
+
+      // Gestion des pièges
+      this.traps.forEach(function(trap){
+          state.physics.arcade.collide(trap.bullets, state.map.blocsLayer, function(bullet){ bullet.kill();});
+          state.physics.arcade.collide(trap.bullets, state.map.collisionGroup, function(bullet) { bullet.kill(); });
+          state.physics.arcade.overlap(trap.bullets, state.player, state.killPlayerCallback, null, state);
+      });
 
       return echelle>0;
   }
@@ -205,7 +239,7 @@ class Level extends Phaser.Tilemap {
       if (points) {
           // création d'un nouveau type d'objet à collecter
           var object = {
-              sprite: 'world',
+              sprite: sprite,
               frame: frame,
               points: points,
               count: 0

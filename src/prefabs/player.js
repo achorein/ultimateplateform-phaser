@@ -28,6 +28,7 @@ class Player extends Phaser.Sprite {
 
     //  Creates 30 bullets, using the 'bullet' graphic
     this.weapon = game.add.weapon(3, 'bullet');
+    this.weapon.bulletGravity.set(0, -this.game.global.gravity);
     //  The bullet will be automatically killed when it leaves the world bounds
     this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
     this.weapon.bulletLifespan = 2000; // en milisecondes
