@@ -44,22 +44,19 @@ class Menu extends Phaser.State {
     ];
 
     var font = self.createFont('CHOOSE YOUR PLAYER');
-    var img = self.game.add.image(self.game.world.centerX, 128, font);
+    var img = self.game.add.image(self.game.world.centerX, 32, font);
     img.anchor.set(0.5);
 
     var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
     this.menu.forEach(function(player) {
-      var sprite = self.game.add.sprite(self.computePosition(self, player.index), self.game.world.centerY, player.texture, 'idle/01');
+      var sprite = self.game.add.sprite(self.computePosition(self, player.index), self.game.world.centerY - 150, player.texture, 'idle/01');
       sprite.anchor.set(0.5);
       sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
       sprite.scale.setTo(0.7);
       player.sprite = sprite;
-      var text = self.game.add.text(self.computePosition(self, player.index), self.game.world.centerY + 150, player.name, style);
+      var text = self.game.add.text(self.computePosition(self, player.index), self.game.world.centerY, player.name, style);
       text.anchor.set(0.5);
     });
-
-    var temps = this.game.add.text(this.game.world.width, 0, this.game.time.elapsed , style);
-    temps.anchor.set(1);
 
     //setup audio
     this.music = this.game.add.audio('musicMenu', 0.5, true);
@@ -67,7 +64,15 @@ class Menu extends Phaser.State {
 
     this.selectPlayer(true);
 
+    //  This is our BitmapData onto which we'll draw the word being entered
+    this.bmd = this.game.make.bitmapData(800, 200);
+    this.bmd.context.font = '64px Arial';
+    this.bmd.context.fillStyle = '#ffffff';
+    this.bmd.context.fillText(this.game.global.playerName, 64, this.game.world.height - 200);
+    this.bmd.addToWorld();
+
     this.canContinueToNextState = true;
+    this.game.input.keyboard.addCallbacks(this, null, null, this.keyPress); //  Capture all key presses
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.okButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
   }
@@ -135,9 +140,19 @@ class Menu extends Phaser.State {
     return pos;
   }
 
+  keyPress(char){
+      //  Clear the BMD
+      this.bmd.cls();
+
+      //  Set the x value we'll start drawing the text from
+      //var x = 64;
+      //this.bmd.context.fillText(letter, x, 64);
+      //x += this.bmd.context.measureText(letter).width;
+  }
+
   writeText(){
       var barX = 128;
-      var barY = this.game.world.height - 128;
+      var barY = this.game.world.height - 350;
       var bar = this.game.add.graphics();
       bar.beginFill(0x666666, 1);
       bar.drawRoundedRect(barX, barY, 800, 100, 5);

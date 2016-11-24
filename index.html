@@ -36,6 +36,17 @@
         <ul class="nav navbar-nav">
           <li><a href="https://github.com/achorein/phaserdemo">github</a></li>
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <span id="score-max">Anonymous 0</span> <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" id="score-top">
+              <li><a href="#">player2 - 10</a></li>
+              <li><a href="#">player1 - 7</a></li>
+            </ul>
+          </li>
+        </ul>
       </div><!--/.nav-collapse -->
     </div>
   </nav>
@@ -51,11 +62,44 @@
   <!-- build:js phaser.min.js -->
   <script src="node_modules/phaser/build/phaser.min.js"></script>
   <!-- /build -->
+  <!-- build:js jquery.min.js -->
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- /build -->
 
   <!-- build:js bundle.min.js -->
   <script src="bundle.js"></script>
   <!-- /build -->
 
+  <script>
+      $(document).ready(function() {
+          $.ajax({
+              url: 'http://phaser.v1kings.io/api/score/max',
+              type: 'GET',
+              contentType: "application/json; charset=utf-8",
+              success: function(data) {
+                  console.log('hight score: ' + data);
+                  $('#score-max').html(data.name + ' ' + data.score);
+              },
+              failure: function(err) {
+                  console.log('Erreur de récupération du score max !');
+              }
+          });
+          /*$.ajax({
+              url: 'http://phaser.v1kings.io/api/score/top',
+              type: 'GET',
+              contentType: "application/json; charset=utf-8",
+              success: function(data) {
+                  $('#score-top').html('');
+                  for (i=0; i<data.length; i++) {
+                      $('#score-top').prepend('<li><a href="#">player2 - 10</a></li>');
+                  }
+              },
+              failure: function(err) {
+                  console.log('Erreur de récupération des scores !');
+              }
+          });*/
+      });
+  </script>
 </body>
 </html>
 

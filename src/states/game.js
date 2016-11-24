@@ -54,10 +54,7 @@ class Game extends Phaser.State {
   render() {
     var self = this;
     // Debug : mise en couleur des blocs invisibles
-    /*this.stairGroup.forEachAlive(function(member) {
-      self.game.debug.spriteBounds(member);
-    });*/
-    //self.game.debug.body(this.player);
+    self.game.debug.body(this.player);
   }
 
   update() {

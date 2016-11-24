@@ -73,7 +73,7 @@ class Victory extends Phaser.State {
         this.canContinueToNextState = false;
         this.game.time.events.add(Phaser.Timer.SECOND*0.5, function(){ this.canContinueToNextState = true; }, this);
 
-        this.saveVarsToLocalStorage();
+        this.saveScore();
 
         // press any key
         this.game.input.keyboard.onDownCallback = function(e) {
@@ -81,9 +81,28 @@ class Victory extends Phaser.State {
         }
     }
 
-    saveVarsToLocalStorage(){
-        var max = localStorage["maxScore"] || 0; //default value of 0 is it does not exist
-        if (this.game.global.score > max){ localStorage["maxScore"] = this.game.global.score; }
+    saveScore(){
+        var self = this;
+        if (this.game.global.level == this.game.global.levelmax) {
+            //var j = jQuery.noConflict();
+            var data = {
+                name: self.game.global.playerName,
+                player: self.game.global.playerSprite,
+                score: self.game.global.score
+            };
+            $.ajax({
+                url: self.game.global.backendUrl + '/score',
+                type: 'PUT',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                success: function(data) {
+                    console.log('Score saved !');
+                },
+                failure: function(err) {
+                    console.log('Erreur de sauvegarde du score !');
+                }
+            });
+        }
     }
 
     update() {}

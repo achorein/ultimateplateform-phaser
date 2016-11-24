@@ -42,9 +42,12 @@ class Boot extends Phaser.State {
       speed: 250,
       maxVelocity: 500,
       level: 1,
-      levelmax: 2,
+      levelmax: 5,
       life: 2,
-      maxlife: 3
+      maxlife: 3,
+      playerSprite: '',
+      playerName: 'Anonymous',
+      backendUrl: 'http://localhost:3000/api'
     };
   }
 
