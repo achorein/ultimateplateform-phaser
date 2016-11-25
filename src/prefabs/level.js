@@ -112,6 +112,7 @@ class Level extends Phaser.Tilemap {
         // on met une image de jumper activé
         this.replace(tile.index, this.jumperSprites[1], tile.x, tile.y, 1, 1, this.backLayer);
         this.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
+            sprite.animations.play('jump');
             // on remet une image de jumper désactivé
             self.replace(self.jumperSprites[1], self.jumperSprites[0], tile.x, tile.y, 1, 1, self.backLayer);
         });
@@ -127,6 +128,7 @@ class Level extends Phaser.Tilemap {
                 if (this.game.global.timer.echelle <= 0) {
                     // sortie de l'echelle, restauration de la gravité
                     player.body.gravity.set(0);
+                    player.animations.play('jump');
                     player.onEchelle = false;
                 }
             }, this);

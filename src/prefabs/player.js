@@ -26,6 +26,10 @@ class Player extends Phaser.Sprite {
         this.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, false, false);
         this.animations.add('run', Phaser.Animation.generateFrameNames('run/', 1, 10, '', 2), 10, true, false);
         this.animations.add('attack', Phaser.Animation.generateFrameNames('attack/', 1, 3, '', 2), 10, false, false);
+        if (this.game.global.player.sprite == 'ninja') {
+            this.animations.add('climp', Phaser.Animation.generateFrameNames('climp/', 1, 10, '', 2), 10, false, false);
+            this.canClimp = true;
+        }
 
         this.addWeapon();
 
@@ -35,9 +39,9 @@ class Player extends Phaser.Sprite {
     }
 
     action() {
+        this.weapon.fire();
         this.animations.play('attack');
         //this.game.add.audio('attackSound').play();
-        this.weapon.fire();
     }
 
     jump() {
@@ -58,7 +62,9 @@ class Player extends Phaser.Sprite {
             this.weapon.fireAngle = Phaser.ANGLE_LEFT;
         }
 
-        if (this.onFloor()) {
+        if (this.onEchelle && this.canClimp) {
+            this.animations.play('climp');
+        } else if (this.onFloor()) {
             this.animations.play('run');
         }
 
@@ -73,7 +79,9 @@ class Player extends Phaser.Sprite {
             this.scale.x *= -1; // symetrie verticale
             this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
         }
-        if (this.onFloor()) {
+        if (this.onEchelle && this.canClimp) {
+            this.animations.play('climp');
+        } else if (this.onFloor()) {
             this.animations.play('run');
         }
         this.facing = 'right';
@@ -81,7 +89,10 @@ class Player extends Phaser.Sprite {
     }
 
     up() {
-        if (this.game.global.timer.echelle>0 && !this.body.touching.up) { // si on est sur une echelle
+        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
+            if(this.canClimp) {
+                this.animations.play('climp');
+            }
             this.body.velocity.y = -this.game.global.player.speed/2;
             this.body.gravity.set(0, -this.game.global.level.gravity+0.1);
             this.onEchelle = true;
@@ -89,7 +100,10 @@ class Player extends Phaser.Sprite {
     }
 
     down() {
-        if (this.game.global.timer.echelle>0 && !this.body.touching.down) { // si on est sur une echelle
+        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
+            if(this.canClimp) {
+                this.animations.play('climp');
+            }
             this.body.velocity.y = this.game.global.player.speed/2;
             this.body.gravity.set(0, -this.game.global.level.gravity+0.1);
             this.onEchelle = true;
@@ -97,7 +111,10 @@ class Player extends Phaser.Sprite {
     }
 
     idle() {
-        if (this.status != 'idle' && this.onFloor())  {
+        if (this.canClimp && this.onEchelle) {
+            this.animations.play('climp');
+            this.animations.stop();
+        }else if (this.status != 'idle' && this.onFloor())  {
             this.animations.stop();
             this.animations.play('idle');
             this.status = 'idle';
@@ -124,6 +141,7 @@ class Player extends Phaser.Sprite {
         this.weapon.bulletSpeed = 600;
         //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
         this.weapon.fireRate = 200;
+        this.weapon.bulletWorldWrap = true;
         //  Tell the Weapon to track the 'player' Sprite
         //  With no offsets from the position
         //  But the 'true' argument tells the weapon to track sprite rotation

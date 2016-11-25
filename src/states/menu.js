@@ -43,9 +43,14 @@ class Menu extends Phaser.State {
             ], texture:'knight'}
         ];
 
-        var font = self.createFont('CHOOSE YOUR PLAYER');
-        var img = self.game.add.image(self.game.centerX, 135, font);
-        img.anchor.set(0.5);
+        var offset = 15;
+        this.game.add.sprite(this.game.centerX, 100, 'logo').anchor.set(0.5);
+        this.game.add.sprite(offset, this.game.height - 100 - offset, 'vikings').alpha = 0.5;
+        this.game.add.sprite(this.game.width - 117 - offset , this.game.height - 100 - offset, 'phaser').alpha = 0.5;
+
+        /*var font = self.createFont('CHOOSE YOUR PLAYER');
+        var img = self.game.add.image(self.game.centerX, 200, font);
+        img.anchor.set(0.5);*/
 
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         this.menu.forEach(function(player) {
@@ -157,12 +162,6 @@ class Menu extends Phaser.State {
                 player.text.scale.setTo(1);
             }
         });
-    }
-
-    createFont(text) {
-        var font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-        font.text = text;
-        return font;
     }
 
     computePosition(self, index) {

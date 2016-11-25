@@ -6,6 +6,8 @@ class Boot extends Phaser.State {
 
     preload() {
         this.load.image('preloader', 'assets/preloader.gif');
+        this.load.image('logo', 'assets/game-logo.png');
+        this.load.image('vikings', 'assets/vikings-logo.png');
         this.load.image('phaser', 'assets/phaser.png');
     }
 

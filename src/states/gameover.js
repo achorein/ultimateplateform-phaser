@@ -6,21 +6,27 @@ class GameOver extends Phaser.State {
 
     create() {
         var self = this;
+        var styleBig = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+        var styleSmall = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
         //add background image
         this.background = this.game.add.sprite(0,0,'background');
         this.background.height = this.game.world.height;
         this.background.width = this.game.world.width;
         this.background.alpha = 0.25;
 
-        // Ajout du score
-        this.gameoverText = this.createFont('YOU LOSE!');
-        var img = this.game.add.image(this.game.world.centerX, this.computePos(1), this.gameoverText);
+        // Ajout texte
+        if (this.game.global.player.life > 0) {
+            var img = this.game.add.sprite(this.game.world.centerX, 100, 'lose');
+        } else {
+            var img = this.game.add.sprite(this.game.world.centerX, 100, 'gameover');
+        }
         img.anchor.set(0.5);
 
-        // Ajout temps écoulé
-        var style = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-        var text = self.game.add.text(self.game.world.centerX, this.computePos(2), this.game.global.level.elapsedTime + ' seconde' + ((this.game.global.level.elapsedTime>1)?'s':''), style);
-        text.anchor.set(0.5);
+        // Ajout du score
+        this.score = this.game.add.text(self.game.world.centerX, this.computePos(2),
+            this.game.global.score + ' points', styleBig);
+        this.score.anchor.set(0.5);
 
         // ajout des vies restantes
         for (var i=0; i<this.game.global.player.life; i++) {
@@ -34,20 +40,22 @@ class GameOver extends Phaser.State {
             sprite.anchor.setTo(0.5);
         }
 
-        // Ajout du score
-        this.score = this.createFont('SCORE '+ this.game.global.score);
-        img = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 200, this.score);
-        img.anchor.set(0.5);
-
-        sprite = self.game.add.sprite(self.game.world.centerX, self.game.world.centerY, this.game.global.player.sprite, 'idle/01');
+        // Ajout personnage mort
+        sprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, this.game.global.player.sprite, 'idle/01');
         sprite.anchor.set(0.5);
         sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
         sprite.animations.play('dead');
         this.game.camera.follow(sprite);
 
+        // Ajout temps écoulé
+        this.time = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 200,
+            this.game.global.level.elapsedTime + ' seconde' + ((this.game.global.level.elapsedTime>1)?'s':''), styleSmall);
+        this.time.anchor.set(0.5);
+
+        // Lecture du son dédié à l'écran
         this.game.add.audio('failedSound').play('', 0, 0.5);
 
-        // si oplus de vie, on sauvegarde le score sur le serveur
+        // si plus de vie, on sauvegarde le score sur le serveur
         if (this.game.global.player.life <= 0) {
             this.saveScore();
         }
@@ -95,12 +103,6 @@ class GameOver extends Phaser.State {
                 this.game.state.start('menu', true, false);
             }
         }
-    }
-
-    createFont(text) {
-        var font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
-        font.text = text;
-        return font;
     }
 
     computePos(index) {

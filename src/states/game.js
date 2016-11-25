@@ -25,7 +25,7 @@ class Game extends Phaser.State {
         this.game.time.desiredFps = 30;
 
         // Ajout du score
-        var style = { font: "bold 18px Arial", fill: "#666", boundsAlignH: "center", boundsAlignV: "middle" };
+        var style = { font: "bold 18px Arial", fill: "#888", boundsAlignH: "center", boundsAlignV: "middle" };
         this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);
         //this.scoreText.anchor.set(0.5);
         this.scoreText.fixedToCamera = true;
@@ -49,12 +49,13 @@ class Game extends Phaser.State {
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
         this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
+        this.dieButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F10);
     }
 
     render() {
         var self = this;
         // Debug : mise en couleur des blocs invisibles
-        // self.game.debug.body(this.player);
+        self.game.debug.body(this.player);
     }
 
     update() {
@@ -99,6 +100,8 @@ class Game extends Phaser.State {
         // permet de rapidement passer au niveau suivant
         if (this.cheatCodeButton.isDown) {
             this.endGame(this, 'victory');
+        } else if (this.dieButton.isDown) {
+            this.endGame(this, 'gameover');
         }
     }
 
