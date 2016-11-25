@@ -183,7 +183,6 @@ class Menu extends Phaser.State {
         bar.beginFill(0xEEEEEE, 1);
         bar.drawRoundedRect(barX, barY, 800, 100, 5);
         this.text = this.game.add.text(barX + 18, barY + 18, '', { font: "18px Arial", fill: "#666" });
-        //this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
         line = [];
         wordIndex = 0;
         lineIndex = 0;

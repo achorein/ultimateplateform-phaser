@@ -118,21 +118,24 @@ class Level extends Phaser.Tilemap {
     }
 
     echelleCallback(player, tile) {
-        // quand le joueur touche un sprite d'echelle, incrémente un compteur
-        this.game.global.timer.echelle++;
-        this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
-            // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
-            this.game.global.timer.echelle--;
-            if (this.game.global.timer.echelle <= 0) {
-                // sortie de l'echelle, restauration de la gravité
-                player.body.gravity.set(0);
-            }
-        }, this);
+        if (this.game.global.timer.echelle < 5) {
+            // quand le joueur touche un sprite d'echelle, incrémente un compteur
+            this.game.global.timer.echelle++;
+            this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function () {
+                // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
+                this.game.global.timer.echelle--;
+                if (this.game.global.timer.echelle <= 0) {
+                    // sortie de l'echelle, restauration de la gravité
+                    player.body.gravity.set(0);
+                    player.onEchelle = false;
+                }
+            }, this);
+        }
     }
 
     specialBlocCallback(player) {
         // quand le joueur est sur un bloc, incrémente un compteur
-        if (player.body.touching.down) {
+        if (player.body.touching.down && this.game.global.timer.bloc < 5) {
             this.game.global.timer.bloc++;
             this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function () {
                 // décrémente le compteur pour pouvoir déterminer si on est sortie du bloc

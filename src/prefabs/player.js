@@ -43,18 +43,15 @@ class Player extends Phaser.Sprite {
     jump() {
         if (this.jumpTimer <  this.game.time.now && this.onFloor()) {
             this.animations.play('jump');
-            this.body.velocity.y = -250;
+            this.body.velocity.y = -this.game.global.player.speed;
             this.jumpTimer = this.game.time.now + 1000;
             this.status = 'jump';
+            this.onEchelle = false;
         }
     }
 
     left() {
-        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
-            this.x -= 5;
-        } else {
-            this.body.velocity.x = -this.game.global.player.speed;
-        }
+        this.body.velocity.x = -this.game.global.player.speed;
 
         if (this.facing != 'left') {
             this.scale.x *= -1; // symetrie verticale
@@ -70,11 +67,8 @@ class Player extends Phaser.Sprite {
     }
 
     right() {
-        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
-            this.x += 5;
-        } else {
-            this.body.velocity.x = this.game.global.player.speed;
-        }
+        this.body.velocity.x = this.game.global.player.speed;
+
         if (this.facing != 'right') {
             this.scale.x *= -1; // symetrie verticale
             this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
@@ -87,18 +81,18 @@ class Player extends Phaser.Sprite {
     }
 
     up() {
-        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
-            this.body.velocity.y = 0;
-            this.body.gravity.set(0, -this.game.global.level.gravity);
-            this.y -= 5;
+        if (this.game.global.timer.echelle>0 && !this.body.touching.up) { // si on est sur une echelle
+            this.body.velocity.y = -this.game.global.player.speed/2;
+            this.body.gravity.set(0, -this.game.global.level.gravity+0.1);
+            this.onEchelle = true;
         }
     }
 
     down() {
-        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
-            this.body.velocity.y = 0;
-            this.body.gravity.set(0, -this.game.global.level.gravity);
-            this.y += 5;
+        if (this.game.global.timer.echelle>0 && !this.body.touching.down) { // si on est sur une echelle
+            this.body.velocity.y = this.game.global.player.speed/2;
+            this.body.gravity.set(0, -this.game.global.level.gravity+0.1);
+            this.onEchelle = true;
         }
     }
 

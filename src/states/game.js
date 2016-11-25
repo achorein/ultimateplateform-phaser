@@ -68,6 +68,9 @@ class Game extends Phaser.State {
 
         // gestion du joueur
         this.player.body.velocity.x = 0;
+        if (this.player.onEchelle) {
+            this.player.body.velocity.y = 0;
+        }
         if (this.cursors.left.isDown) { // fleche de gauche
             this.player.left();
         } else if (this.cursors.right.isDown) { // fleche de droite
