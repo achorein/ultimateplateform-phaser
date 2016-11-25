@@ -28,34 +28,35 @@ class Menu extends Phaser.State {
       {index: 1, name:'SB', description:[
           'Se faufiller dans des situations peu confortable est votre quotidien,',
           'vous allez devoir user de votre agilité pour mener à bien votre mission.'
-      ], texture:'ninjaPlayer'},
+      ], texture:'ninja'},
       {index: 2, name:'ARC', description:[
           'A la recherche des meilleurs artefacts permettant de construire des applications',
           'toujours plus évoluées, vous aller braver les dangers qui vous attendent.'
-      ], texture:'robotPlayer'},
+      ], texture:'robot'},
       {index: 3, name:'BA', description:[
           'Vous partez à l\'aventure à la recherche des parchemins sacrés,',
           'décrivant les besoins cachés d\'utilisateurs toujours plus vicieux.'
-      ], texture:'adventurePlayer'},
+      ], texture:'adventure_girl'},
       {index: 4, name:'PM', description:[
           'Afin de financer votre projet vous partez vous battre contre une armée de problèmes',
           'afin de collecter un trésor qui n\'a d\'égale que votre ambition.'
-      ], texture:'knightPlayer'}
+      ], texture:'knight'}
     ];
 
     var font = self.createFont('CHOOSE YOUR PLAYER');
-    var img = self.game.add.image(self.game.world.centerX, 32, font);
+    var img = self.game.add.image(self.game.world.centerX, 135, font);
     img.anchor.set(0.5);
 
     var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
     this.menu.forEach(function(player) {
-      var sprite = self.game.add.sprite(self.computePosition(self, player.index), self.game.world.centerY - 150, player.texture, 'idle/01');
+      var sprite = self.game.add.sprite(self.computePosition(self, player.index), self.game.world.centerY - 50, player.texture, 'idle/01');
       sprite.anchor.set(0.5);
       sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
       sprite.scale.setTo(0.7);
       player.sprite = sprite;
-      var text = self.game.add.text(self.computePosition(self, player.index), self.game.world.centerY, player.name, style);
+      var text = self.game.add.text(self.computePosition(self, player.index), self.game.world.centerY + 100, player.name, style);
       text.anchor.set(0.5);
+      player.text = text;
     });
 
     //setup audio
@@ -64,21 +65,48 @@ class Menu extends Phaser.State {
 
     this.selectPlayer(true);
 
-    //  This is our BitmapData onto which we'll draw the word being entered
-    this.bmd = this.game.make.bitmapData(800, 200);
-    this.bmd.context.font = '64px Arial';
-    this.bmd.context.fillStyle = '#ffffff';
-    this.bmd.context.fillText(this.game.global.playerName, 64, this.game.world.height - 200);
-    this.bmd.addToWorld();
+    this.loadData();
 
     this.canContinueToNextState = true;
-    this.game.input.keyboard.addCallbacks(this, null, null, this.keyPress); //  Capture all key presses
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.okButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
   }
 
-  update() {
+    loadData() {
+        var playerName = localStorage.getItem('playerName');
+        if (!playerName) {
+            playerName = 'Player 1';
+        }
+        this.game.global.playerName = playerName;
+        $('#playerName').val(playerName);
+        $.ajax({
+            url: 'http://phaser.v1kings.io/api/score/max',
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $('#score-max').html('#1 - ' + data.name + ' - ' + data.score + ' points');
+            },
+            failure: function (err) {
+                console.log('Erreur de récupération du score max !');
+            }
+        });
+        $.ajax({
+            url: 'http://phaser.v1kings.io/api/score/top',
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $('#score-top').html('');
+                for (var i = 1; i < data.length; i++) {
+                    $('#score-top').append('<li><a href="#">#'+ (i+1) + ' - ' + data[i].name + ' - ' + data[i].score + '</a></li>');
+                }
+            },
+            failure: function (err) {
+                console.log('Erreur de récupération des scores !');
+            }
+        });
+    }
 
+  update() {
       if ( this.game.time.now > this.timer)
       if (this.cursors.right.isDown) { // fleche de droite
           this.cursorPos++;
@@ -100,6 +128,8 @@ class Menu extends Phaser.State {
           this.music.stop();
           this.game.global.level = 1;
           this.game.global.life = 3;
+          this.game.global.playerName = $('#playerName').val();
+          localStorage.setItem('playerName', this.game.global.playerName);
           this.game.state.start('game', true, false);
       }
   }
@@ -109,6 +139,7 @@ class Menu extends Phaser.State {
       this.menu.forEach(function(player){
           if (player.index == self.cursorPos) {
             player.sprite.scale.setTo(1);
+            player.text.scale.setTo(1.25);
             player.sprite.animations.play('idle');
             if (!ignoreSound) {
                 self.game.add.audio('miscMenu').play();
@@ -119,6 +150,7 @@ class Menu extends Phaser.State {
           } else {
             player.sprite.animations.stop();
             player.sprite.scale.setTo(0.7);
+            player.text.scale.setTo(1);
           }
       });
   }
@@ -140,19 +172,9 @@ class Menu extends Phaser.State {
     return pos;
   }
 
-  keyPress(char){
-      //  Clear the BMD
-      this.bmd.cls();
-
-      //  Set the x value we'll start drawing the text from
-      //var x = 64;
-      //this.bmd.context.fillText(letter, x, 64);
-      //x += this.bmd.context.measureText(letter).width;
-  }
-
   writeText(){
       var barX = 128;
-      var barY = this.game.world.height - 350;
+      var barY = this.game.world.height - 250;
       var bar = this.game.add.graphics();
       bar.beginFill(0x666666, 1);
       bar.drawRoundedRect(barX, barY, 800, 100, 5);

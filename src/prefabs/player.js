@@ -12,7 +12,7 @@ class Player extends Phaser.Sprite {
         //this.body.bounce.y = 0.1;
         this.body.maxVelocity.set(this.game.global.maxVelocity);
         this.body.collideWorldBounds = true;
-        if (this.game.global.playerSprite == 'ninjaPlayer' || this.game.global.playerSprite == 'knightPlayer') {
+        if (this.game.global.playerSprite == 'ninja' || this.game.global.playerSprite == 'knight') {
                        this.body.setSize(120, 200, 0, 16);
         } else {
             this.body.setSize(120, 200, 96, 32);
@@ -34,14 +34,14 @@ class Player extends Phaser.Sprite {
         this.status = 'idle';
     }
 
-    action(onEchelle) {
+    action() {
       this.animations.play('attack');
       //this.game.add.audio('attackSound').play();
       this.weapon.fire();
     }
 
-    jump(onEchelle) {
-      if (this.jumpTimer <  this.game.time.now && (this.body.onFloor() || onEchelle)) {
+    jump() {
+      if (this.jumpTimer <  this.game.time.now && (this.body.onFloor() || this.game.global.timer.echelle>0 || this.game.global.timer.bloc>0)) {
           this.animations.play('jump');
           this.body.velocity.y = -250;
           this.jumpTimer = this.game.time.now + 1000;
@@ -49,8 +49,8 @@ class Player extends Phaser.Sprite {
       }
     }
 
-    left(onEchelle) {
-      if (onEchelle) { // si on est sur une echelle
+    left() {
+      if (this.game.global.timer.echelle>0) { // si on est sur une echelle
           this.x -= 5;
       } else {
           this.body.velocity.x = -this.game.global.speed;
@@ -69,8 +69,8 @@ class Player extends Phaser.Sprite {
       this.status = 'move';
     }
 
-    right(onEchelle) {
-      if (onEchelle) { // si on est sur une echelle
+    right() {
+      if (this.game.global.timer.echelle>0) { // si on est sur une echelle
           this.x += 5;
       } else {
           this.body.velocity.x = this.game.global.speed;
@@ -86,24 +86,24 @@ class Player extends Phaser.Sprite {
       this.status = 'move';
     }
 
-    up(onEchelle) {
-      if (onEchelle) { // si on est sur une echelle
+    up() {
+      if (this.game.global.timer.echelle>0) { // si on est sur une echelle
           this.body.velocity.y = 0;
           this.body.gravity.set(0, -this.game.global.gravity);
           this.y -= 5;
       }
     }
 
-    down(onEchelle) {
-      if (onEchelle) { // si on est sur une echelle
+    down() {
+      if (this.game.global.timer.echelle>0) { // si on est sur une echelle
           this.body.velocity.y = 0;
           this.body.gravity.set(0, -this.game.global.gravity);
           this.y += 5;
       }
     }
 
-    idle(onEchelle) {
-      if (this.status != 'idle' && (this.body.onFloor() || onEchelle) )  {
+    idle() {
+      if (this.status != 'idle' && (this.body.onFloor() || this.game.global.timer.echelle>0 || this.game.global.timer.bloc>0) )  {
           this.animations.stop();
           this.animations.play('idle');
           this.status = 'idle';

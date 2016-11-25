@@ -42,12 +42,16 @@ class Boot extends Phaser.State {
       speed: 250,
       maxVelocity: 500,
       level: 1,
-      levelmax: 5,
+      levelmax: 2,
       life: 2,
       maxlife: 3,
       playerSprite: '',
-      playerName: 'Anonymous',
-      backendUrl: 'http://localhost:3000/api'
+      playerName: 'Player 1',
+      backendUrl: 'http://phaser.v1kings.io/api',
+      timer: {
+          bloc: 0,
+          echelle: 0
+      }
     };
   }
 

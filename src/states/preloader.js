@@ -28,13 +28,16 @@ class Preloader extends Phaser.State {
 
     this.game.load.spritesheet('world','assets/tilesmap/tilesmap.png', 64, 64);
 
-    this.game.load.atlasJSONHash('adventurePlayer', 'assets/adventure_girl.png', 'assets/adventure_girl.json');
-    this.game.load.atlasJSONHash('knightPlayer', 'assets/knight.png', 'assets/knight.json');
-    this.game.load.atlasJSONHash('robotPlayer', 'assets/robot.png', 'assets/robot.json');
-    this.game.load.atlasJSONHash('ninjaPlayer', 'assets/ninja.png', 'assets/ninja.json');
+    this.game.load.atlasJSONHash('adventure_girl', 'assets/adventure_girl.png', 'assets/adventure_girl.json');
+    this.game.load.atlasJSONHash('knight', 'assets/knight.png', 'assets/knight.json');
+    this.game.load.atlasJSONHash('robot', 'assets/robot.png', 'assets/robot.json');
+    this.game.load.atlasJSONHash('ninja', 'assets/ninja.png', 'assets/ninja.json');
+    this.game.load.atlasJSONHash('zombiemale', 'assets/zombiemale.png', 'assets/zombiemale.json');
+    this.game.load.atlasJSONHash('zombiefemale', 'assets/zombiefemale.png', 'assets/zombiefemale.json');
     this.game.load.spritesheet('spider', 'assets/enemy-spider.png', 77, 53);
     this.game.load.spritesheet('bee', 'assets/enemy-bee.png', 56, 48);
     this.game.load.spritesheet('frog', 'assets/enemy-frog.png', 61, 54);
+    this.game.load.spritesheet('bat', 'assets/enemy-bat.png', 88, 47);
 
     this.game.load.image('bullet-knife', 'assets/bullet_knife.png');
     this.game.load.image('bullet-laser', 'assets/bullet_laser.png');

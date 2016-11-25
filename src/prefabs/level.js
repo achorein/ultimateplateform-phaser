@@ -1,8 +1,5 @@
 import Player from '../prefabs/player';
 
-/* variables globales */
-var echelle = 0;
-
 class Level extends Phaser.Tilemap {
 
   //initialization code in the constructor
@@ -81,7 +78,7 @@ class Level extends Phaser.Tilemap {
     // blocs mobiles
     this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.specialBlocsCollisionCallBack);
     this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.specialBlocsCollisionCallBack);
-    this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.echelleCallback, null, this);
+    this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.specialBlocCallback, null, this);
 
     // gestion des collisions sur objets donnant la mort
     this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
@@ -106,8 +103,6 @@ class Level extends Phaser.Tilemap {
           state.killPlayerCallback(player, enemy);
       }
     }, null, state);
-
-    return echelle>0;
   }
 
   jumperCallback(sprite, tile) {
@@ -122,18 +117,29 @@ class Level extends Phaser.Tilemap {
     });
   }
 
-  echelleCallback(player) {
+  echelleCallback(player, tile) {
       // quand le joueur touche un sprite d'echelle, incrémente un compteur
-      echelle++;
+      this.game.global.timer.echelle++;
       this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
           // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
-          echelle--;
-          if (echelle <= 0) {
+          this.game.global.timer.echelle--;
+          if (this.game.global.timer.echelle <= 0) {
               // sortie de l'echelle, restauration de la gravité
               player.body.gravity.set(0);
           }
       }, this);
   }
+
+    specialBlocCallback(player) {
+        // quand le joueur est sur un bloc, incrémente un compteur
+        if (player.body.touching.down) {
+            this.game.global.timer.bloc++;
+            this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function () {
+                // décrémente le compteur pour pouvoir déterminer si on est sortie du bloc
+                this.game.global.timer.bloc--;
+            }, this);
+        }
+    }
 
     specialBlocsCollisionCallBack(special, bloc) {
         if (special.body.touching.left || special.body.touching.right) {
@@ -283,12 +289,31 @@ class Level extends Phaser.Tilemap {
                             sprite = tile.properties.sprite;
                         }
                         var offset = 16;
+                        if (tile.properties.offset) {
+                            offset = tile.properties.offset;
+                        }
                         var enemy = self.enemiesGroup.create(tile.x * tile.width + offset, tile.y * tile.height + offset, sprite, 1);
-                        enemy.animations.add('walk', [1, 2], 2, true);
-                        enemy.animations.add('dead', [0], 2, false);
-                        enemy.animations.play('walk');
+                        if (tile.properties.atlas) {
+                            enemy.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
+                            enemy.animations.add('walk', Phaser.Animation.generateFrameNames('walk/', 1, 10, '', 2), 10, true, false);
+                            enemy.animations.play('walk');
+                        } else {
+                            enemy.animations.add('walk', [1, 2], 2, true);
+                            enemy.animations.add('dead', [0], 2, false);
+                            enemy.animations.play('walk');
+                        }
                         enemy.anchor.setTo(.5, 0);
-                        enemy.body.velocity.x = -75;
+                        if (tile.properties.scale){
+                            enemy.scale.setTo(tile.properties.scale);
+                        }
+                        if (tile.properties.velocity) {
+                            enemy.body.velocity.x = tile.properties.velocity;
+                        } else {
+                            enemy.body.velocity.x = -75;
+                        }
+                        if (tile.properties.mirormiror) {
+                            enemy.scale.x *= -1; // symetrie verticale
+                        }
                         enemy.body.maxVelocity.set(self.game.global.maxVelocity);
                         enemy.body.gravity.set(0, -self.game.global.gravity);
                         enemy.body.collideWorldBounds = true;
@@ -296,9 +321,9 @@ class Level extends Phaser.Tilemap {
                     }
                 });
             });
-        }
     }
 
+}
     /**
      *
      * @param self

@@ -13,7 +13,8 @@
     "copy:assets": "cp -rf assets build/",
     "copy:phaser": "cp -rf node_modules/phaser/build/phaser.min.js build/phaser.min.js",
     "copy:phaser": "cp -rf node_modules/jquery/dist/jquery.min.js build/jquery.min.js",
-    "copy:bootsrap": "cp -rf node_modules/bootstrap/dist/css/bootstrap.min.css build/bootstrap.min.css"
+    "copy:bootsrap": "cp -rf node_modules/bootstrap/dist/css/bootstrap.min.css build/bootstrap.min.css",
+    "copy:bootsrapjs": "cp -rf node_modules/bootstrap/dist/js/bootstrap.min.js build/bootstrap.min.js"
   },
   "keywords": [],
   "author": "",

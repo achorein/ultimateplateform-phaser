@@ -52,7 +52,7 @@ class Victory extends Phaser.State {
         });
 
         // Ajout du bonus de temps
-        this.game.global.score += Math.floor(1500 / this.game.global.elapsedTime);
+        this.game.global.score += Math.floor(1500 / (this.game.global.elapsedTime<1)?1500:this.game.global.elapsedTime);
         // Ajout du bonus de vie
         this.game.global.score += 50 * this.game.global.life;
 
@@ -82,18 +82,16 @@ class Victory extends Phaser.State {
     }
 
     saveScore(){
-        var self = this;
         if (this.game.global.level == this.game.global.levelmax) {
-            //var j = jQuery.noConflict();
-            var data = {
-                name: self.game.global.playerName,
-                player: self.game.global.playerSprite,
-                score: self.game.global.score
-            };
             $.ajax({
-                url: self.game.global.backendUrl + '/score',
+                url: this.game.global.backendUrl + '/score',
                 type: 'PUT',
-                data: data,
+                dataType: 'json',
+                data: JSON.stringify({
+                    name: this.game.global.playerName,
+                    player: this.game.global.playerSprite,
+                    score: this.game.global.score
+                }),
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     console.log('Score saved !');

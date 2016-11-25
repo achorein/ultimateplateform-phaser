@@ -34,16 +34,19 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="https://github.com/achorein/phaserdemo">github</a></li>
+          <li><a href="https://github.com/achorein/phaserdemo">Github</a></li>
         </ul>
+        <form class="navbar-form navbar-left">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Loading..." id="playerName" value="">
+          </div>
+        </form>
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <span id="score-max">Anonymous 0</span> <span class="caret"></span>
+              <span id="score-max">Loading...</span> <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" id="score-top">
-              <li><a href="#">player2 - 10</a></li>
-              <li><a href="#">player1 - 7</a></li>
             </ul>
           </li>
         </ul>
@@ -65,41 +68,14 @@
   <!-- build:js jquery.min.js -->
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <!-- /build -->
+  <!-- build:js bootstrap.min.js -->
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- /build -->
 
   <!-- build:js bundle.min.js -->
   <script src="bundle.js"></script>
   <!-- /build -->
 
-  <script>
-      $(document).ready(function() {
-          $.ajax({
-              url: 'http://phaser.v1kings.io/api/score/max',
-              type: 'GET',
-              contentType: "application/json; charset=utf-8",
-              success: function(data) {
-                  console.log('hight score: ' + data);
-                  $('#score-max').html(data.name + ' ' + data.score);
-              },
-              failure: function(err) {
-                  console.log('Erreur de récupération du score max !');
-              }
-          });
-          /*$.ajax({
-              url: 'http://phaser.v1kings.io/api/score/top',
-              type: 'GET',
-              contentType: "application/json; charset=utf-8",
-              success: function(data) {
-                  $('#score-top').html('');
-                  for (i=0; i<data.length; i++) {
-                      $('#score-top').prepend('<li><a href="#">player2 - 10</a></li>');
-                  }
-              },
-              failure: function(err) {
-                  console.log('Erreur de récupération des scores !');
-              }
-          });*/
-      });
-  </script>
 </body>
 </html>
 

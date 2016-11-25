@@ -59,6 +59,26 @@ class GameOver extends Phaser.State {
 
   update() {}
 
+  saveScore(){
+    $.ajax({
+        url: this.game.global.backendUrl + '/score',
+        type: 'PUT',
+        dataType: 'json',
+        data: JSON.stringify({
+            name: this.game.global.playerName,
+            player: this.game.global.playerSprite,
+            score: this.game.global.score
+        }),
+        contentType: "application/json; charset=utf-8",
+        success: function(data) {
+            console.log('Score saved !');
+        },
+        failure: function(err) {
+            console.log('Erreur de sauvegarde du score !');
+        }
+    });
+  }
+
   createFont(text) {
       var font = this.game.add.retroFont('fonts', 16, 16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -0123456789', 20);
       font.text = text;
@@ -71,6 +91,7 @@ class GameOver extends Phaser.State {
       if (this.game.global.life > 0) {
           this.game.state.start('game', true, false);
       } else {
+          this.saveScore();
           this.game.state.start('menu', true, false);
       }
     }

@@ -25,7 +25,7 @@ class Game extends Phaser.State {
     this.game.time.desiredFps = 30;
 
     // Ajout du score
-    var style = { font: "bold 18px Arial", fill: "#333", boundsAlignH: "center", boundsAlignV: "middle" };
+    var style = { font: "bold 18px Arial", fill: "#666", boundsAlignH: "center", boundsAlignV: "middle" };
     this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);
     //this.scoreText.anchor.set(0.5);
     this.scoreText.fixedToCamera = true;
@@ -54,11 +54,11 @@ class Game extends Phaser.State {
   render() {
     var self = this;
     // Debug : mise en couleur des blocs invisibles
-    self.game.debug.body(this.player);
+    //self.game.debug.body(this.player);
   }
 
   update() {
-    var onEchelle = this.map.update(this); // gestion des collisions
+    this.map.update(this); // gestion des collisions
     this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
     this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
     this.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, this.killEnemy, null, this);
@@ -69,27 +69,27 @@ class Game extends Phaser.State {
     // gestion du joueur
     this.player.body.velocity.x = 0;
     if (this.cursors.left.isDown) { // fleche de gauche
-      this.player.left(onEchelle);
+      this.player.left();
     } else if (this.cursors.right.isDown) { // fleche de droite
-      this.player.right(onEchelle);
+      this.player.right();
     } else if (this.cursors.up.isDown) { // fleche du haut
-        this.player.up(onEchelle, this.map);
+        this.player.up(this.map);
     } else if (this.cursors.down.isDown) { // fleche du bas
-        this.player.down(onEchelle);
+        this.player.down();
     } else if (this.escapeButton.isDown) {
         this.endGame(this, 'menu');
     } else { // si aucune touche appuyée
-      this.player.idle(onEchelle);
+      this.player.idle();
     }
     if (this.jumpButton.isDown) {
-      this.player.jump(onEchelle);
+      this.player.jump();
     }
     if (this.actionButton.isDown) {
         var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
         if (tile && tile.index == 57) { // sur une porte
             this.endGame(this, 'victory');
         } else {
-            this.player.action(onEchelle);
+            this.player.action();
         }
     }
 
