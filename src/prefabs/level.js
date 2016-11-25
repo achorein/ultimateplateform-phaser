@@ -163,7 +163,7 @@ class Level extends Phaser.Tilemap {
      * @param points nombre de points affecté au bonus (si value créé l'objet dans l'inventaire)
      * @returns {*}
      */
-    getCollectedObject(sprite, frame, points) {
+    getCollectedObject(sprite, frame, points, scale) {
       for (var i=0; i<this.game.global.collected.length; i++){
           if (this.game.global.collected[i].sprite == sprite && this.game.global.collected[i].frame == frame) {
               if (points) {
@@ -178,6 +178,7 @@ class Level extends Phaser.Tilemap {
               sprite: sprite,
               frame: frame,
               points: points,
+              scale: scale,
               count: 0
           };
           this.game.global.collected.push(object);
@@ -311,13 +312,13 @@ class Level extends Phaser.Tilemap {
                         } else {
                             enemy.body.velocity.x = -75;
                         }
-                        if (tile.properties.mirormiror) {
+                        if (tile.properties.miror) {
                             enemy.scale.x *= -1; // symetrie verticale
                         }
                         enemy.body.maxVelocity.set(self.game.global.maxVelocity);
                         enemy.body.gravity.set(0, -self.game.global.gravity);
                         enemy.body.collideWorldBounds = true;
-                        self.getCollectedObject(sprite, 0, 25); // le créé si existe pas
+                        self.getCollectedObject(sprite, 0, 25, tile.properties.scale); // le créé si existe pas
                     }
                 });
             });

@@ -194,17 +194,20 @@
                 {
                  "atlas":true,
                  "enemy":true,
+                 "offset":-12,
                  "scale":0.15,
                  "sprite":"zombiemale",
-                 "velocity":75
+                 "velocity":50
                 },
              "603":
                 {
                  "atlas":true,
                  "enemy":true,
                  "miror":true,
+                 "offset":-20,
                  "scale":0.15,
-                 "sprite":"zombiefemale"
+                 "sprite":"zombiefemale",
+                 "velocity":-50
                 },
              "614":
                 {
@@ -275,6 +278,7 @@
                 {
                  "atlas":"bool",
                  "enemy":"bool",
+                 "offset":"int",
                  "scale":"float",
                  "sprite":"string",
                  "velocity":"int"
@@ -284,8 +288,10 @@
                  "atlas":"bool",
                  "enemy":"bool",
                  "miror":"bool",
+                 "offset":"int",
                  "scale":"float",
-                 "sprite":"string"
+                 "sprite":"string",
+                 "velocity":"int"
                 },
              "614":
                 {

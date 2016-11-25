@@ -43,11 +43,18 @@ class Victory extends Phaser.State {
         var curPos = 4; i=1;
         this.game.global.collected.forEach(function(bonus) {
             sprite = self.game.add.sprite(self.computePos(curPos, i) - 24, self.computePos(curPos), bonus.sprite, bonus.frame);
-            sprite.scale.setTo(0.7);
+            if (bonus.scale) {
+                sprite.scale.setTo(bonus.scale*0.7);
+            } else {
+                sprite.scale.setTo(0.7);
+            }
             sprite.anchor.setTo(0.5);
-            self.game.add.text(self.computePos(curPos, i++) + 24, self.computePos(curPos), bonus.count, style).anchor.set(0.5);
-            if (i%2 != 0) {
+            self.game.add.text(self.computePos(curPos, i) + 24, self.computePos(curPos), bonus.count, style).anchor.set(0.5);
+            if (i%3 == 0) {
                 curPos++;
+                i = 1;
+            } else {
+                i++;
             }
         });
 
@@ -125,11 +132,7 @@ class Victory extends Phaser.State {
 
     computePos(posY, posX) {
         if (posX) {
-            if (posX%2 == 0) {
-                return this.game.world.centerX - 60;
-            } else {
-                return this.game.world.centerX + 60;
-            }
+            return this.game.world.centerX - 240 + (posX * 120);
         } else {
             return this.game.world.centerY - 350 + ((posY - 1) * 48);
         }

@@ -54,7 +54,7 @@ class Game extends Phaser.State {
   render() {
     var self = this;
     // Debug : mise en couleur des blocs invisibles
-    //self.game.debug.body(this.player);
+    // self.game.debug.body(this.player);
   }
 
   update() {
@@ -171,7 +171,7 @@ class Game extends Phaser.State {
           enemy.animations.play('dead');
           enemy.alive = false;
           this.game.add.audio('hitSound').play();
-          this.updateScore(enemy.key, enemy.frame);
+          this.updateScore(enemy.key, 0);
           this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
           this.game.time.events.add(Phaser.Timer.SECOND * 2, function () {
               enemy.kill();

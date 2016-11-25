@@ -117,7 +117,7 @@ class Player extends Phaser.Sprite {
 
     addWeapon() {
         //  Creates 3 bullets, using the 'bullet' graphic
-        this.weapon = this.game.add.weapon(3, 'bullet-fire');
+        this.weapon = this.game.add.weapon(this.game.global.nbBullet, 'bullet-fire');
         this.weapon.bulletGravity.set(0, -this.game.global.gravity);
         //  The bullet will be automatically killed when it leaves the world bounds
         this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
