@@ -2,133 +2,133 @@ import Player from '../prefabs/player';
 
 class Level extends Phaser.Tilemap {
 
-  //initialization code in the constructor
-  constructor(state, key, tileWidth, tileHeight, width, height) {
-    super(state.game, key, tileWidth, tileHeight, width, height);
-    var self = this;
+    //initialization code in the constructor
+    constructor(state, key, tileWidth, tileHeight, width, height) {
+        super(state.game, key, tileWidth, tileHeight, width, height);
+        var self = this;
 
-    this.addTilesetImage('world-spritesheet', 'world');
-    // réupération des layers pour la construction du monde
-    this.backLayer = this.createLayer('back');
-    this.backLayer.resizeWorld();
-    this.blocsLayer = this.createLayer('blocs');
-    this.blocsLayer.resizeWorld();
+        this.addTilesetImage('world-spritesheet', 'world');
+        // réupération des layers pour la construction du monde
+        this.backLayer = this.createLayer('back');
+        this.backLayer.resizeWorld();
+        this.blocsLayer = this.createLayer('blocs');
+        this.blocsLayer.resizeWorld();
 
-    // gestion des collisions sur tile
-    this.setLayer(this.blocsLayer);
-    this.setCollisionBetween(1, 680);
+        // gestion des collisions sur tile
+        this.setLayer(this.blocsLayer);
+        this.setCollisionBetween(1, 680);
 
-    // Gestion des collisions avec le décors (ajout des callback)
-    // gestion des jumper
-    this.jumperSprites = [573, 574];
-    this.setTileIndexCallback(this.jumperSprites[0],
-        this.jumperCallback, this, this.backLayer);
-    // Gestion des pics et de l'eau
-    this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176,177],
-        state.killPlayerCallback, state, this.backLayer);
-    // Gestion des echelles
-    this.setTileIndexCallback([79, 80, 93, 94, 95, 540],
-        this.echelleCallback, this, this.backLayer);
+        // Gestion des collisions avec le décors (ajout des callback)
+        // gestion des jumper
+        this.jumperSprites = [573, 574];
+        this.setTileIndexCallback(this.jumperSprites[0],
+            this.jumperCallback, this, this.backLayer);
+        // Gestion des pics et de l'eau
+        this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176,177],
+            state.killPlayerCallback, state, this.backLayer);
+        // Gestion des echelles
+        this.setTileIndexCallback([79, 80, 93, 94, 95, 540],
+            this.echelleCallback, this, this.backLayer);
 
-    // Ajoute des zonnes de collision spécifiques
-    this.addCollisionObjects(self);
-    // Ajout des blocs mobiles
-    this.addLevelSpecialBlocs(self);
+        // Ajoute des zonnes de collision spécifiques
+        this.addCollisionObjects(self);
+        // Ajout des blocs mobiles
+        this.addLevelSpecialBlocs(self);
 
-    // Ajou des pièges/lasers
-    this.addLevelTraps(self);
-    // Ajout des bonus
-    this.addLevelBonus(self);
-    // Ajout des enemies
-    this.addLevelEnemies(self);
+        // Ajou des pièges/lasers
+        this.addLevelTraps(self);
+        // Ajout des bonus
+        this.addLevelBonus(self);
+        // Ajout des enemies
+        this.addLevelEnemies(self);
 
-    // Ajout du joueur
-    var gameLayer = this.layers[this.getLayer('game')];
-    gameLayer.data.forEach(function(row) {
-      row.forEach(function(data){
-          if (data.index > 0 && data.properties.start) {
-              state.player = new Player(self.game, data.x*data.width, data.y*data.height);
-              self.game.add.existing(state.player);
-          }
-      });
-    });
+        // Ajout du joueur
+        var gameLayer = this.layers[this.getLayer('game')];
+        gameLayer.data.forEach(function(row) {
+            row.forEach(function(data){
+                if (data.index > 0 && data.properties.start) {
+                    state.player = new Player(self.game, data.x*data.width, data.y*data.height);
+                    self.game.add.existing(state.player);
+                }
+            });
+        });
 
-    // Ajout du layer front en dernier pour être au premier plan
-    this.frontLayer = this.createLayer('front');
-    this.frontLayer.resizeWorld();
-  }
+        // Ajout du layer front en dernier pour être au premier plan
+        this.frontLayer = this.createLayer('front');
+        this.frontLayer.resizeWorld();
+    }
 
     /**
      *
      * @param state l'était courant du jeu
      * @returns {boolean} vrai si joueur sur une echelle
      */
-  update(state) {
-    // gestion des collisions (type terrain)
-    this.game.physics.arcade.collide(state.player, this.blocsLayer);
-    // type decors (nécessaire pour les callback sur tile)
-    this.game.physics.arcade.collide(state.player, this.backLayer);
-    // hack pour gérer les pentes
-    this.game.physics.arcade.collide(state.player, this.stairGroup, function(player, stair) {
-      if (player.body.touching.left || player.body.touching.right) {
-          player.y -= 1;
-          player.body.velocity.x += 10;
-      }
-    });
-    // blocs mobiles
-    this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.specialBlocsCollisionCallBack);
-    this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.specialBlocsCollisionCallBack);
-    this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.specialBlocCallback, null, this);
+    update(state) {
+        // gestion des collisions (type terrain)
+        this.game.physics.arcade.collide(state.player, this.blocsLayer);
+        // type decors (nécessaire pour les callback sur tile)
+        this.game.physics.arcade.collide(state.player, this.backLayer);
+        // hack pour gérer les pentes
+        this.game.physics.arcade.collide(state.player, this.stairGroup, function(player, stair) {
+            if (player.body.touching.left || player.body.touching.right) {
+                player.y -= 1;
+                player.body.velocity.x += 10;
+            }
+        });
+        // blocs mobiles
+        this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.specialBlocsCollisionCallBack);
+        this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.specialBlocsCollisionCallBack);
+        this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.specialBlocCallback, null, this);
 
-    // gestion des collisions sur objets donnant la mort
-    this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
+        // gestion des collisions sur objets donnant la mort
+        this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
 
-    // type bonus, quand le joueur touche une étoile
-    this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, state);
+        // type bonus, quand le joueur touche une étoile
+        this.game.physics.arcade.overlap(state.player, this.bonusGroup, state.collectBonus, null, state);
 
-    // Gestion des pièges
-    this.traps.forEach(function(trap){
-        state.physics.arcade.collide(trap.bullets, state.map.blocsLayer, function(bullet){ bullet.kill();});
-        state.physics.arcade.collide(trap.bullets, state.map.collisionGroup, function(bullet) { bullet.kill(); });
-        state.physics.arcade.overlap(trap.bullets, state.player, state.killPlayerCallback, null, state);
-    });
+        // Gestion des pièges
+        this.traps.forEach(function(trap){
+            state.physics.arcade.collide(trap.bullets, state.map.blocsLayer, function(bullet){ bullet.kill();});
+            state.physics.arcade.collide(trap.bullets, state.map.collisionGroup, function(bullet) { bullet.kill(); });
+            state.physics.arcade.overlap(trap.bullets, state.player, state.killPlayerCallback, null, state);
+        });
 
-    // gestion des collisions des ennemies (terrain)
-    this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer, this.enemyCollisionCallBack);
-    // gestion des collisions des ennemies (barriere virtuelle)
-    this.game.physics.arcade.collide(this.enemiesGroup, this.gameCollisionGroup, this.enemyCollisionCallBack);
-    // quand le joueur touche un enemie
-    this.game.physics.arcade.overlap(state.player, this.enemiesGroup, function(player, enemy) {
-      if (enemy.alive) {
-          state.killPlayerCallback(player, enemy);
-      }
-    }, null, state);
-  }
+        // gestion des collisions des ennemies (terrain)
+        this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer, this.enemyCollisionCallBack);
+        // gestion des collisions des ennemies (barriere virtuelle)
+        this.game.physics.arcade.collide(this.enemiesGroup, this.gameCollisionGroup, this.enemyCollisionCallBack);
+        // quand le joueur touche un enemie
+        this.game.physics.arcade.overlap(state.player, this.enemiesGroup, function(player, enemy) {
+            if (enemy.alive) {
+                state.killPlayerCallback(player, enemy);
+            }
+        }, null, state);
+    }
 
-  jumperCallback(sprite, tile) {
-    var self = this;
-    sprite.body.velocity.y = -this.game.global.maxVelocity;
-    this.game.add.audio('jumpSound').play('', 0, 0.25);
-    // on met une image de jumper activé
-    this.replace(tile.index, this.jumperSprites[1], tile.x, tile.y, 1, 1, this.backLayer);
-    this.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
-        // on remet une image de jumper désactivé
-        self.replace(self.jumperSprites[1], self.jumperSprites[0], tile.x, tile.y, 1, 1, self.backLayer);
-    });
-  }
+    jumperCallback(sprite, tile) {
+        var self = this;
+        sprite.body.velocity.y = -this.game.global.level.maxVelocity;
+        this.game.add.audio('jumpSound').play('', 0, 0.25);
+        // on met une image de jumper activé
+        this.replace(tile.index, this.jumperSprites[1], tile.x, tile.y, 1, 1, this.backLayer);
+        this.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
+            // on remet une image de jumper désactivé
+            self.replace(self.jumperSprites[1], self.jumperSprites[0], tile.x, tile.y, 1, 1, self.backLayer);
+        });
+    }
 
-  echelleCallback(player, tile) {
-      // quand le joueur touche un sprite d'echelle, incrémente un compteur
-      this.game.global.timer.echelle++;
-      this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
-          // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
-          this.game.global.timer.echelle--;
-          if (this.game.global.timer.echelle <= 0) {
-              // sortie de l'echelle, restauration de la gravité
-              player.body.gravity.set(0);
-          }
-      }, this);
-  }
+    echelleCallback(player, tile) {
+        // quand le joueur touche un sprite d'echelle, incrémente un compteur
+        this.game.global.timer.echelle++;
+        this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
+            // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
+            this.game.global.timer.echelle--;
+            if (this.game.global.timer.echelle <= 0) {
+                // sortie de l'echelle, restauration de la gravité
+                player.body.gravity.set(0);
+            }
+        }, this);
+    }
 
     specialBlocCallback(player) {
         // quand le joueur est sur un bloc, incrémente un compteur
@@ -150,10 +150,10 @@ class Level extends Phaser.Tilemap {
     }
 
     enemyCollisionCallBack(enemy, bloc) {
-      if (enemy.body.touching.left || enemy.body.touching.right) {
-          enemy.scale.x *= -1; // symetrie verticale
-          enemy.body.velocity.x *= -1;
-      }
+        if (enemy.body.touching.left || enemy.body.touching.right) {
+            enemy.scale.x *= -1; // symetrie verticale
+            enemy.body.velocity.x *= -1;
+        }
     }
 
     /**
@@ -164,27 +164,27 @@ class Level extends Phaser.Tilemap {
      * @returns {*}
      */
     getCollectedObject(sprite, frame, points, scale) {
-      for (var i=0; i<this.game.global.collected.length; i++){
-          if (this.game.global.collected[i].sprite == sprite && this.game.global.collected[i].frame == frame) {
-              if (points) {
-                  this.game.global.collected[i].count = 0;
-              }
-              return this.game.global.collected[i];
-          }
-      }
-      if (points) {
-          // création d'un nouveau type d'objet à collecter
-          var object = {
-              sprite: sprite,
-              frame: frame,
-              points: points,
-              scale: scale,
-              count: 0
-          };
-          this.game.global.collected.push(object);
-          return object;
-      }
-      return null;
+        for (var i=0; i<this.game.global.player.collected.length; i++){
+            if (this.game.global.player.collected[i].sprite == sprite && this.game.global.player.collected[i].frame == frame) {
+                if (points) {
+                    this.game.global.player.collected[i].count = 0;
+                }
+                return this.game.global.player.collected[i];
+            }
+        }
+        if (points) {
+            // création d'un nouveau type d'objet à collecter
+            var object = {
+                sprite: sprite,
+                frame: frame,
+                points: points,
+                scale: scale,
+                count: 0
+            };
+            this.game.global.player.collected.push(object);
+            return object;
+        }
+        return null;
     }
 
     /**
@@ -257,10 +257,10 @@ class Level extends Phaser.Tilemap {
                     self.game.physics.arcade.enableBody(bloc);
                     if (tile.properties.x) bloc.body.velocity.x = parseInt(tile.properties.x);
                     if (tile.properties.y) bloc.body.velocity.y = parseInt(tile.properties.y);
-                    bloc.body.maxVelocity.set(self.game.global.maxVelocity);
+                    bloc.body.maxVelocity.set(self.game.global.level.maxVelocity);
 
                     if (!tile.properties.pushable) {
-                        bloc.body.gravity.set(0, -self.game.global.gravity);
+                        bloc.body.gravity.set(0, -self.game.global.level.gravity);
                         bloc.body.immovable = true;
                     } else {
                         bloc.body.bounce.set(0.5);
@@ -315,16 +315,16 @@ class Level extends Phaser.Tilemap {
                         if (tile.properties.miror) {
                             enemy.scale.x *= -1; // symetrie verticale
                         }
-                        enemy.body.maxVelocity.set(self.game.global.maxVelocity);
-                        enemy.body.gravity.set(0, -self.game.global.gravity);
+                        enemy.body.maxVelocity.set(self.game.global.level.maxVelocity);
+                        enemy.body.gravity.set(0, -self.game.global.level.gravity);
                         enemy.body.collideWorldBounds = true;
                         self.getCollectedObject(sprite, 0, 25, tile.properties.scale); // le créé si existe pas
                     }
                 });
             });
-    }
+        }
 
-}
+    }
     /**
      *
      * @param self
@@ -347,7 +347,7 @@ class Level extends Phaser.Tilemap {
                     trap.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
                     trap.bulletSpeed = tile.properties.bulletSpeed;
                     trap.fireRate = tile.properties.fireRate;
-                    var gravity = -self.game.global.gravity;
+                    var gravity = -self.game.global.level.gravity;
                     if (tile.properties.gravity) {
                         gravity += tile.properties.gravity;
                     }
