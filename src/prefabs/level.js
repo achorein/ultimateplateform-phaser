@@ -135,7 +135,7 @@ class Level extends Phaser.Tilemap {
         }
     }
 
-    specialBlocCallback(player) {
+    specialBlocCallback(player, bloc) {
         // quand le joueur est sur un bloc, incrémente un compteur
         if (player.body.touching.down && this.game.global.timer.bloc < 5) {
             this.game.global.timer.bloc++;
@@ -143,6 +143,19 @@ class Level extends Phaser.Tilemap {
                 // décrémente le compteur pour pouvoir déterminer si on est sortie du bloc
                 this.game.global.timer.bloc--;
             }, this);
+            if (bloc.fallingTime) {
+                var self = this;
+                this.game.time.events.add(bloc.fallingTime, function () {
+                    // chute du bloc
+                    bloc.body.gravity.set(0);
+                    bloc.body.immovable = false;
+                    // fait disparaitre le bloc au bout de 2 secondes
+                    self.game.add.tween(bloc).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+                    this.game.time.events.add(2000, function () {
+                        bloc.kill();
+                    }, this);
+                }, this);
+            }
         }
     }
 
@@ -270,6 +283,9 @@ class Level extends Phaser.Tilemap {
                     } else {
                         bloc.body.bounce.set(0.5);
                         //bloc.body.friction.set(1000);
+                    }
+                    if (tile.properties.fallingTime) {
+                        bloc.fallingTime = tile.properties.fallingTime;
                     }
                     bloc.body.collideWorldBounds = true;
                     self.specialBlocsGroup.add(bloc);

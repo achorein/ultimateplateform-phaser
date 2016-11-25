@@ -55,7 +55,7 @@ class Game extends Phaser.State {
     render() {
         var self = this;
         // Debug : mise en couleur des blocs invisibles
-        self.game.debug.body(this.player);
+        //self.game.debug.body(this.player);
     }
 
     update() {
@@ -103,6 +103,7 @@ class Game extends Phaser.State {
         } else if (this.dieButton.isDown) {
             this.endGame(this, 'gameover');
         }
+
     }
 
     updateLives() {
