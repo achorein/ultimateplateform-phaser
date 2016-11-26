@@ -8,6 +8,7 @@ class Game extends Phaser.State {
 
     create() {
         var self = this; // pour utilisation simple dans les callback
+        var style = { font: "bold 18px Arial", fill: "#888", boundsAlignH: "center", boundsAlignV: "middle" };
         this.game.global.player.collected = [];
 
         // Sprites
@@ -25,7 +26,6 @@ class Game extends Phaser.State {
         this.game.time.desiredFps = 30;
 
         // Ajout du score
-        var style = { font: "bold 18px Arial", fill: "#888", boundsAlignH: "center", boundsAlignV: "middle" };
         this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);
         //this.scoreText.anchor.set(0.5);
         this.scoreText.fixedToCamera = true;
@@ -55,7 +55,9 @@ class Game extends Phaser.State {
     render() {
         var self = this;
         // Debug : mise en couleur des blocs invisibles
-        //self.game.debug.body(this.player);
+        if (this.game.global.devMode) {
+            this.game.debug.body(this.player);
+        }
     }
 
     update() {
@@ -97,13 +99,14 @@ class Game extends Phaser.State {
             }
         }
 
-        // permet de rapidement passer au niveau suivant
-        if (this.cheatCodeButton.isDown) {
-            this.endGame(this, 'victory');
-        } else if (this.dieButton.isDown) {
-            this.endGame(this, 'gameover');
+        if (this.game.global.devMode) {
+            // permet de rapidement passer au niveau suivant
+            if (this.cheatCodeButton.isDown) {
+                this.endGame(this, 'victory');
+            } else if (this.dieButton.isDown) {
+                this.endGame(this, 'gameover');
+            }
         }
-
     }
 
     updateLives() {
@@ -117,6 +120,18 @@ class Game extends Phaser.State {
             sprite = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
             sprite.scale.setTo(0.5);
             sprite.fixedToCamera = true;
+        }
+    }
+
+    updateKeys() {
+        var k = 0;
+        for (var i=0; i<this.player.inventory.key.length; i++){
+            var object = this.player.inventory.key[i];
+            object.sprite.fixedToCamera = true;
+            object.sprite.cameraOffset.x = 5 + 30*k;
+            object.sprite.cameraOffset.y = 88;
+            object.sprite.scale.setTo(0.5);
+            k++;
         }
     }
 
@@ -153,22 +168,32 @@ class Game extends Phaser.State {
     }
 
     collectBonus(player, bonus) {
-        this.game.add.audio('collectSound').play('', 0, 0.25);
-        bonus.kill(); // Removes the bonus from the screen
+        if (bonus.alive) {
+            this.game.add.audio('collectSound').play('', 0, 0.25);
+            if (bonus.keyColor) {
+                player.addToInventory('key', bonus.keyColor, bonus);
+                bonus.alive = false; // on ne peux plus la prendre
+                this.updateKeys(bonus);
+            } else {
+                bonus.kill(); // Removes the bonus from the screen
+            }
 
-        //  Add and update the score
-        this.updateScore(bonus.key, bonus.frame);
-
-        if (this.map.bonusGroup.countLiving() <= 0) {
-            this.endGame(this, 'victory');
+            //  Add and update the score
+            this.updateScore(bonus.key, bonus.frame);
+            if (this.map.bonusGroup.countLiving() <= 0) {
+                this.endGame(this, 'victory');
+            }
         }
     }
 
     updateScore(sprite, index) {
         var collected = this.map.getCollectedObject(sprite, index);
-        this.game.global.score += collected.points;
         collected.count++;
-        this.scoreText.text = 'SCORE ' + this.game.global.score;
+        if(collected.points>0) {
+            // bonus standard
+            this.game.global.score += collected.points;
+            this.scoreText.text = 'SCORE ' + this.game.global.score;
+        }
     }
 
     killEnemy(bullet, enemy) {

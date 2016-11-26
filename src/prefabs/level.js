@@ -66,19 +66,25 @@ class Level extends Phaser.Tilemap {
     update(state) {
         // gestion des collisions (type terrain)
         this.game.physics.arcade.collide(state.player, this.blocsLayer);
+        this.game.physics.arcade.collide(state.player, this.playerCollisionGroup, this.specialBlocCallback, null, state);
         // type decors (nécessaire pour les callback sur tile)
         this.game.physics.arcade.collide(state.player, this.backLayer);
         // hack pour gérer les pentes
         this.game.physics.arcade.collide(state.player, this.stairGroup, function(player, stair) {
             if (player.body.touching.left || player.body.touching.right) {
                 player.y -= 1;
-                player.body.velocity.x += 10;
+                if (player.body.touching.left) {
+                    player.body.velocity.x -= 10;
+                } else {
+                    player.body.velocity.x += 10;
+                }
             }
-        });
+            this.map.specialBlocCallback(player, stair);
+        }, null, state);
         // blocs mobiles
         this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.specialBlocsCollisionCallBack);
         this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.specialBlocsCollisionCallBack);
-        this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.specialBlocCallback, null, this);
+        this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.specialBlocCallback, null, state);
 
         // gestion des collisions sur objets donnant la mort
         this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
@@ -89,7 +95,7 @@ class Level extends Phaser.Tilemap {
         // Gestion des pièges
         this.traps.forEach(function(trap){
             state.physics.arcade.collide(trap.bullets, state.map.blocsLayer, function(bullet){ bullet.kill();});
-            state.physics.arcade.collide(trap.bullets, state.map.collisionGroup, function(bullet) { bullet.kill(); });
+            state.physics.arcade.collide(trap.bullets, state.map.gameCollisionGroup, function(bullet) { bullet.kill(); });
             state.physics.arcade.overlap(trap.bullets, state.player, state.killPlayerCallback, null, state);
         });
 
@@ -144,17 +150,25 @@ class Level extends Phaser.Tilemap {
                 this.game.global.timer.bloc--;
             }, this);
             if (bloc.fallingTime) {
-                var self = this;
                 this.game.time.events.add(bloc.fallingTime, function () {
                     // chute du bloc
                     bloc.body.gravity.set(0);
                     bloc.body.immovable = false;
                     // fait disparaitre le bloc au bout de 2 secondes
-                    self.game.add.tween(bloc).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+                    this.game.add.tween(bloc).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
                     this.game.time.events.add(2000, function () {
                         bloc.kill();
                     }, this);
                 }, this);
+            }
+        }
+        if (bloc.lockColor) {
+            var key = player.getFromInventory('key', bloc.lockColor);
+            if (key) { // le joueur à au moins une clé, on déverouille le block
+                player.removeFromInventory('key', bloc.lockColor);
+                key.kill();
+                bloc.kill();
+                this.updateKeys();
             }
         }
     }
@@ -179,18 +193,19 @@ class Level extends Phaser.Tilemap {
      * @param sprite nom du sprite
      * @param frame index de la frame du spritesheet
      * @param points nombre de points affecté au bonus (si value créé l'objet dans l'inventaire)
+     * @param scale sera utilisé pour l'affichage des écrans de points
      * @returns {*}
      */
     getCollectedObject(sprite, frame, points, scale) {
         for (var i=0; i<this.game.global.player.collected.length; i++){
             if (this.game.global.player.collected[i].sprite == sprite && this.game.global.player.collected[i].frame == frame) {
-                if (points) {
+                if (points || points == 0) {
                     this.game.global.player.collected[i].count = 0;
                 }
                 return this.game.global.player.collected[i];
             }
         }
-        if (points) {
+        if (points || points == 0) {
             // création d'un nouveau type d'objet à collecter
             var object = {
                 sprite: sprite,
@@ -224,15 +239,15 @@ class Level extends Phaser.Tilemap {
         }
 
         // gestion des collisions sur les objets plus petit qu'un sprite
-        this.collisionGroup = this.game.add.group();
-        this.collisionGroup.enableBody = true;
+        this.playerCollisionGroup = this.game.add.group();
+        this.playerCollisionGroup.enableBody = true;
         if (this.objects.playerCollision) {
             this.objects.playerCollision.forEach(function (object) {
                 var sprite = self.game.add.sprite(object.x, object.y);
                 self.game.physics.arcade.enableBody(sprite);
                 sprite.body.moves = false;
                 sprite.body.setSize(object.width, object.height);
-                self.collisionGroup.add(sprite);
+                self.playerCollisionGroup.add(sprite);
             });
         }
 
@@ -270,9 +285,11 @@ class Level extends Phaser.Tilemap {
         var collectableLayer = this.layers[this.getLayer('game')];
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
-                if (tile.index > 0 && tile.properties.moves) {
+                if (tile.index > 0 && tile.properties.bloc) {
                     var bloc = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
                     self.game.physics.arcade.enableBody(bloc);
+                    bloc.body.collideWorldBounds = true;
+
                     if (tile.properties.x) bloc.body.velocity.x = parseInt(tile.properties.x);
                     if (tile.properties.y) bloc.body.velocity.y = parseInt(tile.properties.y);
                     bloc.body.maxVelocity.set(self.game.global.level.maxVelocity);
@@ -287,7 +304,10 @@ class Level extends Phaser.Tilemap {
                     if (tile.properties.fallingTime) {
                         bloc.fallingTime = tile.properties.fallingTime;
                     }
-                    bloc.body.collideWorldBounds = true;
+                    if (tile.properties.lock) {
+                        bloc.lockColor = tile.properties.lock;
+                    }
+
                     self.specialBlocsGroup.add(bloc);
                 }
             });
@@ -407,10 +427,17 @@ class Level extends Phaser.Tilemap {
         var collectableLayer = this.layers[this.getLayer('game')];
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
-                if (tile.index > 0 && tile.properties.points) {
+                if (tile.index > 0 && (tile.properties.points || tile.properties.key)) {
                     var bonus = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
                     self.game.physics.arcade.enableBody(bonus);
-                    bonus.points = parseInt(tile.properties.points);
+                    if (tile.properties.points) {
+                        bonus.points = tile.properties.points;
+                    } else {
+                        bonus.points = 0;
+                    }
+                    if (tile.properties.key) {
+                        bonus.keyColor = tile.properties.key;
+                    }
                     bonus.body.moves = false; // ne subit pas la gravité
                     self.bonusGroup.add(bonus);
                     self.getCollectedObject('world', tile.index - 1, bonus.points); // le créé si existe pas

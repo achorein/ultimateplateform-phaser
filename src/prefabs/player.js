@@ -33,6 +33,8 @@ class Player extends Phaser.Sprite {
 
         this.addWeapon();
 
+        this.inventory = {};
+
         this.jumpTimer = 0; // temps entre deux auts
         this.facing = 'right';
         this.status = 'idle';
@@ -42,6 +44,35 @@ class Player extends Phaser.Sprite {
         this.weapon.fire();
         this.animations.play('attack');
         //this.game.add.audio('attackSound').play();
+    }
+
+    addToInventory(type, name, sprite) {
+        if (!this.inventory[type]) {
+            this.inventory[type] = [];
+        }
+        this.inventory[type].push({name: name, sprite: sprite});
+    }
+
+    getFromInventory(type, name) {
+        if (this.inventory[type]) {
+            for(var i=0; i<this.inventory[type].length; i++) {
+                if (this.inventory[type][i].name == name) {
+                    return this.inventory[type][i].sprite;
+                }
+            }
+        }
+        return null;
+    }
+
+    removeFromInventory(type, name) {
+        if (this.inventory[type]) {
+            for(var i=0; i<this.inventory[type].length; i++) {
+                if (this.inventory[type][i].name == name) {
+                    this.inventory[type].splice(i, 1); // remove object from table
+                    return;
+                }
+            }
+        }
     }
 
     jump() {

@@ -45,7 +45,8 @@ class Boot extends Phaser.State {
             },
             server: {
                 url: 'http://phaser.v1kings.io/api'
-            }
+            },
+            devMode: true
         };
     }
 
