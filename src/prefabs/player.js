@@ -13,9 +13,9 @@ class Player extends Phaser.Sprite {
         this.body.maxVelocity.set(this.game.global.level.maxVelocity);
         this.body.collideWorldBounds = true;
         if (this.game.global.player.sprite == 'ninja' || this.game.global.player.sprite == 'knight') {
-            this.body.setSize(120, 200, 0, 16);
+            this.body.setSize(128, 192, 0, 16);
         } else {
-            this.body.setSize(120, 200, 96, 32);
+            this.body.setSize(128, 192, 96, 32);
         }
 
         this.anchor.setTo(.5,.5);

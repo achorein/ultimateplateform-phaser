@@ -298,7 +298,7 @@ class Level extends Phaser.Tilemap {
                         bloc.body.gravity.set(0, -self.game.global.level.gravity);
                         bloc.body.immovable = true;
                     } else {
-                        bloc.body.bounce.set(0.5);
+                        bloc.body.bounce.set(0.75);
                         //bloc.body.friction.set(1000);
                     }
                     if (tile.properties.fallingTime) {
@@ -306,6 +306,9 @@ class Level extends Phaser.Tilemap {
                     }
                     if (tile.properties.lock) {
                         bloc.lockColor = tile.properties.lock;
+                    }
+                    if (tile.properties.destructable) {
+                        bloc.destructable = tile.properties.destructable;
                     }
 
                     self.specialBlocsGroup.add(bloc);

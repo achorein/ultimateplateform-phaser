@@ -65,6 +65,7 @@ class Game extends Phaser.State {
         this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
         this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
         this.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, this.killEnemy, null, this);
+        this.physics.arcade.overlap(this.player.weapon.bullets, this.map.specialBlocsGroup, this.killBlocCallback, null, this);
 
         // Mise à jour du temps
         this.timeText.text =  'TIME ' + this.elapseSeconds();
@@ -193,6 +194,13 @@ class Game extends Phaser.State {
             // bonus standard
             this.game.global.score += collected.points;
             this.scoreText.text = 'SCORE ' + this.game.global.score;
+        }
+    }
+
+    killBlocCallback(bullet, bloc) {
+        bullet.kill();
+        if (bloc.destructable) {
+            bloc.kill();
         }
     }
 
