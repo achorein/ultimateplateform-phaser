@@ -44,10 +44,13 @@ class Boot extends Phaser.State {
                 echelle: 0
             },
             server: {
-                url: 'http://phaser.v1kings.io/api'
+                url: '/api'
             },
             devMode: true
         };
+        if (!this.game.global.devMode) {
+            this.game.global.level.max = 1;
+        }
     }
 
 }
