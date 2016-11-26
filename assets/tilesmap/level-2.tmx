@@ -4,7 +4,7 @@
   <image source="tilesmap.png" width="512" height="5440"/>
   <tile id="16">
    <properties>
-    <property name="moves" type="bool" value="true"/>
+    <property name="bloc" type="bool" value="true"/>
     <property name="x" type="int" value="100"/>
    </properties>
   </tile>
