@@ -57,6 +57,7 @@ class Game extends Phaser.State {
         // Debug : mise en couleur des blocs invisibles
         if (this.game.global.devMode) {
             this.game.debug.body(this.player);
+            this.game.debug.body(this.map.pnjGroup);
         }
     }
 

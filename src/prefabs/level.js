@@ -41,6 +41,8 @@ class Level extends Phaser.Tilemap {
         this.addLevelBonus(self);
         // Ajout des enemies
         this.addLevelEnemies(self);
+        // Ajout des PNJ
+        this.addLevelPNJ(self);
 
         // Ajout du joueur
         var gameLayer = this.layers[this.getLayer('game')];
@@ -70,17 +72,7 @@ class Level extends Phaser.Tilemap {
         // type decors (nécessaire pour les callback sur tile)
         this.game.physics.arcade.collide(state.player, this.backLayer);
         // hack pour gérer les pentes
-        this.game.physics.arcade.collide(state.player, this.stairGroup, function(player, stair) {
-            if (player.body.touching.left || player.body.touching.right) {
-                player.y -= 1;
-                if (player.body.touching.left) {
-                    player.body.velocity.x -= 10;
-                } else {
-                    player.body.velocity.x += 10;
-                }
-            }
-            this.map.specialBlocCallback(player, stair);
-        }, null, state);
+        this.game.physics.arcade.collide(state.player, this.stairGroup, this.stairCallback, null, state);
         // blocs mobiles
         this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.specialBlocsCollisionCallBack);
         this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.specialBlocsCollisionCallBack);
@@ -104,11 +96,46 @@ class Level extends Phaser.Tilemap {
         // gestion des collisions des ennemies (barriere virtuelle)
         this.game.physics.arcade.collide(this.enemiesGroup, this.gameCollisionGroup, this.enemyCollisionCallBack);
         // quand le joueur touche un enemie
-        this.game.physics.arcade.overlap(state.player, this.enemiesGroup, function(player, enemy) {
-            if (enemy.alive) {
-                state.killPlayerCallback(player, enemy);
+        this.game.physics.arcade.overlap(state.player, this.enemiesGroup, this.enemyOverlapCallback, null, state);
+
+        // gestion des collisions des PNJ (terrain)
+        this.game.physics.arcade.collide(this.pnjGroup, this.blocsLayer, this.enemyCollisionCallBack);
+        // gestion des collisions des PNJ (barriere virtuelle)
+        this.game.physics.arcade.collide(this.pnjGroup, this.gameCollisionGroup, this.enemyCollisionCallBack);
+        // quand le joueur touche un player
+        this.game.physics.arcade.overlap(state.player, this.pnjGroup, this.pnjOverlapCallback, null, this);
+    }
+
+    pnjOverlapCallback(player, pnj) {
+        // afficher le texte
+        if (pnj.text && !pnj.textBloc) {
+            pnj.textBloc = this.game.add.text(pnj.x + pnj.textOffsetX, pnj.y + pnj.textOffsetY, pnj.text, {
+                font: "14px Arial", fill: "#fff", wordWrap: true, wordWrapWidth: 200, align: "center",
+                stroke: '#000000', strokeThickness: 6
+            });
+            this.game.time.events.add(pnj.textTime, function() {
+                pnj.textBloc.kill();
+                pnj.textBloc = null;
+            });
+        }
+    }
+
+    enemyOverlapCallback(enemy, player) {
+        if (enemy.alive) {
+            this.killPlayerCallback(player, enemy);
+        }
+    }
+
+    stairCallback(player, stair) {
+        if (player.body.touching.left || player.body.touching.right) {
+            player.y -= 1;
+            if (player.body.touching.left) {
+                player.body.velocity.x -= 10;
+            } else {
+                player.body.velocity.x += 10;
             }
-        }, null, state);
+        }
+        this.map.specialBlocCallback(player, stair);
     }
 
     jumperCallback(sprite, tile) {
@@ -298,7 +325,7 @@ class Level extends Phaser.Tilemap {
                         bloc.body.gravity.set(0, -self.game.global.level.gravity);
                         bloc.body.immovable = true;
                     } else {
-                        bloc.body.bounce.set(0.75);
+                        bloc.body.bounce.set(0.8, 0.1);
                         //bloc.body.friction.set(1000);
                     }
                     if (tile.properties.fallingTime) {
@@ -309,6 +336,9 @@ class Level extends Phaser.Tilemap {
                     }
                     if (tile.properties.destructable) {
                         bloc.destructable = tile.properties.destructable;
+                    }
+                    if (tile.properties.alpha) {
+                        bloc.alpha = tile.properties.alpha;
                     }
 
                     self.specialBlocsGroup.add(bloc);
@@ -333,11 +363,13 @@ class Level extends Phaser.Tilemap {
                         if (tile.properties.sprite) {
                             sprite = tile.properties.sprite;
                         }
-                        var offset = 16;
+                        var offsetX = (tile.properties.offsetX)?tile.properties.offsetX:16;
+                        var offsetY = (tile.properties.offsetY)?tile.properties.offsetY:16;
                         if (tile.properties.offset) {
-                            offset = tile.properties.offset;
+                            offsetX = tile.properties.offset;
+                            offsetY = tile.properties.offset;
                         }
-                        var enemy = self.enemiesGroup.create(tile.x * tile.width + offset, tile.y * tile.height + offset, sprite, 1);
+                        var enemy = self.enemiesGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
                         if (tile.properties.atlas) {
                             enemy.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
                             enemy.animations.add('walk', Phaser.Animation.generateFrameNames('walk/', 1, 10, '', 2), 10, true, false);
@@ -447,6 +479,51 @@ class Level extends Phaser.Tilemap {
                 }
             });
         });
+    }
+
+    addLevelPNJ(self) {
+        this.pnjGroup = this.game.add.group();
+        this.pnjGroup.enableBody = true;
+        var pnjLayer = this.layers[this.getLayer('game')];
+
+        if (pnjLayer) { // si il y a un layer enemies
+            pnjLayer.data.forEach(function (row) {
+                row.forEach(function (tile) {
+                    if (tile.index > 0 && tile.properties.pnj) {
+                        var sprite = 'ninjagirl';
+                        if (tile.properties.sprite) {
+                            sprite = tile.properties.sprite;
+                        }
+                        var offsetX = (tile.properties.offsetX)?tile.properties.offsetX:16;
+                        var offsetY = (tile.properties.offsetY)?tile.properties.offsetY:16;
+                        if (tile.properties.offset) {
+                            offsetX = tile.properties.offset;
+                            offsetY = tile.properties.offset;
+                        }
+                        var pnj = self.pnjGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
+                        pnj.body.gravity.set(0, -self.game.global.level.gravity);
+                        pnj.body.immovable = true;
+                        if (tile.properties.atlas) {
+                            pnj.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
+                        } else {
+                            pnj.animations.add('idle', [0, 1], 2, true);
+                        }
+                        pnj.animations.play('idle');
+                        pnj.anchor.setTo(.5, 0);
+                        if (tile.properties.scale){
+                            pnj.scale.setTo(tile.properties.scale);
+                        }
+                        if (tile.properties.miror) {
+                            pnj.scale.x *= -1; // symetrie verticale
+                        }
+                        pnj.text = tile.properties.text;
+                        pnj.textOffsetX = (tile.properties.textOffsetX)?tile.properties.textOffsetX:32;
+                        pnj.textOffsetY = (tile.properties.textOffsetY)?tile.properties.textOffsetY:-64;
+                        pnj.textTime = (tile.properties.textTime)?tile.properties.textTime:4000 ;
+                    }
+                });
+            });
+        }
     }
 
 }
