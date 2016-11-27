@@ -9,6 +9,11 @@ class Level extends Phaser.Tilemap {
 
         this.addTilesetImage('world-spritesheet', 'world');
         // réupération des layers pour la construction du monde
+        var backUndergroundLayer = this.layers[this.getLayer('backUnderground')];
+        if (backUndergroundLayer) { // si il y a un deuxième layer back
+            this.backUndergroundLayer = this.createLayer('backUnderground');
+            this.backUndergroundLayer.resizeWorld();
+        }
         this.backLayer = this.createLayer('back');
         this.backLayer.resizeWorld();
         this.blocsLayer = this.createLayer('blocs');
@@ -178,6 +183,7 @@ class Level extends Phaser.Tilemap {
             }, this);
             if (bloc.fallingTime) {
                 this.game.time.events.add(bloc.fallingTime, function () {
+                    player.animations.play('jump');
                     // chute du bloc
                     bloc.body.gravity.set(0);
                     bloc.body.immovable = false;

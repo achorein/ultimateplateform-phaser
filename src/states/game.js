@@ -76,12 +76,19 @@ class Game extends Phaser.State {
         if (this.player.onEchelle) {
             this.player.body.velocity.y = 0;
         }
-        if (this.cursors.left.isDown) { // fleche de gauche
+        if (this.actionButton.isDown) {
+            this.player.action();
+        } else if (this.cursors.left.isDown) { // fleche de gauche
             this.player.left();
         } else if (this.cursors.right.isDown) { // fleche de droite
             this.player.right();
         } else if (this.cursors.up.isDown) { // fleche du haut
-            this.player.up(this.map);
+            var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
+            if (tile && tile.index == 57) { // sur une porte
+                this.endGame(this, 'victory');
+            } else {
+                this.player.up(this.map);
+            }
         } else if (this.cursors.down.isDown) { // fleche du bas
             this.player.down();
         } else if (this.escapeButton.isDown) {
@@ -92,14 +99,7 @@ class Game extends Phaser.State {
         if (this.jumpButton.isDown) {
             this.player.jump();
         }
-        if (this.actionButton.isDown) {
-            var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
-            if (tile && tile.index == 57) { // sur une porte
-                this.endGame(this, 'victory');
-            } else {
-                this.player.action();
-            }
-        }
+
 
         if (this.game.global.devMode) {
             // permet de rapidement passer au niveau suivant

@@ -41,9 +41,15 @@ class Player extends Phaser.Sprite {
     }
 
     action() {
-        this.weapon.fire();
-        this.animations.play('attack');
-        //this.game.add.audio('attackSound').play();
+        if(this.weapon.fire()) {
+            this.animations.play('attack');
+            if (this.facing != 'left') { // regarde à droite
+                this.body.velocity.x = -this.game.global.player.speed*1.5;
+            } else {
+                this.body.velocity.x = this.game.global.player.speed*1.5;
+            }
+            //this.game.add.audio('attackSound').play();
+        }
     }
 
     addToInventory(type, name, sprite) {

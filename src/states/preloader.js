@@ -53,6 +53,8 @@ class Preloader extends Phaser.State {
         this.game.load.spritesheet('frog', 'assets/enemy-frog.png', 61, 54);
         this.game.load.spritesheet('bat', 'assets/enemy-bat.png', 88, 47);
         this.game.load.spritesheet('snail', 'assets/enemy-snail.png', 60, 40);
+        this.game.load.spritesheet('fly', 'assets/enemy-fly.png', 65, 45);
+        this.game.load.spritesheet('mouse', 'assets/enemy-mouse.png', 59, 35);
 
         // armes
         this.game.load.image('bullet-knife', 'assets/bullet_knife.png');
