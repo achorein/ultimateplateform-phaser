@@ -125,9 +125,14 @@ class Level extends Phaser.Tilemap {
         }
     }
 
-    enemyOverlapCallback(enemy, player) {
+    enemyOverlapCallback(player, enemy) {
         if (enemy.alive) {
-            this.killPlayerCallback(player, enemy);
+            if (player.body.touching.down) {
+                this.killEnemy(null, enemy);
+                player.body.velocity.y = -this.game.global.player.speed;
+            } else {
+                this.killPlayerCallback(player, enemy);
+            }
         }
     }
 

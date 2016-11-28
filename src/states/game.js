@@ -208,7 +208,9 @@ class Game extends Phaser.State {
 
     killEnemy(bullet, enemy) {
         if (enemy.alive) {
-            bullet.kill();
+            if (bullet) {
+                bullet.kill();
+            }
             enemy.body.velocity.x = 0;
             enemy.animations.play('dead');
             enemy.alive = false;
