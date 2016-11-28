@@ -48,6 +48,7 @@ class Preloader extends Phaser.State {
         this.game.load.atlasJSONHash('zombiemale', 'assets/zombiemale.png', 'assets/zombiemale.json');
         this.game.load.atlasJSONHash('zombiefemale', 'assets/zombiefemale.png', 'assets/zombiefemale.json');
         this.game.load.atlasJSONHash('pingun', 'assets/enemy-pingun.png', 'assets/enemy-pingun.json');
+        this.game.load.spritesheet('snowman', 'assets/enemy-snowman.png', 64, 73);
         this.game.load.spritesheet('spider', 'assets/enemy-spider.png', 77, 53);
         this.game.load.spritesheet('bee', 'assets/enemy-bee.png', 56, 48);
         this.game.load.spritesheet('frog', 'assets/enemy-frog.png', 61, 54);

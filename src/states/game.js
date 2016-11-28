@@ -24,6 +24,7 @@ class Game extends Phaser.State {
         this.game.physics.startSystem(Phaser.Physics.ARCADE); // gestion simple des collision : carré et cercle
         this.game.physics.arcade.gravity.y = this.game.global.level.gravity;
         this.game.time.desiredFps = 30;
+        this.game.physics.arcade.skipQuadTree = true;
 
         // Ajout du score
         this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);

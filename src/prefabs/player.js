@@ -12,13 +12,16 @@ class Player extends Phaser.Sprite {
         //this.body.bounce.y = 0.1;
         this.body.maxVelocity.set(this.game.global.level.maxVelocity);
         this.body.collideWorldBounds = true;
-        if (this.game.global.player.sprite == 'ninja' || this.game.global.player.sprite == 'knight') {
-            this.body.setSize(128, 192, 0, 16);
-        } else {
-            this.body.setSize(128, 192, 96, 32);
+        if (this.game.global.player.sprite == 'ninja') {
+            this.body.setSize(128, 192, 0, 28);
+        } else if (this.game.global.player.sprite == 'knight') {
+            this.body.setSize(128, 192, 0, 40);
+        } else if (this.game.global.player.sprite == 'adventure_girl') {
+            this.body.setSize(128, 192, 64, 48);
+        } else { // robot
+            this.body.setSize(128, 192, 64, 52);
         }
-
-        this.anchor.setTo(.5,.5);
+        this.anchor.setTo(0.5,0.5);
 
         // add animations from spritesheets
         this.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
