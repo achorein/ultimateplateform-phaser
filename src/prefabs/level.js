@@ -29,7 +29,7 @@ class Level extends Phaser.Tilemap {
         this.setTileIndexCallback(this.jumperSprites[0],
             this.jumperCallback, this, this.backLayer);
         // Gestion des pics et de l'eau
-        this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176,177],
+        this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176, 177],
             state.killPlayerCallback, state, this.backLayer);
         // Gestion des echelles
         this.setTileIndexCallback([79, 80, 93, 94, 95, 540],

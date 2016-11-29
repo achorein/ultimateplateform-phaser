@@ -71,6 +71,8 @@ class Preloader extends Phaser.State {
         this.game.load.image('lose', 'assets/text_lose.png');
         this.game.load.image('gameover', 'assets/text_gameover.png');
 
+        this.game.load.image('keys', 'assets/keys.png');
+
         /*
          * Sons
          */

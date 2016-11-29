@@ -49,6 +49,15 @@ class Game extends Phaser.State {
         }
         this.updateLives();
 
+        // Ajout de l'aide si pas déjà fait
+        if (!this.game.global.helpShown) {
+            this.help = this.game.add.sprite(32, this.game.height - 200, 'keys');
+            this.help.fixedToCamera = true;
+            this.help.alpha = 0.75;
+            this.game.add.tween(this.help).to({alpha: 0}, 5000, Phaser.Easing.Linear.None, true);
+            this.game.global.helpShown = true;
+        }
+
         // Setup audio
         this.music = this.game.add.audio('musicGame', 2, true);
         this.music.play();
