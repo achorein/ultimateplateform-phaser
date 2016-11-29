@@ -53,6 +53,15 @@ class Game extends Phaser.State {
         this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
         this.dieButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F10);
+        this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
+        this.soundButton.onDown.add(function(){
+            if (this.game.sound.mute) {
+                this.game.sound.mute = false;
+            } else {
+                this.game.sound.mute = true;
+            }
+        }, this);
+
     }
 
     render() {

@@ -75,6 +75,14 @@ class Menu extends Phaser.State {
         this.canContinueToNextState = true;
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.okButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
+        this.soundButton.onDown.add(function(){
+            if (this.game.sound.mute) {
+                this.game.sound.mute = false;
+            } else {
+                this.game.sound.mute = true;
+            }
+        }, this);
     }
 
     loadData() {
