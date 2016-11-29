@@ -89,8 +89,15 @@ class Game extends Phaser.State {
             this.player.right();
         } else if (this.cursors.up.isDown) { // fleche du haut
             var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
-            if (tile && tile.index == 57) { // sur une porte
-                this.endGame(this, 'victory');
+            if (tile) {
+                if (tile.properties.end) { // sur une porte
+                    this.endGame(this, 'victory');
+                } else if (tile.properties.teleportX) {
+                    this.player.x = tile.properties.teleportX * 64;
+                    this.player.y = tile.properties.teleportY * 64;
+                } else {
+                    this.player.up(this.map);
+                }
             } else {
                 this.player.up(this.map);
             }
