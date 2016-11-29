@@ -11,15 +11,15 @@ class GameOver extends Phaser.State {
 
         //add background image
         this.background = this.game.add.sprite(0,0,'background');
-        this.background.height = this.game.world.height;
-        this.background.width = this.game.world.width;
+        this.background.height = this.game.height;
+        this.background.width = this.game.width;
         this.background.alpha = 0.25;
 
         // Ajout texte
         if (this.game.global.player.life > 0) {
-            var img = this.game.add.sprite(this.game.world.centerX, 100, 'lose');
+            var img = this.game.add.sprite(this.game.centerX, 100, 'lose');
         } else {
-            var img = this.game.add.sprite(this.game.world.centerX, 100, 'gameover');
+            var img = this.game.add.sprite(this.game.centerX, 100, 'gameover');
         }
         img.anchor.set(0.5);
 
@@ -30,25 +30,25 @@ class GameOver extends Phaser.State {
 
         // ajout des vies restantes
         for (var i=0; i<this.game.global.player.life; i++) {
-            var sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartFull');
+            var sprite = this.game.add.sprite(this.game.centerX - 30 + 30*i, this.computePos(3), 'heartFull');
             sprite.scale.setTo(0.5);
             sprite.anchor.setTo(0.5);
         }
         for (;i<this.game.global.player.maxlife;i++) {
-            sprite = this.game.add.sprite(this.game.world.centerX - 30 + 30*i, this.computePos(3), 'heartEmpty');
+            sprite = this.game.add.sprite(this.game.centerX - 30 + 30*i, this.computePos(3), 'heartEmpty');
             sprite.scale.setTo(0.5);
             sprite.anchor.setTo(0.5);
         }
 
         // Ajout personnage mort
-        sprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, this.game.global.player.sprite, 'idle/01');
+        sprite = this.game.add.sprite(this.game.centerX, this.game.centerY, this.game.global.player.sprite, 'idle/01');
         sprite.anchor.set(0.5);
         sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
         sprite.animations.play('dead');
         this.game.camera.follow(sprite);
 
         // Ajout temps écoulé
-        this.time = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 200,
+        this.time = this.game.add.text(this.game.centerX, this.game.centerY + 200,
             this.game.global.level.elapsedTime + ' seconde' + ((this.game.global.level.elapsedTime>1)?'s':''), styleSmall);
         this.time.anchor.set(0.5);
 
@@ -106,7 +106,7 @@ class GameOver extends Phaser.State {
     }
 
     computePos(index) {
-        return this.game.world.centerY - 200 + ((index - 1) * 48);
+        return this.game.centerY - 200 + ((index - 1) * 48);
     }
 }
 
