@@ -26,12 +26,12 @@ class Menu extends Phaser.State {
         // Ajout personnages
         this.menu = [
             {index: 1, name:'SB', description:[
-                'Se faufiller dans des situations peu confortable est votre quotidien,',
+                'Se faufiller dans des situations peu confortables est votre quotidien,',
                 'vous allez devoir user de votre agilité pour mener à bien votre mission.'
             ], texture:'ninja'},
             {index: 2, name:'ARC', description:[
                 'A la recherche des meilleurs artefacts permettant de construire des applications',
-                'toujours plus évoluées, vous aller braver les dangers qui vous attendent.'
+                'toujours plus évoluées, vous allez braver les dangers qui vous attendent.'
             ], texture:'robot'},
             {index: 3, name:'BA', description:[
                 'Vous partez à l\'aventure à la recherche des parchemins sacrés,',
@@ -39,7 +39,7 @@ class Menu extends Phaser.State {
             ], texture:'adventure_girl'},
             {index: 4, name:'PM', description:[
                 'Afin de financer votre projet vous partez vous battre contre une armée de problèmes',
-                'afin de collecter un trésor qui n\'a d\'égale que votre ambition.'
+                'pour collecter un trésor qui n\'a d\'égal que votre ambition.'
             ], texture:'knight'}
         ];
 
