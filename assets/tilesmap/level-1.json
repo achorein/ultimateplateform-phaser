@@ -46,16 +46,6 @@
          "height":40,
          "name":"game",
          "opacity":1,
-         "properties":
-            {
-             "bloc":true,
-             "y":100
-            },
-         "propertytypes":
-            {
-             "bloc":"bool",
-             "y":"int"
-            },
          "type":"tilelayer",
          "visible":true,
          "width":160,
@@ -7749,6 +7739,10 @@
                 {
                  "points":100
                 },
+             "56":
+                {
+                 "end":true
+                },
              "560":
                 {
                  "key":"blue"
@@ -7909,6 +7903,10 @@
              "559":
                 {
                  "points":"int"
+                },
+             "56":
+                {
+                 "end":"bool"
                 },
              "560":
                 {

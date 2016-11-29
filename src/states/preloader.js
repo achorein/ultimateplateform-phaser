@@ -39,6 +39,7 @@ class Preloader extends Phaser.State {
 
         // players
         this.game.load.atlasJSONHash('adventure_girl', 'assets/adventure_girl.png', 'assets/adventure_girl.json');
+        this.game.load.atlasJSONHash('adventure_boy', 'assets/adventure_boy.png', 'assets/adventure_boy.json');
         this.game.load.atlasJSONHash('knight', 'assets/knight.png', 'assets/knight.json');
         this.game.load.atlasJSONHash('robot', 'assets/robot.png', 'assets/robot.json');
         this.game.load.atlasJSONHash('ninja', 'assets/ninja.png', 'assets/ninja.json');

@@ -64,6 +64,19 @@ class Game extends Phaser.State {
 
         // Inputs
         this.cursors = this.game.input.keyboard.createCursorKeys();
+        this.cursors.up.onDown.add(function(){
+            var tile = this.map.getTile(Math.floor(this.player.x/64), Math.floor(this.player.y/64), this.map.backLayer);
+            if (tile) {
+                if (tile.properties.end) { // sur une porte
+                    this.endGame(this, 'victory');
+                } else if (tile.properties.teleportX) {
+                    this.player.x = tile.properties.teleportX * 64;
+                    this.player.y = tile.properties.teleportY * 64;
+                } else {
+                    this.player.up(this.map);
+                }
+            }
+        }, this);
         this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
         this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -123,19 +136,7 @@ class Game extends Phaser.State {
         } else if (this.cursors.right.isDown) { // fleche de droite
             this.player.right();
         } else if (this.cursors.up.isDown) { // fleche du haut
-            var tile = this.map.getTile(Math.floor(this.player.x/64), Math.floor(this.player.y/64), this.map.backLayer);
-            if (tile) {
-                if (tile.properties.end) { // sur une porte
-                    this.endGame(this, 'victory');
-                } else if (tile.properties.teleportX) {
-                    this.player.x = tile.properties.teleportX * 64;
-                    this.player.y = tile.properties.teleportY * 64;
-                } else {
-                    this.player.up(this.map);
-                }
-            } else {
-                this.player.up(this.map);
-            }
+            this.player.up(this.map);
         } else if (this.cursors.down.isDown) { // fleche du bas
             this.player.down();
         } else if (this.escapeButton.isDown) {
