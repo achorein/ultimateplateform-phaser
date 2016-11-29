@@ -13,8 +13,9 @@ class Game extends Phaser.State {
 
         // Sprites
         this.background = this.game.add.sprite(0,0,'background-level-'+this.game.global.level.current);
-        this.background.height = this.game.world.height;
-        this.background.width = this.game.world.width;
+        //this.background = this.add.tileSprite(0, 0, this.game.world.width, this.game.world.height, 'background-level-'+this.game.global.level.current); // repeat background
+        this.background.height = this.game.height;
+        this.background.width = this.game.width;
         this.background.fixedToCamera = true;
 
         // tilemap
@@ -37,6 +38,7 @@ class Game extends Phaser.State {
         //this.timeText.anchor.set(0.5);
         this.timeText.fixedToCamera = true;
 
+        this.lifeGroup = this.game.add.group();
         // Ajout des vies
         this.updateLives();
 
@@ -63,6 +65,8 @@ class Game extends Phaser.State {
     }
 
     update() {
+        //this.background.tilePosition.y = -(this.game.camera.y * 0.7);
+
         this.map.update(this); // gestion des collisions
         this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
         this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
@@ -113,16 +117,26 @@ class Game extends Phaser.State {
     }
 
     updateLives() {
-        var sprite;
+        //this.lifeGroup.destroy(true, false);
+
+        this.lifeGroup.removeAll(true);
         for (var i=0; i<this.game.global.player.life; i++) {
-            sprite = this.game.add.sprite(5 + 30*i, 59, 'heartFull');
-            sprite.scale.setTo(0.5);
+            var x = 5 + 30*i;
+            var y = 59;
+            var sprite = this.game.add.sprite(x, y, 'heartFull');
             sprite.fixedToCamera = true;
+            sprite.cameraOffset.x = x;
+            sprite.cameraOffset.y = y;
+            sprite.scale.setTo(0.5);
+            this.lifeGroup.add(sprite);
         }
         for (;i<this.game.global.player.maxlife;i++) {
-            sprite = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
-            sprite.scale.setTo(0.5);
+            var sprite = this.game.add.sprite(0, 0, 'heartEmpty');
             sprite.fixedToCamera = true;
+            sprite.cameraOffset.x = 5 + 30*i;
+            sprite.cameraOffset.y = 59;
+            sprite.scale.setTo(0.5);
+            this.lifeGroup.add(sprite);
         }
     }
 
@@ -183,6 +197,10 @@ class Game extends Phaser.State {
 
             //  Add and update the score
             this.updateScore(bonus.key, bonus.frame);
+            if (bonus.life) {
+                this.game.global.life++;
+                this.updateLives();
+            }
             if (this.map.bonusGroup.countLiving() <= 0) {
                 this.endGame(this, 'victory');
             }

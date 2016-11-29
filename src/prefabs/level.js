@@ -71,6 +71,7 @@ class Level extends Phaser.Tilemap {
      * @returns {boolean} vrai si joueur sur une echelle
      */
     update(state) {
+
         // gestion des collisions (type terrain)
         this.game.physics.arcade.collide(state.player, this.blocsLayer);
         this.game.physics.arcade.collide(state.player, this.playerCollisionGroup, this.specialBlocCallback, null, state);
@@ -129,7 +130,7 @@ class Level extends Phaser.Tilemap {
         if (enemy.alive) {
             if (player.body.touching.down) {
                 this.killEnemy(null, enemy);
-                player.body.velocity.y = -this.game.global.player.speed;
+                player.body.velocity.y = -this.game.global.player.speed/2;
             } else {
                 this.killPlayerCallback(player, enemy);
             }
@@ -473,7 +474,7 @@ class Level extends Phaser.Tilemap {
         var collectableLayer = this.layers[this.getLayer('game')];
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
-                if (tile.index > 0 && (tile.properties.points || tile.properties.key)) {
+                if (tile.index > 0 && (tile.properties.points || tile.properties.key || tile.properties.life)) {
                     var bonus = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
                     self.game.physics.arcade.enableBody(bonus);
                     if (tile.properties.points) {
@@ -483,6 +484,9 @@ class Level extends Phaser.Tilemap {
                     }
                     if (tile.properties.key) {
                         bonus.keyColor = tile.properties.key;
+                    }
+                    if (tile.properties.life) {
+                        bonus.life = true;
                     }
                     bonus.body.moves = false; // ne subit pas la gravité
                     self.bonusGroup.add(bonus);

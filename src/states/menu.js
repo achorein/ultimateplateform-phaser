@@ -135,7 +135,7 @@ class Menu extends Phaser.State {
                 this.game.global.level.current = 1;
                 this.game.global.score = 0;
                 this.game.global.scoreLastLevel = 0;
-                this.game.global.player.life = this.game.global.player.maxlife;
+                this.game.global.player.life = this.game.global.player.maxlife - 1;
                 this.game.global.player.name = $('#playerName').val();
                 localStorage.setItem('playerName', this.game.global.player.name);
                 $('#playerName').prop('disabled', true);
