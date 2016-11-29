@@ -25,7 +25,7 @@ class Game extends Phaser.State {
         this.game.physics.startSystem(Phaser.Physics.ARCADE); // gestion simple des collision : carré et cercle
         this.game.physics.arcade.gravity.y = this.game.global.level.gravity;
         this.game.time.desiredFps = 30;
-        this.game.physics.arcade.skipQuadTree = true;
+        //this.game.physics.arcade.skipQuadTree = true;
 
         // Ajout du score
         this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);
@@ -38,8 +38,15 @@ class Game extends Phaser.State {
         //this.timeText.anchor.set(0.5);
         this.timeText.fixedToCamera = true;
 
-        this.lifeGroup = this.game.add.group();
+        this.playerLifeGroup = this.game.add.group();;
+        //this.playerLifeGroup.enableBody = true;
         // Ajout des vies
+        for (var i=0; i<this.game.global.player.maxlife; i++) {
+            var life = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
+            life.fixedToCamera = true;
+            life.scale.setTo(0.5);
+            this.playerLifeGroup.add(life);
+        }
         this.updateLives();
 
         // Setup audio
@@ -51,8 +58,6 @@ class Game extends Phaser.State {
         this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
         this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-        this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
-        this.dieButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F10);
         this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
         this.soundButton.onDown.add(function(){
             if (this.game.sound.mute) {
@@ -61,7 +66,19 @@ class Game extends Phaser.State {
                 this.game.sound.mute = true;
             }
         }, this);
+        if (this.game.global.devMode) {
+            // permet de rapidement passer au niveau suivant
+            this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
+            this.cheatCodeButton.onDown.add(function() {
+                this.endGame(this, 'victory');
+            }, this);
+            // permet de perdre instantanement
+            this.dieButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F10);
+            this.dieButton.onDown.add(function() {
+                this.endGame(this, 'gameover');
+            }, this);
 
+        }
     }
 
     render() {
@@ -97,7 +114,7 @@ class Game extends Phaser.State {
         } else if (this.cursors.right.isDown) { // fleche de droite
             this.player.right();
         } else if (this.cursors.up.isDown) { // fleche du haut
-            var tile = this.map.getTile(Math.floor((this.player.x+32)/64), Math.floor((this.player.y+32)/64), this.map.backLayer);
+            var tile = this.map.getTile(Math.floor(this.player.x/64), Math.floor(this.player.y/64), this.map.backLayer);
             if (tile) {
                 if (tile.properties.end) { // sur une porte
                     this.endGame(this, 'victory');
@@ -120,39 +137,16 @@ class Game extends Phaser.State {
         if (this.jumpButton.isDown) {
             this.player.jump();
         }
-
-
-        if (this.game.global.devMode) {
-            // permet de rapidement passer au niveau suivant
-            if (this.cheatCodeButton.isDown) {
-                this.endGame(this, 'victory');
-            } else if (this.dieButton.isDown) {
-                this.endGame(this, 'gameover');
-            }
-        }
     }
 
     updateLives() {
-        //this.lifeGroup.destroy(true, false);
-
-        this.lifeGroup.removeAll(true);
         for (var i=0; i<this.game.global.player.life; i++) {
-            var x = 5 + 30*i;
-            var y = 59;
-            var sprite = this.game.add.sprite(x, y, 'heartFull');
-            sprite.fixedToCamera = true;
-            sprite.cameraOffset.x = x;
-            sprite.cameraOffset.y = y;
-            sprite.scale.setTo(0.5);
-            this.lifeGroup.add(sprite);
+            this.playerLifeGroup.children[i].key = 'heartFull';
+            this.playerLifeGroup.children[i].loadTexture('heartFull');
         }
         for (;i<this.game.global.player.maxlife;i++) {
-            var sprite = this.game.add.sprite(0, 0, 'heartEmpty');
-            sprite.fixedToCamera = true;
-            sprite.cameraOffset.x = 5 + 30*i;
-            sprite.cameraOffset.y = 59;
-            sprite.scale.setTo(0.5);
-            this.lifeGroup.add(sprite);
+            this.playerLifeGroup.children[i].key = 'heartEmpty';
+            this.playerLifeGroup.children[i].loadTexture('heartEmpty');
         }
     }
 
@@ -211,12 +205,17 @@ class Game extends Phaser.State {
                 bonus.kill(); // Removes the bonus from the screen
             }
 
+            if (bonus.life) {
+                if (this.game.global.player.life<this.game.global.player.maxlife) {
+                    this.game.global.player.life++;
+                    this.updateLives();
+                } else {
+                    this.game.global.score += 100;
+                }
+            }
             //  Add and update the score
             this.updateScore(bonus.key, bonus.frame);
-            if (bonus.life) {
-                this.game.global.life++;
-                this.updateLives();
-            }
+
             if (this.map.bonusGroup.countLiving() <= 0) {
                 this.endGame(this, 'victory');
             }

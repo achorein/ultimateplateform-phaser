@@ -31,8 +31,8 @@ class Boot extends Phaser.State {
                 elapsedTime: 0
             },
             player: {
-                life: 3,
-                maxlife: 4,
+                life: 2,
+                maxlife: 3,
                 speed: 250,
                 nbBullet: 1,
                 sprite: '',
