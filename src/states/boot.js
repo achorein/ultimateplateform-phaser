@@ -25,7 +25,7 @@ class Boot extends Phaser.State {
             scoreLastLevel: 0,
             level: {
                 current: 1,
-                max: 5,
+                max: 3,
                 gravity: 400,
                 maxVelocity: 475,
                 elapsedTime: 0
