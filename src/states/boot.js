@@ -46,11 +46,11 @@ class Boot extends Phaser.State {
             server: {
                 url: '/api'
             },
-            devMode: true
+            devMode: false
         };
-        if (!this.game.global.devMode) {
+        /*if (!this.game.global.devMode) {
             this.game.global.level.max = 1;
-        }
+        }*/
     }
 
 }

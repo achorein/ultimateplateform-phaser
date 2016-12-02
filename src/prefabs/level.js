@@ -31,9 +31,6 @@ class Level extends Phaser.Tilemap {
         // Gestion des pics et de l'eau
         this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176, 177],
             state.killPlayerCallback, state, this.backLayer);
-        // Gestion des echelles
-        this.setTileIndexCallback([79, 80, 93, 94, 95, 540],
-            this.echelleCallback, this, this.backLayer);
 
         // Ajoute des zonnes de collision spécifiques
         this.addCollisionObjects(self);
@@ -162,23 +159,6 @@ class Level extends Phaser.Tilemap {
         });
     }
 
-    echelleCallback(player, tile) {
-        if (this.game.global.timer.echelle < 5) {
-            // quand le joueur touche un sprite d'echelle, incrémente un compteur
-            this.game.global.timer.echelle++;
-            this.game.time.events.add(Phaser.Timer.SECOND * 0.1, function () {
-                // décrémente le compteur pour pouvoir déterminer si on est sortie de l'echelle
-                this.game.global.timer.echelle--;
-                if (this.game.global.timer.echelle <= 0) {
-                    // sortie de l'echelle, restauration de la gravité
-                    player.body.gravity.set(0);
-                    player.animations.play('jump');
-                    player.onEchelle = false;
-                }
-            }, this);
-        }
-    }
-
     specialBlocCallback(player, bloc) {
         // quand le joueur est sur un bloc, incrémente un compteur
         if (player.body.touching.down && this.game.global.timer.bloc < 5) {
@@ -225,6 +205,10 @@ class Level extends Phaser.Tilemap {
             enemy.scale.x *= -1; // symetrie verticale
             enemy.body.velocity.x *= -1;
         }
+    }
+
+    getTileOnSprite(player, layer) {
+        return this.getTile(Math.floor(player.x / 64), Math.floor(player.y / 64), layer);
     }
 
     /**

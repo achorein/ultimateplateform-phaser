@@ -39,7 +39,6 @@ class Game extends Phaser.State {
         this.timeText.fixedToCamera = true;
 
         this.playerLifeGroup = this.game.add.group();;
-        //this.playerLifeGroup.enableBody = true;
         // Ajout des vies
         for (var i=0; i<this.game.global.player.maxlife; i++) {
             var life = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
@@ -49,12 +48,12 @@ class Game extends Phaser.State {
         }
         this.updateLives();
 
-        // Ajout de l'aide si pas déjà fait
+        // Ajout de l'aide si première partie
         if (!this.game.global.helpShown) {
             this.help = this.game.add.sprite(32, this.game.height - 200, 'keys');
             this.help.fixedToCamera = true;
             this.help.alpha = 0.75;
-            this.game.add.tween(this.help).to({alpha: 0}, 5000, Phaser.Easing.Linear.None, true);
+            this.game.add.tween(this.help).to({alpha: 0}, 5000, Phaser.Easing.Linear.None, true); // fondu
             this.game.global.helpShown = true;
         }
 
@@ -65,7 +64,7 @@ class Game extends Phaser.State {
         // Inputs
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.cursors.up.onDown.add(function(){
-            var tile = this.map.getTile(Math.floor(this.player.x/64), Math.floor(this.player.y/64), this.map.backLayer);
+            var tile = this.map.getTileOnSprite(this.player, this.map.backLayer);
             if (tile) {
                 if (tile.properties.end) { // sur une porte
                     this.endGame(this, 'victory');
@@ -123,6 +122,22 @@ class Game extends Phaser.State {
 
         // Mise à jour du temps
         this.timeText.text =  'TIME ' + this.elapseSeconds();
+
+        // Gestion des echelles
+        var wasEchelleOverlap = this.player.echelleOverlap; // ancien status
+        var backTile = this.map.getTileOnSprite(this.player, this.map.backLayer); // nouveau status
+        if (backTile) {
+            this.player.echelleOverlap = [79, 80, 93, 94, 95, 540].indexOf(backTile.index) >= 0;
+        } else {
+            this.player.echelleOverlap = false;
+        }
+        if (!this.player.echelleOverlap) { // reinit la gravité si pas sur une echelle
+            this.player.body.gravity.set(0);
+            if (wasEchelleOverlap) { // sortie de l'echelle
+                this.player.animations.play('jump');
+            }
+            this.player.onEchelle = false;
+        }
 
         // gestion du joueur
         this.player.body.velocity.x = 0;

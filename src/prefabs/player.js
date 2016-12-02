@@ -129,7 +129,7 @@ class Player extends Phaser.Sprite {
     }
 
     up() {
-        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
+        if (this.echelleOverlap) { // si on est sur une echelle
             if(this.canClimp) {
                 this.animations.play('climp');
             }
@@ -140,7 +140,7 @@ class Player extends Phaser.Sprite {
     }
 
     down() {
-        if (this.game.global.timer.echelle>0) { // si on est sur une echelle
+        if (this.echelleOverlap) { // si on est sur une echelle
             if(this.canClimp) {
                 this.animations.play('climp');
             }
@@ -167,7 +167,7 @@ class Player extends Phaser.Sprite {
     }
 
     onFloor() {
-        return this.body.onFloor() || this.game.global.timer.echelle>0 || this.game.global.timer.bloc>0;
+        return this.body.onFloor() || this.echelleOverlap || this.game.global.timer.bloc>0;
     }
 
     addWeapon() {
