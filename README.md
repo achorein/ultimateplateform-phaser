@@ -11,8 +11,8 @@ Le jeu est déployé à l'adresse suivante : http://phaser.v1kings.io
 
 - [Tiled](http://www.mapeditor.org/) : Création d'une tilemap pour générer les niveaux
 - [TexturePacker](https://www.codeandweb.com/texturepacker) : Création de spritesheet d'animation à partir d'un ensemble de sprites unitaire
-- [ShoeBox](http://renderhjs.net/shoebox/ : Découpage et fusion d'images
-- [imBatch](http://www.highmotionsoftware.com/products/imbatch : Traitement par lot d'images
+- [ShoeBox](http://renderhjs.net/shoebox/) : Découpage et fusion d'images
+- [imBatch](http://www.highmotionsoftware.com/products/imbatch) : Traitement par lot d'images
 
 ## Graphismes
 
