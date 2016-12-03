@@ -10,7 +10,7 @@ class GameOver extends Phaser.State {
         var styleSmall = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
         //add background image
-        this.background = this.game.add.sprite(0,0,'background');
+        this.background = this.game.add.sprite(0,0,'background-menu');
         this.background.height = this.game.height;
         this.background.width = this.game.width;
         this.background.alpha = 0.25;
@@ -78,7 +78,7 @@ class GameOver extends Phaser.State {
             type: 'PUT',
             dataType: 'json',
             data: JSON.stringify({
-                name: this.game.global.player.name,
+                playername: this.game.global.player.name,
                 player: this.game.global.player.sprite,
                 score: this.game.global.score
             }),

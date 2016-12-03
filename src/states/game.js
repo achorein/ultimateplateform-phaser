@@ -28,6 +28,7 @@ class Game extends Phaser.State {
         //this.game.physics.arcade.skipQuadTree = true;
 
         // Ajout du score
+        this.game.global.score = 0;
         this.scoreText = this.game.add.text(5, 5, 'SCORE ' + this.game.global.score, style);
         //this.scoreText.anchor.set(0.5);
         this.scoreText.fixedToCamera = true;
@@ -79,6 +80,9 @@ class Game extends Phaser.State {
         this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
         this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        this.escapeButton.onDown.add(function(){
+            this.endGame(this, 'menu-level');
+        }, this);
         this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
         this.soundButton.onDown.add(function(){
             if (this.game.sound.mute) {
@@ -154,8 +158,6 @@ class Game extends Phaser.State {
             this.player.up(this.map);
         } else if (this.cursors.down.isDown) { // fleche du bas
             this.player.down();
-        } else if (this.escapeButton.isDown) {
-            this.endGame(this, 'menu');
         } else { // si aucune touche appuyée
             this.player.idle();
         }

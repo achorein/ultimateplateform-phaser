@@ -10,7 +10,7 @@ class Victory extends Phaser.State {
         var styleSmall = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
         //add background image
-        this.background = this.game.add.sprite(0,0,'background');
+        this.background = this.game.add.sprite(0,0,'background-menu');
         this.background.height = this.game.height;
         this.background.width = this.game.width;
         this.background.alpha = 0.25;
@@ -84,6 +84,10 @@ class Victory extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND*0.25, function(){ this.canContinueToNextState = true; }, this);
 
         this.saveScore();
+        var oldMaxLevel = parseInt(localStorage.getItem('playerMaxLevel'));
+        if (oldMaxLevel < this.game.global.level.current+1) {
+            localStorage.setItem('playerMaxLevel', this.game.global.level.current + 1);
+        }
 
         // press any key
         this.game.input.keyboard.onDownCallback = function(e) {
@@ -92,27 +96,52 @@ class Victory extends Phaser.State {
     }
 
     saveScore(){
-        if (this.game.global.level.current == this.game.global.level.max) {
+        if (parseInt(localStorage.getItem('level'+this.game.global.level.current)) < this.game.global.score) {
+            localStorage.setItem('level' + this.game.global.level.current, this.game.global.score);
             $.ajax({
                 url: this.game.global.server.url + '/score',
                 type: 'PUT',
                 dataType: 'json',
                 data: JSON.stringify({
-                    name: this.game.global.player.name,
+                    playername: this.game.global.player.name,
                     player: this.game.global.player.sprite,
-                    score: this.game.global.score
+                    score: this.game.global.score,
+                    level: this.game.global.level.current
                 }),
                 contentType: "application/json; charset=utf-8",
-                success: function(data) {
-                    console.log('Score saved !');
+                success: function (data) {
+                    console.log('Score level saved !');
                 },
-                failure: function(err) {
-                    console.log('Erreur de sauvegarde du score !');
+                failure: function (err) {
+                    console.log('Erreur de sauvegarde du score level !');
                 }
             });
-        } else {
-            this.game.global.scoreLastLevel = this.game.global.score;
+            var scoreTotal = 0;
+            for (var i = 0; i < this.game.global.level.max; i++) {
+                var scoreLevel = localStorage.getItem('level' + (i+1));
+                if (scoreLevel) {
+                    scoreTotal += parseInt(scoreLevel);
+                }
+            }
+            $.ajax({
+                url: this.game.global.server.url + '/score',
+                type: 'PUT',
+                dataType: 'json',
+                data: JSON.stringify({
+                    playername: this.game.global.player.name,
+                    player: this.game.global.player.sprite,
+                    score: scoreTotal
+                }),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log('Score total saved !');
+                },
+                failure: function (err) {
+                    console.log('Erreur de sauvegarde du score total !');
+                }
+            });
         }
+        this.game.global.scoreLastLevel = this.game.global.score;
     }
 
     update() {}

@@ -16,7 +16,7 @@ class Menu extends Phaser.State {
     create() {
         var self = this;
         //add background image
-        this.background = this.game.add.sprite(0,0, 'background');
+        this.background = this.game.add.sprite(0,0, 'background-menu');
         this.background.height = this.game.height;
         this.background.width = this.game.width;
         this.background.alpha = 0.25;
@@ -54,7 +54,11 @@ class Menu extends Phaser.State {
 
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         this.menu.forEach(function(player) {
-            var sprite = self.game.add.sprite(self.computePosition(self, player.index), self.game.centerY - 50, player.texture, 'idle/01');
+            var sprite = self.game.add.button(self.computePosition(self, player.index), self.game.centerY - 50, player.texture, function(sprite){
+                this.cursorPos = sprite.cursorPos;
+                this.goNextState();
+            }, self, 'idle/01');
+            sprite.cursorPos = player.index;
             sprite.anchor.set(0.5);
             sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
             sprite.scale.setTo(0.7);
@@ -62,6 +66,10 @@ class Menu extends Phaser.State {
             var text = self.game.add.text(self.computePosition(self, player.index), self.game.centerY + 100, player.name, style);
             text.anchor.set(0.5);
             player.text = text;
+            sprite.onInputOver.add(function(sprite){
+                this.cursorPos = sprite.cursorPos;
+                this.selectPlayer();
+            }, self);
         });
 
         //setup audio
@@ -86,38 +94,8 @@ class Menu extends Phaser.State {
     }
 
     loadData() {
-        var playerName = localStorage.getItem('playerName');
-        if (!playerName) {
-            playerName = 'Player 1';
-        }
-        this.game.global.player.name = playerName;
-        $('#playerName').val(playerName);
-        $('#playerName').prop('disabled', false);
-        $.ajax({
-            url: this.game.global.server.url + '/score/max',
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $('#score-max').html('#1 - ' + data.name + ' - ' + data.score + ' points');
-            },
-            failure: function (err) {
-                console.log('Erreur de récupération du score max !');
-            }
-        });
-        $.ajax({
-            url: this.game.global.server.url + '/score/top',
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $('#score-top').html('');
-                for (var i = 1; i < data.length; i++) {
-                    $('#score-top').append('<li><a href="#">#'+ (i+1) + ' - ' + data[i].name + ' - ' + data[i].score + '</a></li>');
-                }
-            },
-            failure: function (err) {
-                console.log('Erreur de récupération des scores !');
-            }
-        });
+        this.game.global.player.name = this.game.commun.refreshPlayerName(false);
+        this.game.commun.refreshScore();
     }
 
     update() {
@@ -137,18 +115,16 @@ class Menu extends Phaser.State {
                 this.selectPlayer();
                 this.timer = this.game.time.now + 250;
             } else if(this.okButton.isDown) {
-                this.game.add.audio('okMenu').play('', 0, 0.5);
-                this.game.global.player.sprite = this.menu[this.cursorPos-1].texture;
-                this.music.stop();
-                this.game.global.level.current = 1;
-                this.game.global.score = 0;
-                this.game.global.scoreLastLevel = 0;
-                this.game.global.player.life = this.game.global.player.maxlife - 1;
-                this.game.global.player.name = $('#playerName').val();
-                localStorage.setItem('playerName', this.game.global.player.name);
-                $('#playerName').prop('disabled', true);
-                this.game.state.start('game', true, false);
+               this.goNextState();
             }
+    }
+
+    goNextState() {
+        this.game.add.audio('okMenu').play('', 0, 0.5);
+        this.game.global.player.sprite = this.menu[this.cursorPos-1].texture;
+        this.music.stop();
+        localStorage.setItem('playerName', this.game.global.player.name);
+        this.game.state.start('menu-level', true, false);
     }
 
     selectPlayer(ignoreSound) {

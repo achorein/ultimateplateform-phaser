@@ -1,3 +1,5 @@
+import Commun from '../commun';
+
 class Boot extends Phaser.State {
 
     constructor() {
@@ -5,15 +7,15 @@ class Boot extends Phaser.State {
     }
 
     preload() {
-        this.load.image('preloader', 'assets/preloader.gif');
-        this.load.image('logo', 'assets/game-logo.png');
-        this.load.image('vikings', 'assets/vikings-logo.png');
-        this.load.image('phaser', 'assets/phaser.png');
+        this.load.image('preloader', 'assets/menu/preloader.gif');
+        this.load.image('logo', 'assets/menu/game-logo.png');
+        this.load.image('vikings', 'assets/menu/vikings-logo.png');
+        this.load.image('phaser', 'assets/menu/phaser.png');
     }
 
     create() {
         this.initGlobalVariables();
-
+        this.game.commun = new Commun(this.game);
         this.game.state.start('preloader');
     }
 
@@ -44,13 +46,13 @@ class Boot extends Phaser.State {
                 echelle: 0
             },
             server: {
-                url: '/api'
+                url: 'http://phaser.v1kings.io/api'
             },
-            devMode: false
+            devMode: true
         };
-        /*if (!this.game.global.devMode) {
-            this.game.global.level.max = 1;
-        }*/
+        if (this.game.global.devMode) {
+            this.game.global.level.max = 5;
+        }
     }
 
 }
