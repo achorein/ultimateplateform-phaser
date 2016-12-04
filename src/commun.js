@@ -21,7 +21,7 @@ class Commun {
             type: 'GET',
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                $('#score-max').html('#1 - ' + data.name + ' - ' + data.score + ' points');
+                $('#score-max').html('#1 - ' + data.playername + ' - ' + data.score + ' points');
             },
             failure: function (err) {
                 console.log('Erreur de récupération du score max !');
@@ -34,7 +34,7 @@ class Commun {
             success: function (data) {
                 $('#score-top').html('');
                 for (var i = 1; i < data.length; i++) {
-                    $('#score-top').append('<li><a href="#">#'+ (i+1) + ' - ' + data[i].name + ' - ' + data[i].score + '</a></li>');
+                    $('#score-top').append('<li><a href="#">#'+ (i+1) + ' - ' + data[i].playername + ' - ' + data[i].score + '</a></li>');
                 }
             },
             failure: function (err) {
