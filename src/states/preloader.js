@@ -33,6 +33,7 @@ class Preloader extends Phaser.State {
             this.game.load.tilemap('tilemap-level-'+i, 'assets/tilesmap/level-'+i+'.json', null, Phaser.Tilemap.TILED_JSON);
             this.game.load.image('background-trees-level-'+i, 'assets/tilesmap/level-'+i+'-background-trees.png');
             this.game.load.image('background-sky-level-'+i, 'assets/tilesmap/level-'+i+'-background-sky.png');
+            this.game.load.audio('music-level-'+i,'assets/tilesmap/level-'+i+'.mp3');
         }
         this.game.load.spritesheet('world','assets/tilesmap/tilesmap.png', 64, 64);
 
@@ -85,7 +86,6 @@ class Preloader extends Phaser.State {
         // musics
         this.game.load.audio('musicMenu','assets/sounds/menu_music.mp3');
         this.game.load.audio('miscMenu','assets/sounds/menu_misc.wav');
-        this.game.load.audio('musicGame','assets/sounds/game.mp3');
         // bruitages
         this.game.load.audio('okMenu','assets/sounds/menu_ok.wav');
         this.game.load.audio('jumpSound','assets/sounds/jump.ogg');

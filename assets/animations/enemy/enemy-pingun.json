@@ -1,55 +1,46 @@
 {
-"frames": [
-	{
-		"filename": "dead/01.png",
+"frames": {
+	"dead/01.png":{
 		"frame": {"x":0, "y":402, "w":185, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":185,"h":200},
 		"sourceSize": {"w":185,"h":200}
 	},
-	{
-		"filename": "dead/02.png",
+	"dead/02.png":{
 		"frame": {"x":0, "y":603, "w":185, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":185,"h":200},
 		"sourceSize": {"w":185,"h":200}
 	},
-	{
-		"filename": "dead/03.png",
+	"dead/03.png":{
 		"frame": {"x":0, "y":201, "w":209, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":209,"h":200},
 		"sourceSize": {"w":209,"h":200}
 	},
-	{
-		"filename": "dead/04.png",
+	"dead/04.png":{
 		"frame": {"x":0, "y":0, "w":248, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":248,"h":200},
 		"sourceSize": {"w":248,"h":200}
 	},
-	{
-		"filename": "walk/01.png",
+	"walk/01.png":{
 		"frame": {"x":210, "y":201, "w":176, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":176,"h":200},
 		"sourceSize": {"w":176,"h":200}
 	},
-	{
-		"filename": "walk/02.png",
+	"walk/02.png":{
 		"frame": {"x":0, "y":804, "w":176, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":176,"h":200},
 		"sourceSize": {"w":176,"h":200}
 	},
-	{
-		"filename": "walk/03.png",
+	"walk/03.png":{
 		"frame": {"x":186, "y":402, "w":176, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":176,"h":200},
 		"sourceSize": {"w":176,"h":200}
 	},
-	{
-		"filename": "walk/04.png",
+	"walk/04.png":{
 		"frame": {"x":177, "y":804, "w":176, "h":200},
 		"spriteSourceSize": {"x":0,"y":0,"w":176,"h":200},
 		"sourceSize": {"w":176,"h":200}
 	}
-
-],
+},
 "meta": {
 	"image": "main.png",
 	"size": {"w": 512, "h": 1024},

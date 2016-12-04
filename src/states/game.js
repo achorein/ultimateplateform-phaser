@@ -66,7 +66,7 @@ class Game extends Phaser.State {
         }
 
         // Setup audio
-        this.music = this.game.add.audio('musicGame', 2, true);
+        this.music = this.game.add.audio('music-level-'+this.game.global.level.current, 2, true);
         this.music.play();
 
         // Inputs
