@@ -208,7 +208,7 @@ class Level extends Phaser.Tilemap {
     }
 
     getTileOnSprite(player, layer) {
-        return this.getTile(Math.floor(player.x / 64), Math.floor(player.y / 64), layer);
+        return this.getTile(Math.floor(player.x / 64), Math.floor((player.y + 32) / 64), layer);
     }
 
     /**
