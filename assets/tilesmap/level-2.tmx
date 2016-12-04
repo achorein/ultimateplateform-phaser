@@ -56,7 +56,7 @@
     <property name="offsetX" type="int" value="24"/>
     <property name="offsetY" type="int" value="-10"/>
     <property name="pnj" type="bool" value="true"/>
-    <property name="scale" type="float" value="0.15"/>
+    <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="ninjagirl"/>
     <property name="text" value="Un conseil mon gars, saute le plus loin possible !"/>
     <property name="textOffsetX" type="int" value="-64"/>
@@ -80,7 +80,7 @@
     <property name="offsetX" type="int" value="24"/>
     <property name="offsetY" type="int" value="-10"/>
     <property name="pnj" type="bool" value="true"/>
-    <property name="scale" type="float" value="0.15"/>
+    <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="adventure_boy"/>
     <property name="text" value="Cette mine recele de nombreux trésors, mais restez sur vos garde prudent !"/>
     <property name="textOffsetX" type="int" value="-64"/>

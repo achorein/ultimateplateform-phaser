@@ -7022,8 +7022,8 @@
                  "type":"",
                  "visible":true,
                  "width":60,
-                 "x":2178.66666666667,
-                 "y":1600.66666666667
+                 "x":2178.67,
+                 "y":1600.67
                 }, 
                 {
                  "height":16,
@@ -7121,7 +7121,7 @@
                  "type":"",
                  "visible":true,
                  "width":66.6667,
-                 "x":1279.33666666667,
+                 "x":1279.34,
                  "y":799.333
                 }, 
                 {
@@ -7165,7 +7165,7 @@
                  "type":"",
                  "visible":true,
                  "width":9.33333,
-                 "x":4314.66666666667,
+                 "x":4314.67,
                  "y":2496.67
                 }, 
                 {
@@ -7186,7 +7186,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":5.66666666666697,
+                 "width":5.66667,
                  "x":3840,
                  "y":2497
                 }, 
@@ -7673,7 +7673,7 @@
                  "atlas":true,
                  "offset":-10,
                  "pnj":true,
-                 "scale":0.15,
+                 "scale":0.39,
                  "sprite":"ninjagirl",
                  "text":"Impossible de passer ces piques, la cl\u00e9 est trop loin !"
                 },

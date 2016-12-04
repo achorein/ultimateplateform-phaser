@@ -65,7 +65,7 @@
     <property name="atlas" type="bool" value="true"/>
     <property name="enemy" type="bool" value="true"/>
     <property name="offset" type="int" value="-12"/>
-    <property name="scale" type="float" value="0.15"/>
+    <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="zombiemale"/>
     <property name="velocity" type="int" value="50"/>
    </properties>
@@ -76,7 +76,7 @@
     <property name="enemy" type="bool" value="true"/>
     <property name="miror" type="bool" value="true"/>
     <property name="offset" type="int" value="-20"/>
-    <property name="scale" type="float" value="0.15"/>
+    <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="zombiefemale"/>
     <property name="velocity" type="int" value="-50"/>
    </properties>

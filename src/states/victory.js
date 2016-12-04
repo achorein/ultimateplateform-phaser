@@ -47,9 +47,9 @@ class Victory extends Phaser.State {
         }
 
         // Ajout personnage qui saute
-        var sprite = this.game.add.sprite(this.game.centerX, this.game.centerY + 50, this.game.global.player.sprite, 'idle/01');
+        var sprite = this.game.add.sprite(this.game.centerX, this.game.centerY + 50, this.game.global.player.sprite, 'idle/01.png');
         sprite.anchor.set(0.5);
-        sprite.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, true, false);
+        sprite.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '.png', 2), 10, true, false);
         sprite.animations.play('jump');
         this.game.camera.follow(sprite);
 
@@ -107,7 +107,7 @@ class Victory extends Phaser.State {
                 this.game.global.level.current++;
                 this.game.state.start('game', true, false);
             } else {
-                this.game.state.start('menu', true, false);
+                this.game.state.start('menu-level', true, false);
             }
         }
     }

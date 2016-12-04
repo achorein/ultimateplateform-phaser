@@ -195,7 +195,7 @@
                  "atlas":true,
                  "enemy":true,
                  "offset":-12,
-                 "scale":0.15,
+                 "scale":0.39,
                  "sprite":"zombiemale",
                  "velocity":50
                 },
@@ -205,7 +205,7 @@
                  "enemy":true,
                  "miror":true,
                  "offset":-20,
-                 "scale":0.15,
+                 "scale":0.39,
                  "sprite":"zombiefemale",
                  "velocity":-50
                 },

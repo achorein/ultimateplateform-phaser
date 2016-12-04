@@ -56,11 +56,11 @@ class Menu extends Phaser.State {
             var sprite = this.game.add.button(this.computePosition(player.index), this.game.centerY - 50, player.texture, function(sprite){
                 this.cursorPos = sprite.cursorPos;
                 this.goNextState();
-            }, this, 'idle/01');
+            }, this, 'idle/01.png');
             sprite.cursorPos = player.index;
             sprite.anchor.set(0.5);
-            sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
-            sprite.scale.setTo(0.7);
+            sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '.png', 2), 10, true, false);
+            sprite.scale.setTo(1);
             player.sprite = sprite;
             var text = this.game.add.text(this.computePosition(player.index), this.game.centerY + 100, player.name, style);
             text.anchor.set(0.5);
@@ -140,7 +140,7 @@ class Menu extends Phaser.State {
                 this.game.time.events.add(lineDelay, this.writeText, this);
             } else {
                 player.sprite.animations.stop();
-                player.sprite.scale.setTo(0.7);
+                player.sprite.scale.setTo(0.8);
                 player.text.scale.setTo(1);
             }
         }, this);

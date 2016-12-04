@@ -2,8 +2,8 @@ class Player extends Phaser.Sprite {
 
     //initialization code in the constructor
     constructor(game, x, y, frame) {
-        super(game, x, y, game.global.player.sprite, 'idle/01');
-        this.scale.setTo(0.33);
+        super(game, x, y, game.global.player.sprite, 'idle/01.png');
+        this.scale.setTo(0.4);
 
         //setup physics properties
         this.game.physics.arcade.enableBody(this);
@@ -13,24 +13,24 @@ class Player extends Phaser.Sprite {
         this.body.maxVelocity.set(this.game.global.level.maxVelocity);
         this.body.collideWorldBounds = true;
         if (this.game.global.player.sprite == 'ninja') {
-            this.body.setSize(128, 192, 0, 28);
+            this.body.setSize(92, 160, 0, 35);
         } else if (this.game.global.player.sprite == 'knight') {
-            this.body.setSize(128, 192, 0, 40);
+            this.body.setSize(92, 160, 0, 15);
         } else if (this.game.global.player.sprite == 'adventure_girl') {
-            this.body.setSize(128, 192, 64, 48);
+            this.body.setSize(92, 160, 2, 20);
         } else { // robot
-            this.body.setSize(128, 192, 64, 52);
+            this.body.setSize(92, 160, 0, 5);
         }
         this.anchor.setTo(0.5,0.5);
 
         // add animations from spritesheets
-        this.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
-        this.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
-        this.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, false, false);
-        this.animations.add('run', Phaser.Animation.generateFrameNames('run/', 1, 10, '', 2), 10, true, false);
-        this.animations.add('attack', Phaser.Animation.generateFrameNames('attack/', 1, 3, '', 2), 10, false, false);
+        this.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '.png', 2), 6, false, false);
+        this.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '.png', 2), 10, true, false);
+        this.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '.png', 2), 10, false, false);
+        this.animations.add('run', Phaser.Animation.generateFrameNames('run/', 1, 10, '.png', 2), 10, true, false);
+        this.animations.add('attack', Phaser.Animation.generateFrameNames('attack/', 1, 3, '.png', 2), 10, false, false);
         if (this.game.global.player.sprite == 'ninja') {
-            this.animations.add('climp', Phaser.Animation.generateFrameNames('climp/', 1, 10, '', 2), 10, false, false);
+            this.animations.add('climp', Phaser.Animation.generateFrameNames('climp/', 1, 10, '.png', 2), 10, false, false);
             this.canClimp = true;
         }
 

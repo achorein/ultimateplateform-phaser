@@ -40,9 +40,9 @@ class GameOver extends Phaser.State {
         }
 
         // Ajout personnage mort
-        sprite = this.game.add.sprite(this.game.centerX, this.game.centerY, this.game.global.player.sprite, 'idle/01');
+        sprite = this.game.add.sprite(this.game.centerX, this.game.centerY, this.game.global.player.sprite, 'idle/01.png');
         sprite.anchor.set(0.5);
-        sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '', 2), 10, false, false);
+        sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '.png', 2), 10, false, false);
         sprite.animations.play('dead');
         this.game.camera.follow(sprite);
 
@@ -78,7 +78,7 @@ class GameOver extends Phaser.State {
                 this.game.global.score = this.game.global.scoreLastLevel;
                 this.game.state.start('game', true, false);
             } else {
-                this.game.state.start('menu', true, false);
+                this.game.state.start('menu-level', true, false);
             }
         }
     }

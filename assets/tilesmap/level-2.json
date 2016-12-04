@@ -2184,26 +2184,26 @@
          "name":"playerCollision",
          "objects":[
                 {
-                 "height":63.3638181818174,
+                 "height":63.3638,
                  "id":583,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":9.81822727272703,
-                 "x":4863.99727272727,
-                 "y":2176.63181818182
+                 "width":9.81823,
+                 "x":4864,
+                 "y":2176.63
                 }, 
                 {
-                 "height":64.0211250000002,
+                 "height":64.0211,
                  "id":584,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":10,
-                 "x":4213.96125,
-                 "y":2176.046875
+                 "x":4213.96,
+                 "y":2176.05
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2807,7 +2807,7 @@
                  "offsetX":24,
                  "offsetY":-10,
                  "pnj":true,
-                 "scale":0.15,
+                 "scale":0.39,
                  "sprite":"ninjagirl",
                  "text":"Un conseil mon gars, saute le plus loin possible !",
                  "textOffsetX":-64
@@ -2838,7 +2838,7 @@
                  "offsetX":24,
                  "offsetY":-10,
                  "pnj":true,
-                 "scale":0.15,
+                 "scale":0.39,
                  "sprite":"adventure_boy",
                  "text":"Cette mine recele de nombreux tr\u00e9sors, mais restez sur vos garde prudent !",
                  "textOffsetX":-64,

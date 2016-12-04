@@ -2822,7 +2822,7 @@
                  "miror":true,
                  "offset":-26,
                  "pnj":true,
-                 "scale":0.4,
+                 "scale":0.5,
                  "sprite":"knight",
                  "text":"Ce lac est gel\u00e9, prenez-garde !"
                 },
@@ -2831,7 +2831,7 @@
                  "atlas":true,
                  "offset":0,
                  "pnj":true,
-                 "scale":1,
+                 "scale":0.39,
                  "sprite":"santa",
                  "text":"Oh Oh Oh !"
                 },

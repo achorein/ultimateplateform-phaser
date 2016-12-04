@@ -88,7 +88,7 @@
     <property name="miror" type="bool" value="true"/>
     <property name="offset" type="int" value="-26"/>
     <property name="pnj" type="bool" value="true"/>
-    <property name="scale" type="float" value="0.4"/>
+    <property name="scale" type="float" value="0.5"/>
     <property name="sprite" value="knight"/>
     <property name="text" value="Ce lac est gelé, prenez-garde !"/>
    </properties>
@@ -98,7 +98,7 @@
     <property name="atlas" type="bool" value="true"/>
     <property name="offset" type="int" value="0"/>
     <property name="pnj" type="bool" value="true"/>
-    <property name="scale" type="float" value="1"/>
+    <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="santa"/>
     <property name="text" value="Oh Oh Oh !"/>
    </properties>

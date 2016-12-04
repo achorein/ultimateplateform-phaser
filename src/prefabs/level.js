@@ -365,8 +365,8 @@ class Level extends Phaser.Tilemap {
                         }
                         var enemy = this.enemiesGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
                         if (tile.properties.atlas) {
-                            enemy.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
-                            enemy.animations.add('walk', Phaser.Animation.generateFrameNames('walk/', 1, 10, '', 2), 10, true, false);
+                            enemy.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '.png', 2), 6, false, false);
+                            enemy.animations.add('walk', Phaser.Animation.generateFrameNames('walk/', 1, 10, '.png', 2), 10, true, false);
                             enemy.animations.play('walk');
                         } else {
                             enemy.animations.add('walk', [1, 2], 2, true);
@@ -502,7 +502,7 @@ class Level extends Phaser.Tilemap {
                         pnj.body.gravity.set(0, -this.game.global.level.gravity);
                         pnj.body.immovable = true;
                         if (tile.properties.atlas) {
-                            pnj.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
+                            pnj.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '.png', 2), 10, true, false);
                         } else {
                             pnj.animations.add('idle', [0, 1], 2, true);
                         }
