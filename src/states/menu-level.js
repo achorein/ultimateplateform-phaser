@@ -13,7 +13,6 @@ class MenuLevel extends Phaser.State {
     }
 
     create() {
-        var self = this;
         var styleBig = { font: "bold 64px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         var styleSmall = { font: "bold 48x Arial", fontSize: 32, fill: "#666", boundsAlignH: "center", boundsAlignV: "middle" };
         this.cursorPos = 1;
@@ -47,7 +46,7 @@ class MenuLevel extends Phaser.State {
                 var bar = this.game.add.graphics();
                 bar.beginFill(0xffffff);
                 // Ajout d'une image de preview du niveau
-                var levelPreview = this.game.add.sprite(this.computePosition(i+1, 'center').x, this.computePosition(i+1, 'center').y, 'background-level-'+(i+1));
+                var levelPreview = this.game.add.sprite(this.computePosition(i+1, 'center').x, this.computePosition(i+1, 'center').y, 'background-trees-level-'+(i+1));
                 levelPreview.anchor.set(0.5);
                 // création d'un masque permettant d'arrondir l'image de preview
                 var mask = this.game.add.graphics();
@@ -67,7 +66,7 @@ class MenuLevel extends Phaser.State {
                 text.anchor.set(0.5);
                 this.menu.push({index: i+1, sprite: sprite, text: text});
                 sprite.onInputOver.add(function(sprite){
-                    self.cursorPos = sprite.cursorPos;
+                    this.cursorPos = sprite.cursorPos;
                     this.selectLevel();
                 }, this);
 
@@ -146,17 +145,16 @@ class MenuLevel extends Phaser.State {
     }
 
     selectLevel(ignoreSound) {
-        var self = this;
         this.menu.forEach(function(level){
-            if (level.index == self.cursorPos) {
+            if (level.index == this.cursorPos) {
                 level.sprite.loadTexture('level-ok');
                 if (!ignoreSound) {
-                    self.game.add.audio('miscMenu').play();
+                    this.game.add.audio('miscMenu').play();
                 }
             } else {
                 level.sprite.loadTexture('level-ko');
             }
-        });
+        }, this);
     }
 
     computePosition(index, position) {

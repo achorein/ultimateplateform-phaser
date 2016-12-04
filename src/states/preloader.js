@@ -29,8 +29,10 @@ class Preloader extends Phaser.State {
          */
         // carte
         for (var i=1;i<=this.game.global.level.max;i++) {
+            this.game.load.json('level-'+i+'-config', 'assets/tilesmap/level-'+i+'-config.json');
             this.game.load.tilemap('tilemap-level-'+i, 'assets/tilesmap/level-'+i+'.json', null, Phaser.Tilemap.TILED_JSON);
-            this.game.load.image('background-level-'+i, 'assets/tilesmap/level-'+i+'-background.png');
+            this.game.load.image('background-trees-level-'+i, 'assets/tilesmap/level-'+i+'-background-trees.png');
+            this.game.load.image('background-sky-level-'+i, 'assets/tilesmap/level-'+i+'-background-sky.png');
         }
         this.game.load.spritesheet('world','assets/tilesmap/tilesmap.png', 64, 64);
 

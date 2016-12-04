@@ -14,7 +14,6 @@ class Menu extends Phaser.State {
     }
 
     create() {
-        var self = this;
         //add background image
         this.background = this.game.add.sprite(0,0, 'background-menu');
         this.background.height = this.game.height;
@@ -48,29 +47,29 @@ class Menu extends Phaser.State {
         this.game.add.sprite(offset, this.game.height - 100 - offset, 'vikings').alpha = 0.5;
         this.game.add.sprite(this.game.width - 117 - offset , this.game.height - 100 - offset, 'phaser').alpha = 0.5;
 
-        /*var font = self.createFont('CHOOSE YOUR PLAYER');
-        var img = self.game.add.image(self.game.centerX, 200, font);
+        /*var font = this.createFont('CHOOSE YOUR PLAYER');
+        var img = this.game.add.image(this.game.centerX, 200, font);
         img.anchor.set(0.5);*/
 
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         this.menu.forEach(function(player) {
-            var sprite = self.game.add.button(self.computePosition(self, player.index), self.game.centerY - 50, player.texture, function(sprite){
+            var sprite = this.game.add.button(this.computePosition(player.index), this.game.centerY - 50, player.texture, function(sprite){
                 this.cursorPos = sprite.cursorPos;
                 this.goNextState();
-            }, self, 'idle/01');
+            }, this, 'idle/01');
             sprite.cursorPos = player.index;
             sprite.anchor.set(0.5);
             sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
             sprite.scale.setTo(0.7);
             player.sprite = sprite;
-            var text = self.game.add.text(self.computePosition(self, player.index), self.game.centerY + 100, player.name, style);
+            var text = this.game.add.text(this.computePosition(player.index), this.game.centerY + 100, player.name, style);
             text.anchor.set(0.5);
             player.text = text;
             sprite.onInputOver.add(function(sprite){
                 this.cursorPos = sprite.cursorPos;
                 this.selectPlayer();
-            }, self);
-        });
+            }, this);
+        }, this);
 
         //setup audio
         this.music = this.game.add.audio('musicMenu', 0.5, true);
@@ -128,34 +127,33 @@ class Menu extends Phaser.State {
     }
 
     selectPlayer(ignoreSound) {
-        var self = this;
         this.menu.forEach(function(player){
-            if (player.index == self.cursorPos) {
+            if (player.index == this.cursorPos) {
                 player.sprite.scale.setTo(1);
                 player.text.scale.setTo(1.25);
                 player.sprite.animations.play('idle');
                 if (!ignoreSound) {
-                    self.game.add.audio('miscMenu').play();
+                    this.game.add.audio('miscMenu').play();
                 }
                 wordIndex = -1;
                 lineIndex = -1;
-                self.game.time.events.add(lineDelay, self.writeText, self);
+                this.game.time.events.add(lineDelay, this.writeText, this);
             } else {
                 player.sprite.animations.stop();
                 player.sprite.scale.setTo(0.7);
                 player.text.scale.setTo(1);
             }
-        });
+        }, this);
     }
 
-    computePosition(self, index) {
+    computePosition(index) {
         var squareWidth = 250;
-        var min = self.menu.length/2 * squareWidth/2;
-        var value = self.cursorPos;
+        var min = this.menu.length/2 * squareWidth/2;
+        var value = this.cursorPos;
         if (index) {
             value = index;
         }
-        var pos = (self.game.centerY - min) + (value-1)*squareWidth;
+        var pos = (this.game.centerY - min) + (value-1)*squareWidth;
         return pos;
     }
 

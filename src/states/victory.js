@@ -5,7 +5,6 @@ class Victory extends Phaser.State {
     }
 
     create() {
-        var self = this;
         var styleBig = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         var styleSmall = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
@@ -25,11 +24,13 @@ class Victory extends Phaser.State {
         img.fixedToCamera = true;
 
         // Ajout du bonus de temps
-        this.game.global.score += Math.floor(1500 / (this.game.global.elapsedTime<1)?1500:this.game.global.elapse.elapsedTime);
+        this.config = this.game.cache.getJSON('level-'+this.game.global.level.current+'-config');
+        var bestTime = this.config.bestTime || 40;
+        this.game.global.score += Math.floor(bestTime * 1000 / (this.game.global.level.elapsedTime<bestTime)?bestTime:this.game.global.level.elapsedTime);
         // Ajout du bonus de vie
         this.game.global.score += 50 * this.game.global.player.life;
         // Ajout du score
-        this.score = this.game.add.text(self.game.centerX, this.computePos(2),
+        this.score = this.game.add.text(this.game.centerX, this.computePos(2),
             this.game.global.score + ' points', styleBig);
         this.score.anchor.set(0.5);
 
@@ -46,7 +47,7 @@ class Victory extends Phaser.State {
         }
 
         // Ajout personnage qui saute
-        var sprite = self.game.add.sprite(self.game.centerX, self.game.centerY + 50, this.game.global.player.sprite, 'idle/01');
+        var sprite = this.game.add.sprite(this.game.centerX, this.game.centerY + 50, this.game.global.player.sprite, 'idle/01');
         sprite.anchor.set(0.5);
         sprite.animations.add('jump', Phaser.Animation.generateFrameNames('jump/', 1, 10, '', 2), 10, true, false);
         sprite.animations.play('jump');
@@ -60,21 +61,21 @@ class Victory extends Phaser.State {
         // Ajout résumé des bonus
         var curPos = 10; i=1;
         this.game.global.player.collected.forEach(function(bonus) {
-            sprite = self.game.add.sprite(self.computePos(curPos, i) - 24, self.computePos(curPos), bonus.sprite, bonus.frame);
+            sprite = this.game.add.sprite(this.computePos(curPos, i) - 24, this.computePos(curPos), bonus.sprite, bonus.frame);
             if (bonus.scale) {
                 sprite.scale.setTo(bonus.scale*0.7);
             } else {
                 sprite.scale.setTo(0.7);
             }
             sprite.anchor.setTo(0.5);
-            self.game.add.text(self.computePos(curPos, i) + 24, self.computePos(curPos), bonus.count, styleSmall).anchor.set(0.5);
+            this.game.add.text(this.computePos(curPos, i) + 24, this.computePos(curPos), bonus.count, styleSmall).anchor.set(0.5);
             if (i%3 == 0) {
                 curPos++;
                 i = 1;
             } else {
                 i++;
             }
-        });
+        }, this);
 
         // Lecture du son dédié à l'écran
         this.game.add.audio('winnerSound').play();
@@ -91,8 +92,9 @@ class Victory extends Phaser.State {
         }
 
         // press any key
+        this.game.input.keyboard.callbackContext = this;
         this.game.input.keyboard.onDownCallback = function(e) {
-            self.onInputDown(self);
+            this.onInputDown(this);
         }
     }
 

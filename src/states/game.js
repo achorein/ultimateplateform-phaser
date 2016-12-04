@@ -7,19 +7,26 @@ class Game extends Phaser.State {
     }
 
     create() {
-        var self = this; // pour utilisation simple dans les callback
         var style = { font: "bold 18px Arial", fill: "#888", boundsAlignH: "center", boundsAlignV: "middle" };
         this.game.global.player.collected = [];
 
         // Sprites
-        this.background = this.game.add.sprite(0,0,'background-level-'+this.game.global.level.current);
-        //this.background = this.add.tileSprite(0, 0, this.game.world.width, this.game.world.height, 'background-level-'+this.game.global.level.current); // repeat background
-        this.background.height = this.game.height;
-        this.background.width = this.game.width;
-        this.background.fixedToCamera = true;
+        this.config = this.game.cache.getJSON('level-'+this.game.global.level.current+'-config');
+
+        if (this.config.sky) {
+            this.sky = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background-sky-level-' + this.game.global.level.current); // repeat background
+            this.sky.fixedToCamera = true;
+        }
+        this.trees = this.game.add.tileSprite(0, 0, this.game.width, this.config.trees.height || 1500, 'background-trees-level-'+this.game.global.level.current);
+        //this.trees = this.game.add.sprite(0,0,'background-trees-level-'+this.game.global.level.current);
 
         // tilemap
         this.map = new LevelMap(this, 'tilemap-level-'+this.game.global.level.current);
+        this.trees.width = this.world.width;
+        this.trees.y = this.world.height - this.trees.height;
+        if (this.config.trees && this.config.trees.offset) {
+            this.trees.y -= this.config.trees.offset;
+        }
 
         // commons
         this.game.physics.startSystem(Phaser.Physics.ARCADE); // gestion simple des collision : carré et cercle
@@ -39,7 +46,7 @@ class Game extends Phaser.State {
         //this.timeText.anchor.set(0.5);
         this.timeText.fixedToCamera = true;
 
-        this.playerLifeGroup = this.game.add.group();;
+        this.playerLifeGroup = this.game.add.group();
         // Ajout des vies
         for (var i=0; i<this.game.global.player.maxlife; i++) {
             var life = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
@@ -68,7 +75,7 @@ class Game extends Phaser.State {
             var tile = this.map.getTileOnSprite(this.player, this.map.backLayer);
             if (tile) {
                 if (tile.properties.end) { // sur une porte
-                    this.endGame(this, 'victory');
+                    this.endGame('victory');
                 } else if (tile.properties.teleportX) {
                     this.player.x = tile.properties.teleportX * 64;
                     this.player.y = tile.properties.teleportY * 64;
@@ -81,7 +88,7 @@ class Game extends Phaser.State {
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
         this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.escapeButton.onDown.add(function(){
-            this.endGame(this, 'menu-level');
+            this.endGame('menu-level');
         }, this);
         this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
         this.soundButton.onDown.add(function(){
@@ -95,19 +102,18 @@ class Game extends Phaser.State {
             // permet de rapidement passer au niveau suivant
             this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
             this.cheatCodeButton.onDown.add(function() {
-                this.endGame(this, 'victory');
+                this.endGame('victory');
             }, this);
             // permet de perdre instantanement
             this.dieButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F10);
             this.dieButton.onDown.add(function() {
-                this.endGame(this, 'gameover');
+                this.endGame('gameover');
             }, this);
 
         }
     }
 
     render() {
-        var self = this;
         // Debug : mise en couleur des blocs invisibles
         if (this.game.global.devMode) {
             this.game.debug.body(this.player);
@@ -116,7 +122,11 @@ class Game extends Phaser.State {
     }
 
     update() {
-        //this.background.tilePosition.y = -(this.game.camera.y * 0.7);
+        if (this.sky) {
+            this.sky.tilePosition.y = -(this.game.camera.y * 0.7);
+            this.sky.tilePosition.x = -(this.game.camera.x * 0.7);
+        }
+        this.trees.tilePosition.x = -(this.game.camera.x * 0.1);;
 
         this.map.update(this); // gestion des collisions
         this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
@@ -193,20 +203,20 @@ class Game extends Phaser.State {
         return Math.floor((this.game.time.now - this.startTime)/1000);
     }
 
-    endGame(self, state) {
-        self.game.global.level.elapsedTime = self.elapseSeconds();
+    endGame(state) {
+        this.game.global.level.elapsedTime = this.elapseSeconds();
         if (state == 'gameover') {
-            if (self.player.action != 'dead') {
+            if (this.player.action != 'dead') {
                 this.game.global.player.life--;
-                self.player.die();
-                self.game.add.audio('deadSound').play();
-                self.music.stop();
-                self.game.state.start('gameover', true, false);
+                this.player.die();
+                this.game.add.audio('deadSound').play();
+                this.music.stop();
+                this.game.state.start('gameover', true, false);
                 return;
             }
         }
-        self.music.stop();
-        self.game.state.start(state, true, false);
+        this.music.stop();
+        this.game.state.start(state, true, false);
     }
 
     shutdown() {
@@ -218,7 +228,7 @@ class Game extends Phaser.State {
      */
 
     killPlayerCallback(sprite, tile) {
-        this.endGame(this, 'gameover');
+        this.endGame('gameover');
     }
 
     collectBonus(player, bonus) {
@@ -244,7 +254,7 @@ class Game extends Phaser.State {
             this.updateScore(bonus.key, bonus.frame);
 
             if (this.map.bonusGroup.countLiving() <= 0) {
-                this.endGame(this, 'victory');
+                this.endGame('victory');
             }
         }
     }

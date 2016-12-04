@@ -5,7 +5,6 @@ class GameOver extends Phaser.State {
     }
 
     create() {
-        var self = this;
         var styleBig = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         var styleSmall = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
@@ -24,7 +23,7 @@ class GameOver extends Phaser.State {
         img.anchor.set(0.5);
 
         // Ajout du score
-        this.score = this.game.add.text(self.game.centerX, this.computePos(2),
+        this.score = this.game.add.text(this.game.centerX, this.computePos(2),
             this.game.global.score + ' points', styleBig);
         this.score.anchor.set(0.5);
 
@@ -63,8 +62,9 @@ class GameOver extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND*0.25, function(){ this.canContinueToNextState = true; }, this);
 
         // press any key
+        this.game.input.keyboard.callbackContext = this;
         this.game.input.keyboard.onDownCallback = function(e) {
-            self.onInputDown(self);
+            this.onInputDown();
         }
     }
 

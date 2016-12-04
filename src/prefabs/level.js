@@ -5,7 +5,7 @@ class Level extends Phaser.Tilemap {
     //initialization code in the constructor
     constructor(state, key, tileWidth, tileHeight, width, height) {
         super(state.game, key, tileWidth, tileHeight, width, height);
-        var self = this;
+        this.maxLevelScore = 0;
 
         this.addTilesetImage('world-spritesheet', 'world');
         // réupération des layers pour la construction du monde
@@ -33,33 +33,34 @@ class Level extends Phaser.Tilemap {
             state.killPlayerCallback, state, this.backLayer);
 
         // Ajoute des zonnes de collision spécifiques
-        this.addCollisionObjects(self);
+        this.addCollisionObjects();
         // Ajout des blocs mobiles
-        this.addLevelSpecialBlocs(self);
+        this.addLevelSpecialBlocs();
 
         // Ajou des pièges/lasers
-        this.addLevelTraps(self);
+        this.addLevelTraps();
         // Ajout des bonus
-        this.addLevelBonus(self);
+        this.addLevelBonus();
         // Ajout des enemies
-        this.addLevelEnemies(self);
+        this.addLevelEnemies();
         // Ajout des PNJ
-        this.addLevelPNJ(self);
+        this.addLevelPNJ();
 
         // Ajout du joueur
         var gameLayer = this.layers[this.getLayer('game')];
         gameLayer.data.forEach(function(row) {
             row.forEach(function(data){
                 if (data.index > 0 && data.properties.start) {
-                    state.player = new Player(self.game, data.x*data.width, data.y*data.height);
-                    self.game.add.existing(state.player);
+                    state.player = new Player(this.game, data.x*data.width, data.y*data.height);
+                    this.game.add.existing(state.player);
                 }
-            });
-        });
+            }, this);
+        }, this);
 
         // Ajout du layer front en dernier pour être au premier plan
         this.frontLayer = this.createLayer('front');
         this.frontLayer.resizeWorld();
+        console.log('max score level ' + this.game.global.level.current + ' :' + this.maxLevelScore);
     }
 
     /**
@@ -147,7 +148,6 @@ class Level extends Phaser.Tilemap {
     }
 
     jumperCallback(sprite, tile) {
-        var self = this;
         sprite.body.velocity.y = -this.game.global.level.maxVelocity;
         this.game.add.audio('jumpSound').play('', 0, 0.25);
         // on met une image de jumper activé
@@ -155,8 +155,8 @@ class Level extends Phaser.Tilemap {
         this.game.time.events.add(Phaser.Timer.SECOND * 0.25, function() {
             sprite.animations.play('jump');
             // on remet une image de jumper désactivé
-            self.replace(self.jumperSprites[1], self.jumperSprites[0], tile.x, tile.y, 1, 1, self.backLayer);
-        });
+            this.replace(this.jumperSprites[1], this.jumperSprites[0], tile.x, tile.y, 1, 1, this.backLayer);
+        }, this);
     }
 
     specialBlocCallback(player, bloc) {
@@ -245,20 +245,19 @@ class Level extends Phaser.Tilemap {
 
     /**
      * à la main (car fonction this.createFromObjects impossible sans gid non généré par Tiled)
-     * @param self
      */
-    addCollisionObjects(self) {
+    addCollisionObjects() {
         // gestion des pentes
         this.stairGroup = this.game.add.group();
         this.stairGroup.enableBody = true;
         if (this.objects.stairCollision) {
             this.objects.stairCollision.forEach(function (object) {
-                var sprite = self.game.add.sprite(object.x, object.y);
-                self.game.physics.arcade.enableBody(sprite);
+                var sprite = this.game.add.sprite(object.x, object.y);
+                this.game.physics.arcade.enableBody(sprite);
                 sprite.body.moves = false;
                 sprite.body.setSize(object.width, object.height);
-                self.stairGroup.add(sprite);
-            });
+                this.stairGroup.add(sprite);
+            }, this);
         }
 
         // gestion des collisions sur les objets plus petit qu'un sprite
@@ -266,12 +265,12 @@ class Level extends Phaser.Tilemap {
         this.playerCollisionGroup.enableBody = true;
         if (this.objects.playerCollision) {
             this.objects.playerCollision.forEach(function (object) {
-                var sprite = self.game.add.sprite(object.x, object.y);
-                self.game.physics.arcade.enableBody(sprite);
+                var sprite = this.game.add.sprite(object.x, object.y);
+                this.game.physics.arcade.enableBody(sprite);
                 sprite.body.moves = false;
                 sprite.body.setSize(object.width, object.height);
-                self.playerCollisionGroup.add(sprite);
-            });
+                this.playerCollisionGroup.add(sprite);
+            }, this);
         }
 
         // gestion des collisions sur les objets plus petit qu'un sprite
@@ -279,12 +278,12 @@ class Level extends Phaser.Tilemap {
         this.deathGroup.enableBody = true
         if (this.objects.deathCollision) {
             this.objects.deathCollision.forEach(function (object) {
-                var sprite = self.game.add.sprite(object.x, object.y);
-                self.game.physics.arcade.enableBody(sprite);
+                var sprite = this.game.add.sprite(object.x, object.y);
+                this.game.physics.arcade.enableBody(sprite);
                 sprite.body.moves = false;
                 sprite.body.setSize(object.width, object.height);
-                self.deathGroup.add(sprite);
-            });
+                this.deathGroup.add(sprite);
+            }, this);
         }
 
         // gestion des collisions sur les enemies (limitation des mouvements)
@@ -292,16 +291,16 @@ class Level extends Phaser.Tilemap {
         this.gameCollisionGroup.enableBody = true;
         if (this.objects.gameCollision) {
             this.objects.gameCollision.forEach(function (object) {
-                var sprite = self.game.add.sprite(object.x, object.y);
-                self.game.physics.arcade.enableBody(sprite);
+                var sprite = this.game.add.sprite(object.x, object.y);
+                this.game.physics.arcade.enableBody(sprite);
                 sprite.body.moves = false;
                 sprite.body.setSize(object.width, object.height);
-                self.gameCollisionGroup.add(sprite);
-            });
+                this.gameCollisionGroup.add(sprite);
+            }, this);
         }
     }
 
-    addLevelSpecialBlocs(self) {
+    addLevelSpecialBlocs() {
         // gestion des blocs qui bouges
         this.specialBlocsGroup = this.game.add.group();
         this.specialBlocsGroup.enableBody = true;
@@ -309,16 +308,16 @@ class Level extends Phaser.Tilemap {
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
                 if (tile.index > 0 && tile.properties.bloc) {
-                    var bloc = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
-                    self.game.physics.arcade.enableBody(bloc);
+                    var bloc = this.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
+                    this.game.physics.arcade.enableBody(bloc);
                     bloc.body.collideWorldBounds = true;
 
                     if (tile.properties.x) bloc.body.velocity.x = parseInt(tile.properties.x);
                     if (tile.properties.y) bloc.body.velocity.y = parseInt(tile.properties.y);
-                    bloc.body.maxVelocity.set(self.game.global.level.maxVelocity);
+                    bloc.body.maxVelocity.set(this.game.global.level.maxVelocity);
 
                     if (!tile.properties.pushable) {
-                        bloc.body.gravity.set(0, -self.game.global.level.gravity);
+                        bloc.body.gravity.set(0, -this.game.global.level.gravity);
                         bloc.body.immovable = true;
                     } else {
                         bloc.body.bounce.set(0.8, 0.1);
@@ -337,17 +336,16 @@ class Level extends Phaser.Tilemap {
                         bloc.alpha = tile.properties.alpha;
                     }
 
-                    self.specialBlocsGroup.add(bloc);
+                    this.specialBlocsGroup.add(bloc);
                 }
-            });
-        });
+            }, this);
+        }, this);
     }
 
     /**
      *
-     * @param self
      */
-    addLevelEnemies(self) {
+    addLevelEnemies() {
         this.enemiesGroup = this.game.add.group();
         this.enemiesGroup.enableBody = true;
         var enemiesLayer = this.layers[this.getLayer('game')];
@@ -365,7 +363,7 @@ class Level extends Phaser.Tilemap {
                             offsetX = tile.properties.offset;
                             offsetY = tile.properties.offset;
                         }
-                        var enemy = self.enemiesGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
+                        var enemy = this.enemiesGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
                         if (tile.properties.atlas) {
                             enemy.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 8, '', 2), 6, false, false);
                             enemy.animations.add('walk', Phaser.Animation.generateFrameNames('walk/', 1, 10, '', 2), 10, true, false);
@@ -387,21 +385,21 @@ class Level extends Phaser.Tilemap {
                         if (tile.properties.miror) {
                             enemy.scale.x *= -1; // symetrie verticale
                         }
-                        enemy.body.maxVelocity.set(self.game.global.level.maxVelocity);
-                        enemy.body.gravity.set(0, -self.game.global.level.gravity);
+                        enemy.body.maxVelocity.set(this.game.global.level.maxVelocity);
+                        enemy.body.gravity.set(0, -this.game.global.level.gravity);
                         enemy.body.collideWorldBounds = true;
-                        self.getCollectedObject(sprite, 0, 25, tile.properties.scale); // le créé si existe pas
+                        this.maxLevelScore += 25;
+                        this.getCollectedObject(sprite, 0, 25, tile.properties.scale); // le créé si existe pas
                     }
-                });
-            });
+                }, this);
+            }, this);
         }
 
     }
     /**
      *
-     * @param self
      */
-    addLevelTraps(self) {
+    addLevelTraps() {
         this.traps = [];
         var trapLayer = this.layers[this.getLayer('blocs')];
         trapLayer.data.forEach(function (row) {
@@ -411,7 +409,7 @@ class Level extends Phaser.Tilemap {
                     if (tile.properties.sprite){
                         sprite = tile.properties.sprite;
                     }
-                    var trap = self.game.add.weapon(30, sprite);
+                    var trap = this.game.add.weapon(30, sprite);
                     var offset = 32;
                     trap.x = tile.x * tile.width + offset;
                     trap.y = tile.y * tile.height + offset;
@@ -419,7 +417,7 @@ class Level extends Phaser.Tilemap {
                     trap.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
                     trap.bulletSpeed = tile.properties.bulletSpeed;
                     trap.fireRate = tile.properties.fireRate;
-                    var gravity = -self.game.global.level.gravity;
+                    var gravity = -this.game.global.level.gravity;
                     if (tile.properties.gravity) {
                         gravity += tile.properties.gravity;
                     }
@@ -442,25 +440,25 @@ class Level extends Phaser.Tilemap {
                             bullet.body.angularVelocity = tile.properties.angularVelocity;
                         });
                     }
-                    self.traps.push(trap);
+                    this.traps.push(trap);
                 }
-            });
-        });
+            }, this);
+        }, this);
     }
 
     /**
      *
-     * @param self
+     * @param this
      */
-    addLevelBonus(self) {
+    addLevelBonus() {
         this.bonusGroup = this.game.add.group();
         this.bonusGroup.enableBody = true;
         var collectableLayer = this.layers[this.getLayer('game')];
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
                 if (tile.index > 0 && (tile.properties.points || tile.properties.key || tile.properties.life)) {
-                    var bonus = self.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
-                    self.game.physics.arcade.enableBody(bonus);
+                    var bonus = this.game.add.sprite(tile.x * tile.width, tile.y * tile.height, "world", tile.index - 1);
+                    this.game.physics.arcade.enableBody(bonus);
                     if (tile.properties.points) {
                         bonus.points = tile.properties.points;
                     } else {
@@ -473,14 +471,15 @@ class Level extends Phaser.Tilemap {
                         bonus.life = true;
                     }
                     bonus.body.moves = false; // ne subit pas la gravité
-                    self.bonusGroup.add(bonus);
-                    self.getCollectedObject('world', tile.index - 1, bonus.points); // le créé si existe pas
+                    this.bonusGroup.add(bonus);
+                    this.maxLevelScore += bonus.points;
+                    this.getCollectedObject('world', tile.index - 1, bonus.points); // le créé si existe pas
                 }
-            });
-        });
+            }, this);
+        }, this);
     }
 
-    addLevelPNJ(self) {
+    addLevelPNJ() {
         this.pnjGroup = this.game.add.group();
         this.pnjGroup.enableBody = true;
         var pnjLayer = this.layers[this.getLayer('game')];
@@ -499,8 +498,8 @@ class Level extends Phaser.Tilemap {
                             offsetX = tile.properties.offset;
                             offsetY = tile.properties.offset;
                         }
-                        var pnj = self.pnjGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
-                        pnj.body.gravity.set(0, -self.game.global.level.gravity);
+                        var pnj = this.pnjGroup.create(tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
+                        pnj.body.gravity.set(0, -this.game.global.level.gravity);
                         pnj.body.immovable = true;
                         if (tile.properties.atlas) {
                             pnj.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '', 2), 10, true, false);
@@ -520,8 +519,8 @@ class Level extends Phaser.Tilemap {
                         pnj.textOffsetY = (tile.properties.textOffsetY)?tile.properties.textOffsetY:-64;
                         pnj.textTime = (tile.properties.textTime)?tile.properties.textTime:4000 ;
                     }
-                });
-            });
+                }, this);
+            }, this);
         }
     }
 
