@@ -24,7 +24,7 @@ class GameOver extends Phaser.State {
         img.anchor.set(0.5);
 
         // Ajout du score
-        this.score = this.game.add.text(self.game.world.centerX, this.computePos(2),
+        this.score = this.game.add.text(self.game.centerX, this.computePos(2),
             this.game.global.score + ' points', styleBig);
         this.score.anchor.set(0.5);
 
@@ -55,10 +55,8 @@ class GameOver extends Phaser.State {
         // Lecture du son dédié à l'écran
         this.game.add.audio('failedSound').play('', 0, 0.5);
 
-        // si plus de vie, on sauvegarde le score sur le serveur
-        if (this.game.global.player.life <= 0) {
-            this.saveScore();
-        }
+        // on sauvegarde le score sur le serveur
+        this.game.commun.saveScore();
 
         //prevent accidental click-thru by not allowing state transition for a short time
         this.canContinueToNextState = false;
@@ -71,26 +69,6 @@ class GameOver extends Phaser.State {
     }
 
     update() {}
-
-    saveScore(){
-        $.ajax({
-            url: this.game.global.server.url + '/score',
-            type: 'PUT',
-            dataType: 'json',
-            data: JSON.stringify({
-                playername: this.game.global.player.name,
-                player: this.game.global.player.sprite,
-                score: this.game.global.score
-            }),
-            contentType: "application/json; charset=utf-8",
-            success: function(data) {
-                console.log('Score saved !');
-            },
-            failure: function(err) {
-                console.log('Erreur de sauvegarde du score !');
-            }
-        });
-    }
 
     onInputDown () {
         if(this.canContinueToNextState){
