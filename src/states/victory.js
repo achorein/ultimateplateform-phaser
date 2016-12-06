@@ -26,7 +26,10 @@ class Victory extends Phaser.State {
         // Ajout du bonus de temps
         this.config = this.game.cache.getJSON('level-'+this.game.global.level.current+'-config');
         var bestTime = this.config.bestTime || 40;
-        this.game.global.score += Math.floor(bestTime * 1000 / (this.game.global.level.elapsedTime<bestTime)?bestTime:this.game.global.level.elapsedTime);
+        var playerTime = (this.game.global.level.elapsedTime<bestTime)?bestTime:this.game.global.level.elapsedTime;
+        var bonusTemps = Math.floor(bestTime * 1000 / playerTime);
+        console.log('bestTime : ' + bestTime + ', ' + playerTime + ', bonus: ' + bonusTemps);
+        this.game.global.score += bonusTemps;
         // Ajout du bonus de vie
         this.game.global.score += 50 * this.game.global.player.life;
         // Ajout du score

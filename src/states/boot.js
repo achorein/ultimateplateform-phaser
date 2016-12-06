@@ -51,7 +51,7 @@ class Boot extends Phaser.State {
             devMode: true
         };
         if (this.game.global.devMode) {
-            this.game.global.level.max = 5;
+            this.game.global.level.max = 6;
         }
     }
 

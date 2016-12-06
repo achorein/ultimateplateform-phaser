@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="32" height="12" tilewidth="64" tileheight="64" nextobjectid="202">
+ <tileset firstgid="1" name="world-spritesheet" tilewidth="64" tileheight="64" tilecount="680" columns="8">
+  <image source="tilesmap.png" width="512" height="5440"/>
+  <tile id="7">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="switchname" value="gate1"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="moves" type="bool" value="true"/>
+    <property name="pushable" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="moves" type="bool" value="true"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="moves" type="bool" value="true"/>
+    <property name="x" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="153">
+   <properties>
+    <property name="start" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="540">
+   <properties>
+    <property name="points" type="int" value="1"/>
+   </properties>
+  </tile>
+  <tile id="541">
+   <properties>
+    <property name="points" type="int" value="10"/>
+   </properties>
+  </tile>
+  <tile id="542">
+   <properties>
+    <property name="points" type="int" value="5"/>
+   </properties>
+  </tile>
+  <tile id="556">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="557">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="558">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="559">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="598">
+   <properties>
+    <property name="atlas" type="bool" value="true"/>
+    <property name="enemy" type="bool" value="true"/>
+    <property name="offset" type="int" value="-12"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="zombiemale"/>
+    <property name="velocity" type="int" value="50"/>
+   </properties>
+  </tile>
+  <tile id="603">
+   <properties>
+    <property name="atlas" type="bool" value="true"/>
+    <property name="enemy" type="bool" value="true"/>
+    <property name="miror" type="bool" value="true"/>
+    <property name="offset" type="int" value="-20"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="zombiefemale"/>
+    <property name="velocity" type="int" value="-50"/>
+   </properties>
+  </tile>
+  <tile id="614">
+   <properties>
+    <property name="bulletSpeed" type="int" value="500"/>
+    <property name="fireAngle" value="right"/>
+    <property name="fireRate" type="int" value="1500"/>
+   </properties>
+  </tile>
+  <tile id="619">
+   <properties>
+    <property name="switchaction" value="destroy"/>
+    <property name="switchname" value="gate1"/>
+    <property name="switchtimer" type="int" value="3000"/>
+    <property name="tileOff" type="int" value="619"/>
+    <property name="tileOn" type="int" value="620"/>
+   </properties>
+  </tile>
+  <tile id="623">
+   <properties>
+    <property name="angularVelocity" type="int" value="720"/>
+    <property name="bulletSpeed" type="int" value="100"/>
+    <property name="fireAngle" value="up"/>
+    <property name="fireRate" type="int" value="4000"/>
+    <property name="gravity" type="int" value="250"/>
+    <property name="sprite" value="bullet-water"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="back" width="32" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,527,524,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,58,
+0,0,522,0,620,0,0,0,0,492,0,523,526,525,523,0,0,0,0,0,0,0,0,0,0,0,0,0,0,505,504,57,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="blocs" width="32" height="12">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507,507
+</data>
+ </layer>
+ <layer name="game" width="32" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+154,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="front" width="32" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup color="#ffff00" name="stairCollision"/>
+ <objectgroup color="#ff0000" name="playerCollision"/>
+ <objectgroup color="#aa0000" name="gameCollision">
+  <object id="200" x="2030" y="642" width="12" height="60"/>
+  <object id="201" x="4" y="638" width="8" height="66"/>
+ </objectgroup>
+ <objectgroup name="deathCollision"/>
+</map>

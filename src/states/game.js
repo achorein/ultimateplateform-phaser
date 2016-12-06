@@ -73,16 +73,7 @@ class Game extends Phaser.State {
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.cursors.up.onDown.add(function(){
             var tile = this.map.getTileOnSprite(this.player, this.map.backLayer);
-            if (tile) {
-                if (tile.properties.end) { // sur une porte
-                    this.endGame('victory');
-                } else if (tile.properties.teleportX) {
-                    this.player.x = tile.properties.teleportX * 64;
-                    this.player.y = tile.properties.teleportY * 64;
-                } else {
-                    this.player.up(this.map);
-                }
-            }
+            this.playerAction(tile);
         }, this);
         this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
@@ -113,6 +104,48 @@ class Game extends Phaser.State {
         }
     }
 
+    playerAction(tile) {
+        if (tile) {
+            if (tile.properties.end) { // sur une porte
+                this.endGame('victory');
+            } else if (tile.properties.teleportX) {
+                // gestion des portes (ou téléporteurs)
+                this.player.x = tile.properties.teleportX * 64;
+                this.player.y = tile.properties.teleportY * 64;
+            } else if (tile.properties.switchname) {
+                // gestion des leviers
+                if (tile.index == tile.properties.tileOff + 1) { // activation
+                    this.map.replace(tile.properties.tileOff + 1,  tile.properties.tileOn + 1, tile.x, tile.y, 1, 1, this.map.backLayer);
+                    if (tile.properties.switchaction == 'destroy') {
+                        this.map.switchBlocsGroup[tile.properties.switchname].callAll('kill');
+                        if (tile.properties.switchtimer) {
+                            this.map.switchBlocsGroup[tile.properties.switchname].switchevent = this.game.time.events.add(tile.properties.switchtimer, function() {
+                                this.map.replace(tile.properties.tileOn + 1,  tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, this.map.backLayer);
+                                this.map.switchBlocsGroup[tile.properties.switchname].callAll('revive');
+                            }, this);
+                        }
+                    } else {
+                        console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
+                    }
+                } else if (tile.index == tile.properties.tileOn + 1) { // desactivation
+                    this.map.replace(tile.properties.tileOn + 1,  tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, this.map.backLayer);
+                    if (tile.properties.switchaction == 'destroy') {
+                        this.map.switchBlocsGroup[tile.properties.switchname].callAll('revive');
+                        if (this.map.switchBlocsGroup[tile.properties.switchname].switchevent) {
+                            this.game.time.events.remove(this.map.switchBlocsGroup[tile.properties.switchname].switchevent);
+                        }
+                    } else {
+                        console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
+                    }
+                } else {
+                    console.log('Propriété du levier tileOn et tileOff non définie');
+                }
+            } else {
+                this.player.up(this.map);
+            }
+        }
+    }
+
     render() {
         // Debug : mise en couleur des blocs invisibles
         if (this.game.global.devMode) {
@@ -126,7 +159,7 @@ class Game extends Phaser.State {
             this.sky.tilePosition.y = -(this.game.camera.y * 0.7);
             this.sky.tilePosition.x = -(this.game.camera.x * 0.7);
         }
-        this.trees.tilePosition.x = -(this.game.camera.x * 0.1);;
+        //this.trees.tilePosition.x = -(this.game.camera.x * 0.1);
 
         this.map.update(this); // gestion des collisions
         this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
@@ -165,7 +198,7 @@ class Game extends Phaser.State {
         } else if (this.cursors.right.isDown) { // fleche de droite
             this.player.right();
         } else if (this.cursors.up.isDown) { // fleche du haut
-            this.player.up(this.map);
+            this.player.up();
         } else if (this.cursors.down.isDown) { // fleche du bas
             this.player.down();
         } else { // si aucune touche appuyée
