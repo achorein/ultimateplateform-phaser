@@ -16,12 +16,15 @@ class Enemy extends Moving {
         }
 
         super(game, tile.x * tile.width + offsetX, tile.y * tile.height + offsetY, sprite, 1);
-        this.body.gravity.set(0, -this.game.global.level.gravity);
+        if (!tile.properties.gravity) {
+            this.body.gravity.set(0, -this.game.global.level.gravity); // annulation de la gravité
+        }
         if (tile.properties.velocity) {
             this.body.velocity.x = tile.properties.velocity;
         } else {
             this.body.velocity.x = -75;
         }
+
         this.anchor.setTo(.5, 0);
         if (tile.properties.scale){
             this.scale.setTo(tile.properties.scale);

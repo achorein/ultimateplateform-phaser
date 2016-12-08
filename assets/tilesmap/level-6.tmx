@@ -80,6 +80,7 @@
    <properties>
     <property name="atlas" type="bool" value="true"/>
     <property name="enemy" type="bool" value="true"/>
+    <property name="gravity" type="bool" value="true"/>
     <property name="invincible" type="bool" value="true"/>
     <property name="miror" type="bool" value="true"/>
     <property name="offset" type="int" value="-20"/>

@@ -167,7 +167,7 @@ class Player extends Phaser.Sprite {
     }
 
     onFloor() {
-        return this.body.onFloor() || this.echelleOverlap || this.body.touching.down || this.game.global.timer.bloc>0;
+        return this.body.onFloor() || this.echelleOverlap || this.body.touching.down;
     }
 
     addWeapon() {
@@ -175,8 +175,8 @@ class Player extends Phaser.Sprite {
         this.weapon = this.game.add.weapon(this.game.global.player.nbBullet, 'bullet-fire');
         this.weapon.bulletGravity.set(0, -this.game.global.level.gravity);
         //  The bullet will be automatically killed when it leaves the world bounds
-        this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
-        this.weapon.bulletLifespan = 2000; // en milisecondes
+        this.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
+        //this.weapon.bulletLifespan = 2000; // en milisecondes
         //  The speed at which the bullet is fired
         this.weapon.bulletSpeed = 600;
         //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
