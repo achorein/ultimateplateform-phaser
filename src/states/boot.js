@@ -41,10 +41,6 @@ class Boot extends Phaser.State {
                 collected: [],
                 name: 'Player 1'
             },
-            timer: {
-                bloc: 0,
-                echelle: 0
-            },
             server: {
                 url: '/api'
             },

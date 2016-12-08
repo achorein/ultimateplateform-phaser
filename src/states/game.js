@@ -151,6 +151,14 @@ class Game extends Phaser.State {
         if (this.game.global.devMode) {
             this.game.debug.body(this.player);
             this.game.debug.body(this.map.pnjGroup);
+            this.map.specialBlocsGroup.forEachAlive(function(bloc) {
+                this.game.debug.body(bloc);
+            }, this);
+            for(var key in this.map.switchBlocsGroup){
+                this.map.switchBlocsGroup[key].forEachAlive(function(bloc) {
+                    this.game.debug.body(bloc);
+                }, this);
+            }
         }
     }
 
@@ -314,15 +322,17 @@ class Game extends Phaser.State {
             if (bullet) {
                 bullet.kill();
             }
-            enemy.body.velocity.x = 0;
-            enemy.animations.play('dead');
-            enemy.alive = false;
-            this.game.add.audio('hitSound').play();
-            this.updateScore(enemy.key, 0);
-            this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
-            this.game.time.events.add(Phaser.Timer.SECOND * 2, function () {
-                enemy.kill();
-            });
+            if (!enemy.invincible) {
+                enemy.body.velocity.x = 0;
+                enemy.animations.play('dead');
+                enemy.alive = false;
+                this.game.add.audio('hitSound').play();
+                this.updateScore(enemy.key, 0);
+                this.game.add.tween(enemy).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+                this.game.time.events.add(Phaser.Timer.SECOND * 2, function () {
+                    enemy.kill();
+                });
+            }
         }
     }
 }

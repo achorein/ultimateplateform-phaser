@@ -17,7 +17,7 @@ class Player extends Phaser.Sprite {
         } else if (this.game.global.player.sprite == 'knight') {
             this.body.setSize(92, 160, 0, 15);
         } else if (this.game.global.player.sprite == 'adventure_girl') {
-            this.body.setSize(92, 160, 2, 20);
+            this.body.setSize(92, 160, 0, 20);
         } else { // robot
             this.body.setSize(92, 160, 0, 5);
         }
@@ -167,7 +167,7 @@ class Player extends Phaser.Sprite {
     }
 
     onFloor() {
-        return this.body.onFloor() || this.echelleOverlap || this.game.global.timer.bloc>0;
+        return this.body.onFloor() || this.echelleOverlap || this.body.touching.down || this.game.global.timer.bloc>0;
     }
 
     addWeapon() {
