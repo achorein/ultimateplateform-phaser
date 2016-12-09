@@ -37,6 +37,70 @@ class SpecialBloc extends Moving {
         this.init();
     }
 
+    static specialBlocCallback(player, bloc) {
+        var game = player.game;
+        // quand le joueur est sur un bloc, incrémente un compteur
+        if (player.body.touching.down && bloc.fallingTime) {
+            game.time.events.add(bloc.fallingTime, function () {
+                player.animations.play('jump');
+                // chute du bloc
+                bloc.body.gravity.set(0);
+                bloc.body.immovable = false;
+                // fait disparaitre le bloc au bout de 2 secondes
+                game.add.tween(bloc).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+                game.time.events.add(2000, function () {
+                    bloc.kill();
+                }, this);
+            }, this);
+        }
+        if (bloc.lockColor) {
+            var key = player.getFromInventory('key', bloc.lockColor);
+            if (key) { // le joueur à au moins une clé, on déverouille le block
+                player.removeFromInventory('key', bloc.lockColor);
+                key.kill();
+                bloc.kill();
+                this.updateKeys();
+            }
+        }
+        if (player.body.touching.right || player.body.touching.left) {
+            player.body.velocity.x = 0;
+        }
+    }
+
+    static actionOnTile(tile, state) {
+        if (tile.properties.switchname) {
+            // gestion des leviers
+            if (tile.index == tile.properties.tileOff + 1) { // activation
+                state.map.replace(tile.properties.tileOff + 1, tile.properties.tileOn + 1, tile.x, tile.y, 1, 1, state.map.backLayer);
+                if (tile.properties.switchaction == 'destroy') {
+                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].callAll('kill');
+                    if (tile.properties.switchtimer) {
+                        SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent = state.game.time.events.add(tile.properties.switchtimer, function () {
+                            state.map.replace(tile.properties.tileOn + 1, tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, state.map.backLayer);
+                            SpecialBloc.switchBlocsGroup[tile.properties.switchname].callAll('revive');
+                        }, state);
+                    }
+                } else {
+                    console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
+                }
+            } else if (tile.index == tile.properties.tileOn + 1) { // desactivation
+                state.map.replace(tile.properties.tileOn + 1, tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, state.map.backLayer);
+                if (tile.properties.switchaction == 'destroy') {
+                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].callAll('revive');
+                    if (SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent) {
+                        state.game.time.events.remove(SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent);
+                    }
+                } else {
+                    console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
+                }
+            } else {
+                console.log('Propriété du levier tileOn et tileOff non définie');
+            }
+        } else {
+            console.log('aucune action sur des blocs pour ce tile');
+        }
+    }
+
 }
 
 export default SpecialBloc;

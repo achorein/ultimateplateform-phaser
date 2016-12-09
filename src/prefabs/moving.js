@@ -33,6 +33,10 @@ class Moving extends Phaser.Sprite {
         }
     }
 
+    static movingCollisionCallBack(moving, bloc) {
+        moving.changeDirection(bloc);
+    }
+
 }
 
 export default Moving;

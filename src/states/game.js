@@ -1,4 +1,5 @@
 import LevelMap from '../prefabs/level';
+import SpecialBloc from '../prefabs/specialbloc';
 
 class Game extends Phaser.State {
 
@@ -113,33 +114,7 @@ class Game extends Phaser.State {
                 this.player.x = tile.properties.teleportX * 64;
                 this.player.y = tile.properties.teleportY * 64;
             } else if (tile.properties.switchname) {
-                // gestion des leviers
-                if (tile.index == tile.properties.tileOff + 1) { // activation
-                    this.map.replace(tile.properties.tileOff + 1,  tile.properties.tileOn + 1, tile.x, tile.y, 1, 1, this.map.backLayer);
-                    if (tile.properties.switchaction == 'destroy') {
-                        this.map.switchBlocsGroup[tile.properties.switchname].callAll('kill');
-                        if (tile.properties.switchtimer) {
-                            this.map.switchBlocsGroup[tile.properties.switchname].switchevent = this.game.time.events.add(tile.properties.switchtimer, function() {
-                                this.map.replace(tile.properties.tileOn + 1,  tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, this.map.backLayer);
-                                this.map.switchBlocsGroup[tile.properties.switchname].callAll('revive');
-                            }, this);
-                        }
-                    } else {
-                        console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
-                    }
-                } else if (tile.index == tile.properties.tileOn + 1) { // desactivation
-                    this.map.replace(tile.properties.tileOn + 1,  tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, this.map.backLayer);
-                    if (tile.properties.switchaction == 'destroy') {
-                        this.map.switchBlocsGroup[tile.properties.switchname].callAll('revive');
-                        if (this.map.switchBlocsGroup[tile.properties.switchname].switchevent) {
-                            this.game.time.events.remove(this.map.switchBlocsGroup[tile.properties.switchname].switchevent);
-                        }
-                    } else {
-                        console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
-                    }
-                } else {
-                    console.log('Propriété du levier tileOn et tileOff non définie');
-                }
+                SpecialBloc.actionOnTile(tile, this);
             } else {
                 this.player.up(this.map);
             }
@@ -154,8 +129,8 @@ class Game extends Phaser.State {
             this.map.specialBlocsGroup.forEachAlive(function(bloc) {
                 this.game.debug.body(bloc);
             }, this);
-            for(var key in this.map.switchBlocsGroup){
-                this.map.switchBlocsGroup[key].forEachAlive(function(bloc) {
+            for(var key in SpecialBloc.switchBlocsGroup){
+                SpecialBloc.switchBlocsGroup[key].forEachAlive(function(bloc) {
                     this.game.debug.body(bloc);
                 }, this);
             }
@@ -170,10 +145,6 @@ class Game extends Phaser.State {
         //this.trees.tilePosition.x = -(this.game.camera.x * 0.1);
 
         this.map.update(this); // gestion des collisions
-        this.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
-        this.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
-        this.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, this.killEnemy, null, this);
-        this.physics.arcade.overlap(this.player.weapon.bullets, this.map.specialBlocsGroup, this.killBlocCallback, null, this);
 
         // Mise à jour du temps
         this.timeText.text =  'TIME ' + this.elapseSeconds();
@@ -240,12 +211,23 @@ class Game extends Phaser.State {
         }
     }
 
+    updateScore(sprite, index) {
+        var collected = this.player.getCollectedObject(sprite, index);
+        collected.count++;
+        if(collected.points>0) {
+            // bonus standard
+            this.game.global.score += collected.points;
+            this.scoreText.text = 'SCORE ' + this.game.global.score;
+        }
+    }
+
     elapseSeconds() {
         return Math.floor((this.game.time.now - this.startTime)/1000);
     }
 
     endGame(state) {
         this.game.global.level.elapsedTime = this.elapseSeconds();
+        this.game.global.player.collected = this.player.collected;
         if (state == 'gameover') {
             if (this.player.action != 'dead') {
                 this.game.global.player.life--;
@@ -267,6 +249,17 @@ class Game extends Phaser.State {
     /*
      * Callbacks appelés depuis la classe Level (utilisation de this.levelState)
      */
+
+    enemyOverlapCallback(player, enemy) {
+        if (enemy.alive) {
+            if (player.body.touching.down && !enemy.invincible) {
+                this.killEnemy(null, enemy);
+                player.body.velocity.y = -this.game.global.player.speed/2;
+            } else {
+                this.killPlayerCallback(player, enemy);
+            }
+        }
+    }
 
     killPlayerCallback(sprite, tile) {
         this.endGame('gameover');
@@ -297,16 +290,6 @@ class Game extends Phaser.State {
             if (this.map.bonusGroup.countLiving() <= 0) {
                 this.endGame('victory');
             }
-        }
-    }
-
-    updateScore(sprite, index) {
-        var collected = this.map.getCollectedObject(sprite, index);
-        collected.count++;
-        if(collected.points>0) {
-            // bonus standard
-            this.game.global.score += collected.points;
-            this.scoreText.text = 'SCORE ' + this.game.global.score;
         }
     }
 

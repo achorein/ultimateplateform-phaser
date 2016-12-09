@@ -1,3 +1,4 @@
+import Moving from '../prefabs/moving';
 import Player from '../prefabs/player';
 import Enemy from '../prefabs/enemy';
 import PNJ from '../prefabs/pnj';
@@ -35,6 +36,9 @@ class Level extends Phaser.Tilemap {
         this.setTileIndexCallback([571, 572, 81, 82, 83, 84, 85, 86, 170, 171, 176, 177],
             state.killPlayerCallback, state, this.backLayer);
 
+        this.player = new Player(this.game);
+        state.player = this.player;
+
         // Ajoute des zonnes de collision spécifiques
         this.addCollisionObjects();
         // Ajout des blocs mobiles
@@ -54,7 +58,8 @@ class Level extends Phaser.Tilemap {
         gameLayer.data.forEach(function(row) {
             row.forEach(function(data){
                 if (data.index > 0 && data.properties.start) {
-                    this.player = new Player(this.game, data.x*data.width, data.y*data.height);
+                    this.player.x = data.x*data.width;
+                    this.player.y = data.y*data.height;
                     this.game.add.existing(this.player);
                 }
             }, state);
@@ -78,15 +83,15 @@ class Level extends Phaser.Tilemap {
 
         // gestion des collisions (type terrain)
         this.game.physics.arcade.collide(state.player, this.blocsLayer);
-        this.game.physics.arcade.collide(state.player, this.playerCollisionGroup, this.specialBlocCallback, null, state);
+        this.game.physics.arcade.collide(state.player, this.playerCollisionGroup, SpecialBloc.specialBlocCallback, null, state);
         // type decors (nécessaire pour les callback sur tile)
         this.game.physics.arcade.collide(state.player, this.backLayer);
         // hack pour gérer les pentes
         this.game.physics.arcade.collide(state.player, this.stairGroup, this.stairCallback, null, state);
         // blocs mobiles
-        this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, this.movingCollisionCallBack);
-        this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, this.movingCollisionCallBack);
-        this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, this.specialBlocCallback, null, state);
+        this.game.physics.arcade.collide(this.specialBlocsGroup, this.blocsLayer, Moving.movingCollisionCallBack);
+        this.game.physics.arcade.collide(this.specialBlocsGroup, this.gameCollisionGroup, Moving.movingCollisionCallBack);
+        this.game.physics.arcade.collide(state.player, this.specialBlocsGroup, SpecialBloc.specialBlocCallback, null, state);
 
         // gestion des collisions sur objets donnant la mort
         this.game.physics.arcade.collide(state.player, this.deathGroup, state.killPlayerCallback, null, state);
@@ -101,8 +106,8 @@ class Level extends Phaser.Tilemap {
             this.physics.arcade.overlap(trap.bullets, this.player, this.killPlayerCallback, null, this);
         }, state);
 
-        for(var key in this.switchBlocsGroup){
-            this.game.physics.arcade.collide(state.player, this.switchBlocsGroup[key], function(player, bloc) {
+        for(var key in SpecialBloc.switchBlocsGroup){
+            this.game.physics.arcade.collide(state.player, SpecialBloc.switchBlocsGroup[key], function(player, bloc) {
                 if (player.body.touching.right || player.body.touching.left) {
                     player.body.velocity.x = 0;
                 }
@@ -110,43 +115,24 @@ class Level extends Phaser.Tilemap {
         }
 
         // gestion des collisions des ennemies (terrain)
-        this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer, this.movingCollisionCallBack);
+        this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer, Moving.movingCollisionCallBack);
         // gestion des collisions des ennemies (barriere virtuelle)
-        this.game.physics.arcade.collide(this.enemiesGroup, this.gameCollisionGroup, this.movingCollisionCallBack);
+        this.game.physics.arcade.collide(this.enemiesGroup, this.gameCollisionGroup, Moving.movingCollisionCallBack);
         // quand le joueur touche un enemie
-        this.game.physics.arcade.overlap(state.player, this.enemiesGroup, this.enemyOverlapCallback, null, state);
+        this.game.physics.arcade.overlap(this.player, this.enemiesGroup, state.enemyOverlapCallback, null, state);
 
         // gestion des collisions des PNJ (terrain)
-        this.game.physics.arcade.collide(this.pnjGroup, this.blocsLayer, this.movingCollisionCallBack);
+        this.game.physics.arcade.collide(this.pnjGroup, this.blocsLayer, Moving.movingCollisionCallBack);
         // gestion des collisions des PNJ (barriere virtuelle)
-        this.game.physics.arcade.collide(this.pnjGroup, this.gameCollisionGroup, this.movingCollisionCallBack);
+        this.game.physics.arcade.collide(this.pnjGroup, this.gameCollisionGroup, Moving.movingCollisionCallBack);
         // quand le joueur touche un player
-        this.game.physics.arcade.overlap(state.player, this.pnjGroup, this.pnjOverlapCallback, null, this);
-    }
+        this.game.physics.arcade.overlap(this.player, this.pnjGroup, PNJ.pnjOverlapCallback, null, this);
 
-    pnjOverlapCallback(player, pnj) {
-        // afficher le texte
-        if (pnj.text && !pnj.textBloc) {
-            pnj.textBloc = this.game.add.text(pnj.x + pnj.textOffsetX, pnj.y + pnj.textOffsetY, pnj.text, {
-                font: "14px Arial", fill: "#fff", wordWrap: true, wordWrapWidth: 200, align: "center",
-                stroke: '#000000', strokeThickness: 6
-            });
-            this.game.time.events.add(pnj.textTime, function() {
-                pnj.textBloc.kill();
-                pnj.textBloc = null;
-            });
-        }
-    }
+        this.game.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
+        this.game.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
+        this.game.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, state.killEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.weapon.bullets, this.map.specialBlocsGroup, state.killBlocCallback, null, this);
 
-    enemyOverlapCallback(player, enemy) {
-        if (enemy.alive) {
-            if (player.body.touching.down && !enemy.invincible) {
-                this.killEnemy(null, enemy);
-                player.body.velocity.y = -this.game.global.player.speed/2;
-            } else {
-                this.killPlayerCallback(player, enemy);
-            }
-        }
     }
 
     stairCallback(player, stair) {
@@ -158,7 +144,7 @@ class Level extends Phaser.Tilemap {
                 player.body.velocity.x += 10;
             }
         }
-        this.map.specialBlocCallback(player, stair);
+        SpecialBloc.specialBlocCallback(player, stair);
     }
 
     jumperCallback(sprite, tile) {
@@ -173,75 +159,8 @@ class Level extends Phaser.Tilemap {
         }, this);
     }
 
-    specialBlocCallback(player, bloc) {
-        // quand le joueur est sur un bloc, incrémente un compteur
-        if (player.body.touching.down && this.game.global.timer.bloc < 5) {
-            if (bloc.fallingTime) {
-                this.game.time.events.add(bloc.fallingTime, function () {
-                    player.animations.play('jump');
-                    // chute du bloc
-                    bloc.body.gravity.set(0);
-                    bloc.body.immovable = false;
-                    // fait disparaitre le bloc au bout de 2 secondes
-                    this.game.add.tween(bloc).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
-                    this.game.time.events.add(2000, function () {
-                        bloc.kill();
-                    }, this);
-                }, this);
-            }
-        }
-        if (bloc.lockColor) {
-            var key = player.getFromInventory('key', bloc.lockColor);
-            if (key) { // le joueur à au moins une clé, on déverouille le block
-                player.removeFromInventory('key', bloc.lockColor);
-                key.kill();
-                bloc.kill();
-                this.updateKeys();
-            }
-        }
-        if (player.body.touching.right || player.body.touching.left) {
-            player.body.velocity.x = 0;
-        }
-    }
-
-    movingCollisionCallBack(moving, bloc) {
-        moving.changeDirection(bloc);
-    }
-
     getTileOnSprite(player, layer) {
         return this.getTile(Math.floor(player.x / 64), Math.floor((player.y + 32) / 64), layer);
-    }
-
-    /**
-     *
-     * @param sprite nom du sprite
-     * @param frame index de la frame du spritesheet
-     * @param points nombre de points affecté au bonus (si value créé l'objet dans l'inventaire)
-     * @param scale sera utilisé pour l'affichage des écrans de points
-     * @returns {*}
-     */
-    getCollectedObject(sprite, frame, points, scale) {
-        for (var i=0; i<this.game.global.player.collected.length; i++){
-            if (this.game.global.player.collected[i].sprite == sprite && this.game.global.player.collected[i].frame == frame) {
-                if (points || points == 0) {
-                    this.game.global.player.collected[i].count = 0;
-                }
-                return this.game.global.player.collected[i];
-            }
-        }
-        if (points || points == 0) {
-            // création d'un nouveau type d'objet à collecter
-            var object = {
-                sprite: sprite,
-                frame: frame,
-                points: points,
-                scale: scale,
-                count: 0
-            };
-            this.game.global.player.collected.push(object);
-            return object;
-        }
-        return null;
     }
 
     /**
@@ -305,18 +224,18 @@ class Level extends Phaser.Tilemap {
         // gestion des blocs qui bouges
         this.specialBlocsGroup = this.game.add.group();
         this.specialBlocsGroup.enableBody = true;
-        this.switchBlocsGroup = {};
+        SpecialBloc.switchBlocsGroup = {};
         var collectableLayer = this.layers[this.getLayer('game')];
         collectableLayer.data.forEach(function (row) {
             row.forEach(function (tile) {
                 if (tile.index > 0 && tile.properties.bloc) {
                     var bloc = new SpecialBloc(this.game, tile);
                     if (bloc.switchname) {
-                        if (!this.switchBlocsGroup[tile.properties.switchname]) {
-                            this.switchBlocsGroup[tile.properties.switchname] =  this.game.add.group();
-                            this.switchBlocsGroup[tile.properties.switchname].enableBody = true;
+                        if (!SpecialBloc.switchBlocsGroup[tile.properties.switchname]) {
+                            SpecialBloc.switchBlocsGroup[tile.properties.switchname] =  this.game.add.group();
+                            SpecialBloc.switchBlocsGroup[tile.properties.switchname].enableBody = true;
                         }
-                        this.switchBlocsGroup[tile.properties.switchname].add(bloc);
+                        SpecialBloc.switchBlocsGroup[tile.properties.switchname].add(bloc);
                     } else {
                         this.specialBlocsGroup.add(bloc);
                     }
@@ -339,7 +258,7 @@ class Level extends Phaser.Tilemap {
                         var enemy = new Enemy(this.game, tile);
                         this.enemiesGroup.add(enemy);
                         this.maxLevelScore += enemy.points;
-                        this.getCollectedObject(enemy.key, 0, enemy.points, tile.properties.scale); // le créé si existe pas
+                        this.player.getCollectedObject(enemy.key, 0, enemy.points, tile.properties.scale); // le créé si existe pas
                     }
                 }, this);
             }, this);
@@ -423,7 +342,7 @@ class Level extends Phaser.Tilemap {
                     bonus.body.moves = false; // ne subit pas la gravité
                     this.bonusGroup.add(bonus);
                     this.maxLevelScore += bonus.points;
-                    this.getCollectedObject('world', tile.index - 1, bonus.points); // le créé si existe pas
+                    this.player.getCollectedObject('world', tile.index - 1, bonus.points); // le créé si existe pas
                 }
             }, this);
         }, this);

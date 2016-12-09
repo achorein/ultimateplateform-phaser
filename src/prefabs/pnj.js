@@ -40,6 +40,20 @@ class PNJ extends Moving {
         this.init();
     }
 
+    static pnjOverlapCallback(player, pnj) {
+        // afficher le texte
+        if (pnj.text && !pnj.textBloc) {
+            pnj.textBloc = this.game.add.text(pnj.x + pnj.textOffsetX, pnj.y + pnj.textOffsetY, pnj.text, {
+                font: "14px Arial", fill: "#fff", wordWrap: true, wordWrapWidth: 200, align: "center",
+                stroke: '#000000', strokeThickness: 6
+            });
+            this.game.time.events.add(pnj.textTime, function() {
+                pnj.textBloc.kill();
+                pnj.textBloc = null;
+            });
+        }
+    }
+
 }
 
 export default PNJ;

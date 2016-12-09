@@ -41,6 +41,7 @@ class Player extends Phaser.Sprite {
         this.jumpTimer = 0; // temps entre deux auts
         this.facing = 'right';
         this.status = 'idle';
+        this.collected = [];
     }
 
     action() {
@@ -190,6 +191,39 @@ class Player extends Phaser.Sprite {
         this.weapon.onFire.add(function(bullet, weapon) {
             bullet.body.angularVelocity = 720;
         });
+    }
+
+
+    /**
+     *
+     * @param sprite nom du sprite
+     * @param frame index de la frame du spritesheet
+     * @param points nombre de points affecté au bonus (si value créé l'objet dans l'inventaire)
+     * @param scale sera utilisé pour l'affichage des écrans de points
+     * @returns {*}
+     */
+    getCollectedObject(sprite, frame, points, scale) {
+        for (var i=0; i<this.collected.length; i++){
+            if (this.collected[i].sprite == sprite && this.collected[i].frame == frame) {
+                if (points || points == 0) {
+                    this.collected[i].count = 0;
+                }
+                return this.collected[i];
+            }
+        }
+        if (points || points == 0) {
+            // création d'un nouveau type d'objet à collecter
+            var object = {
+                sprite: sprite,
+                frame: frame,
+                points: points,
+                scale: scale,
+                count: 0
+            };
+            this.collected.push(object);
+            return object;
+        }
+        return null;
     }
 
 }

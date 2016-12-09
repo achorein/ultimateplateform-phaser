@@ -38,7 +38,6 @@ class Boot extends Phaser.State {
                 speed: 250,
                 nbBullet: 1,
                 sprite: '',
-                collected: [],
                 name: 'Player 1'
             },
             server: {
