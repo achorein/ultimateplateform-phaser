@@ -67,28 +67,39 @@ class SpecialBloc extends Moving {
         }
     }
 
-    static actionOnTile(tile, state) {
+    static actionOnTile(tile, map) {
+        var game = map.game;
         if (tile.properties.switchname) {
             // gestion des leviers
-            if (tile.index == tile.properties.tileOff + 1) { // activation
-                state.map.replace(tile.properties.tileOff + 1, tile.properties.tileOn + 1, tile.x, tile.y, 1, 1, state.map.backLayer);
+            if (tile.index == tile.properties.tileOff + 1) { // activation du levier
+                map.replace(tile.properties.tileOff + 1, tile.properties.tileOn + 1, tile.x, tile.y, 1, 1, map.backLayer);
                 if (tile.properties.switchaction == 'destroy') {
-                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].callAll('kill');
+                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].forEach(function(bloc) {
+                        bloc.kill();
+                    });
                     if (tile.properties.switchtimer) {
-                        SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent = state.game.time.events.add(tile.properties.switchtimer, function () {
-                            state.map.replace(tile.properties.tileOn + 1, tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, state.map.backLayer);
-                            SpecialBloc.switchBlocsGroup[tile.properties.switchname].callAll('revive');
-                        }, state);
+                        SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent = game.time.events.add(tile.properties.switchtimer, function () {
+                            map.replace(tile.properties.tileOn + 1, tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, map.backLayer);
+                            SpecialBloc.switchBlocsGroup[tile.properties.switchname].forEach(function(bloc){
+                                bloc.revive();
+                            });
+                        });
                     }
+                } else if (tile.properties.switchaction == 'fire') {
+                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].forEach(function(trap){
+                        trap.autofire = !trap.autofire;
+                    });
                 } else {
                     console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
                 }
-            } else if (tile.index == tile.properties.tileOn + 1) { // desactivation
-                state.map.replace(tile.properties.tileOn + 1, tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, state.map.backLayer);
+            } else if (tile.index == tile.properties.tileOn + 1 && !tile.properties.switchonlyonce) { // desactivation du levier
+                map.replace(tile.properties.tileOn + 1, tile.properties.tileOff + 1, tile.x, tile.y, 1, 1, map.backLayer);
                 if (tile.properties.switchaction == 'destroy') {
-                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].callAll('revive');
+                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].forEach(function(bloc){
+                        bloc.revive();
+                    });
                     if (SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent) {
-                        state.game.time.events.remove(SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent);
+                        game.time.events.remove(SpecialBloc.switchBlocsGroup[tile.properties.switchname].switchevent);
                     }
                 } else {
                     console.log('action inconnu pour ce levier : ' + tile.properties.switchaction);
@@ -99,6 +110,15 @@ class SpecialBloc extends Moving {
         } else {
             console.log('aucune action sur des blocs pour ce tile');
         }
+    }
+
+    /**
+     * Contexte (this) = Level (map)
+     * @param player
+     * @param tile
+     */
+    static switchCallback(player, tile) {
+        SpecialBloc.actionOnTile(tile, this);
     }
 
 }

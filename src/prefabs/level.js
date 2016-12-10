@@ -64,8 +64,8 @@ class Level extends Phaser.Tilemap {
                 }
             }, state);
         }, state);
-        if (!state.player) {
-            console.log('La position de démraage du joueur n\'est pas définie dans le niveau');
+        if (state.player.x == 0) {
+            console.log('La position de démarrage du joueur n\'est pas définie dans le niveau');
         }
 
         // Ajout du layer front en dernier pour être au premier plan
@@ -106,14 +106,6 @@ class Level extends Phaser.Tilemap {
             this.physics.arcade.overlap(trap.bullets, this.player, this.killPlayerCallback, null, this);
         }, state);
 
-        for(var key in SpecialBloc.switchBlocsGroup){
-            this.game.physics.arcade.collide(state.player, SpecialBloc.switchBlocsGroup[key], function(player, bloc) {
-                if (player.body.touching.right || player.body.touching.left) {
-                    player.body.velocity.x = 0;
-                }
-            }, function() { return true; }, this);
-        }
-
         // gestion des collisions des ennemies (terrain)
         this.game.physics.arcade.collide(this.enemiesGroup, this.blocsLayer, Moving.movingCollisionCallBack);
         // gestion des collisions des ennemies (barriere virtuelle)
@@ -128,10 +120,10 @@ class Level extends Phaser.Tilemap {
         // quand le joueur touche un player
         this.game.physics.arcade.overlap(this.player, this.pnjGroup, PNJ.pnjOverlapCallback, null, this);
 
-        this.game.physics.arcade.collide(this.player.weapon.bullets, this.map.blocsLayer, function(bullet) { bullet.kill(); });
-        this.game.physics.arcade.collide(this.player.weapon.bullets, this.map.collisionGroup, function(bullet) { bullet.kill(); });
-        this.game.physics.arcade.overlap(this.player.weapon.bullets, this.map.enemiesGroup, state.killEnemy, null, this);
-        this.game.physics.arcade.overlap(this.player.weapon.bullets, this.map.specialBlocsGroup, state.killBlocCallback, null, this);
+        this.game.physics.arcade.collide(this.player.weapon.bullets, this.blocsLayer, function(bullet) { bullet.kill(); });
+        this.game.physics.arcade.collide(this.player.weapon.bullets, this.collisionGroup, function(bullet) { bullet.kill(); });
+        this.game.physics.arcade.overlap(this.player.weapon.bullets, this.enemiesGroup, state.killEnemy, null, state);
+        this.game.physics.arcade.overlap(this.player.weapon.bullets, this.specialBlocsGroup, state.killBlocCallback, null, this);
 
     }
 
@@ -225,23 +217,34 @@ class Level extends Phaser.Tilemap {
         this.specialBlocsGroup = this.game.add.group();
         this.specialBlocsGroup.enableBody = true;
         SpecialBloc.switchBlocsGroup = {};
-        var collectableLayer = this.layers[this.getLayer('game')];
-        collectableLayer.data.forEach(function (row) {
+        var layer = this.layers[this.getLayer('game')];
+        layer.data.forEach(function (row) {
             row.forEach(function (tile) {
                 if (tile.index > 0 && tile.properties.bloc) {
                     var bloc = new SpecialBloc(this.game, tile);
                     if (bloc.switchname) {
                         if (!SpecialBloc.switchBlocsGroup[tile.properties.switchname]) {
-                            SpecialBloc.switchBlocsGroup[tile.properties.switchname] =  this.game.add.group();
-                            SpecialBloc.switchBlocsGroup[tile.properties.switchname].enableBody = true;
+                            SpecialBloc.switchBlocsGroup[tile.properties.switchname] =  [];
                         }
-                        SpecialBloc.switchBlocsGroup[tile.properties.switchname].add(bloc);
-                    } else {
-                        this.specialBlocsGroup.add(bloc);
+                        SpecialBloc.switchBlocsGroup[tile.properties.switchname].push(bloc);
                     }
+                    this.specialBlocsGroup.add(bloc);
                 }
             }, this);
         }, this);
+
+        // gestion des leviers qui s'active au touché
+        var tiles = [];
+        var backLayer = this.layers[this.getLayer('back')];
+        backLayer.data.forEach(function (row) {
+            row.forEach(function (tile) {
+                if(tile.properties.switchname && tile.properties.switchonlyonce) {
+                    tiles.push(tile.index);
+                }
+            });
+        });
+        this.setTileIndexCallback(tiles,
+            SpecialBloc.switchCallback, this, this.backLayer);
     }
 
     /**
@@ -282,8 +285,12 @@ class Level extends Phaser.Tilemap {
                     var offset = 32;
                     trap.x = tile.x * tile.width + offset;
                     trap.y = tile.y * tile.height + offset;
-                    trap.autofire = true
-                    trap.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
+                    if (tile.properties.holdfire) {
+                        trap.autofire = false;
+                    } else {
+                        trap.autofire = true;
+                    }
+                    trap.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
                     trap.bulletSpeed = tile.properties.bulletSpeed;
                     trap.fireRate = tile.properties.fireRate;
                     var gravity = -this.game.global.level.gravity;
@@ -310,6 +317,10 @@ class Level extends Phaser.Tilemap {
                         });
                     }
                     this.traps.push(trap);
+                    if (!SpecialBloc.switchBlocsGroup[tile.properties.switchname]) {
+                        SpecialBloc.switchBlocsGroup[tile.properties.switchname] =  [];
+                    }
+                    SpecialBloc.switchBlocsGroup[tile.properties.switchname].push(trap);
                 }
             }, this);
         }, this);

@@ -114,7 +114,7 @@ class Game extends Phaser.State {
                 this.player.x = tile.properties.teleportX * 64;
                 this.player.y = tile.properties.teleportY * 64;
             } else if (tile.properties.switchname) {
-                SpecialBloc.actionOnTile(tile, this);
+                SpecialBloc.actionOnTile(tile, this.map);
             } else {
                 this.player.up(this.map);
             }
@@ -129,11 +129,6 @@ class Game extends Phaser.State {
             this.map.specialBlocsGroup.forEachAlive(function(bloc) {
                 this.game.debug.body(bloc);
             }, this);
-            for(var key in SpecialBloc.switchBlocsGroup){
-                SpecialBloc.switchBlocsGroup[key].forEachAlive(function(bloc) {
-                    this.game.debug.body(bloc);
-                }, this);
-            }
         }
     }
 
@@ -261,7 +256,7 @@ class Game extends Phaser.State {
         }
     }
 
-    killPlayerCallback(sprite, tile) {
+    killPlayerCallback(player, tile) {
         this.endGame('gameover');
     }
 

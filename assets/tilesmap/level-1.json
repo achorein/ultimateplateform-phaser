@@ -7048,28 +7048,6 @@
                  "y":642
                 }, 
                 {
-                 "height":60,
-                 "id":919,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18,
-                 "x":898,
-                 "y":644
-                }, 
-                {
-                 "height":56,
-                 "id":920,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":14,
-                 "x":264,
-                 "y":772
-                }, 
-                {
                  "height":64,
                  "id":921,
                  "name":"",
@@ -7125,15 +7103,15 @@
                  "y":799.333
                 }, 
                 {
-                 "height":64,
+                 "height":66,
                  "id":1001,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":20,
-                 "x":1385.33,
-                 "y":1472
+                 "width":6,
+                 "x":1594.33,
+                 "y":1470
                 }, 
                 {
                  "height":61.3333,
@@ -7143,8 +7121,8 @@
                  "type":"",
                  "visible":true,
                  "width":9.33333,
-                 "x":1984,
-                 "y":1474.67
+                 "x":2147,
+                 "y":1471.67
                 }, 
                 {
                  "height":61.3333,
@@ -7222,17 +7200,6 @@
                  "width":12,
                  "x":10199,
                  "y":195
-                }, 
-                {
-                 "height":62,
-                 "id":1178,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":7,
-                 "x":9792,
-                 "y":193
                 }, 
                 {
                  "height":62.6667,
