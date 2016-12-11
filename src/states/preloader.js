@@ -79,6 +79,9 @@ class Preloader extends Phaser.State {
         this.game.load.image('level-ko', 'assets/menu/level-ko.png');
         this.game.load.image('level-ok', 'assets/menu/level-ok.png');
         this.game.load.image('level-locked', 'assets/menu/level-locked.png');
+        this.game.load.image('sound-on', 'assets/menu/sound-on.png');
+        this.game.load.image('sound-off', 'assets/menu/sound-off.png');
+        this.game.load.image('home', 'assets/menu/home.png');
 
         /*
          * Sons

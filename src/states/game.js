@@ -81,6 +81,11 @@ class Game extends Phaser.State {
         this.music = this.game.add.audio('music-level-'+this.game.global.level.current, 2, true);
         this.music.play();
 
+        this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
+        this.soundButton.scale.setTo(0.25);
+        this.homeButton = this.game.add.button(this.game.width - 100, 5, 'home', this.goHome, this);
+        this.homeButton.scale.setTo(0.25);
+
         // Inputs
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.cursors.up.onDown.add(function(){
@@ -89,18 +94,10 @@ class Game extends Phaser.State {
         }, this);
         this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.actionButton = this.game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
-        this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-        this.escapeButton.onDown.add(function(){
-            this.endGame('menu-level');
-        }, this);
-        this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
-        this.soundButton.onDown.add(function(){
-            if (this.game.sound.mute) {
-                this.game.sound.mute = false;
-            } else {
-                this.game.sound.mute = true;
-            }
-        }, this);
+        this.homeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        this.homeKey.onDown.add(this.goHome, this);
+        this.soundKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
+        this.soundKey.onDown.add(this.toggleSound, this);
         if (this.game.global.devMode) {
             // permet de rapidement passer au niveau suivant
             this.cheatCodeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F9);
@@ -113,6 +110,20 @@ class Game extends Phaser.State {
                 this.endGame('gameover');
             }, this);
 
+        }
+    }
+
+    goHome() {
+        this.endGame('menu-level');
+    }
+
+    toggleSound() {
+        if (this.game.sound.mute) {
+            this.game.sound.mute = false;
+            this.soundButton.loadTexture('sound-on');
+        } else {
+            this.game.sound.mute = true;
+            this.soundButton.loadTexture('sound-off');
         }
     }
 

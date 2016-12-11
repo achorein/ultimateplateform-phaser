@@ -61,10 +61,35 @@ class GameOver extends Phaser.State {
         this.canContinueToNextState = false;
         this.game.time.events.add(Phaser.Timer.SECOND*0.25, function(){ this.canContinueToNextState = true; }, this);
 
+        this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
+        this.soundButton.scale.setTo(0.25);
+        this.homeButton = this.game.add.button(5, 5, 'home', this.goHome, this);
+        this.homeButton.scale.setTo(0.25);
+
+        this.homeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        this.homeKey.onDown.add(this.goHome, this);
+        this.soundKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
+        this.soundKey.onDown.add(this.toggleSound, this);
+
         // press any key
         this.game.input.keyboard.callbackContext = this;
         this.game.input.keyboard.onDownCallback = function(e) {
             this.onInputDown();
+        }
+    }
+
+    goHome() {
+        //this.music.stop();
+        this.game.state.start('menu-level', true, false);
+    }
+
+    toggleSound() {
+        if (this.game.sound.mute) {
+            this.game.sound.mute = false;
+            this.soundButton.loadTexture('sound-on');
+        } else {
+            this.game.sound.mute = true;
+            this.soundButton.loadTexture('sound-off');
         }
     }
 

@@ -75,21 +75,28 @@ class Menu extends Phaser.State {
         this.music = this.game.add.audio('musicMenu', 0.5, true);
         this.music.play();
 
+        this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
+        this.soundButton.scale.setTo(0.25);
+
         this.selectPlayer(true);
 
         this.loadData();
 
         this.canContinueToNextState = true;
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.okButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-        this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
-        this.soundButton.onDown.add(function(){
-            if (this.game.sound.mute) {
-                this.game.sound.mute = false;
-            } else {
-                this.game.sound.mute = true;
-            }
-        }, this);
+        this.okKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.soundKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
+        this.soundKey.onDown.add(this.toggleSound, this);
+    }
+
+    toggleSound() {
+        if (this.game.sound.mute) {
+            this.game.sound.mute = false;
+            this.soundButton.loadTexture('sound-on');
+        } else {
+            this.game.sound.mute = true;
+            this.soundButton.loadTexture('sound-off');
+        }
     }
 
     loadData() {
@@ -113,7 +120,7 @@ class Menu extends Phaser.State {
                 }
                 this.selectPlayer();
                 this.timer = this.game.time.now + 250;
-            } else if(this.okButton.isDown) {
+            } else if(this.okKey.isDown) {
                this.goNextState();
             }
     }

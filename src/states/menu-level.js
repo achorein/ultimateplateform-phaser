@@ -90,24 +90,35 @@ class MenuLevel extends Phaser.State {
         this.music = this.game.add.audio('musicMenu', 0.5, true);
         this.music.play();
 
+        this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
+        this.soundButton.scale.setTo(0.25);
+        this.homeButton = this.game.add.button(5, 5, 'home', this.goHome, this);
+        this.homeButton.scale.setTo(0.25);
+
         // inputs
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.okButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-        this.escapeButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-        this.escapeButton.onDown.add(function(){
-            this.music.stop();
-            this.game.state.start('menu', true, false);
-        }, this);
-        this.soundButton = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
-        this.soundButton.onDown.add(function(){
-            if (this.game.sound.mute) {
-                this.game.sound.mute = false;
-            } else {
-                this.game.sound.mute = true;
-            }
-        }, this);
+        this.homeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        this.homeKey.onDown.add(this.goHome, this);
+        this.soundKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
+        this.soundKey.onDown.add(this.toggleSound, this);
 
         this.canContinueToNextState = true;
+    }
+
+    goHome() {
+        this.music.stop();
+        this.game.state.start('menu', true, false);
+    }
+
+    toggleSound() {
+        if (this.game.sound.mute) {
+            this.game.sound.mute = false;
+            this.soundButton.loadTexture('sound-on');
+        } else {
+            this.game.sound.mute = true;
+            this.soundButton.loadTexture('sound-off');
+        }
     }
 
     update() {
