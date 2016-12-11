@@ -83,8 +83,10 @@ class Game extends Phaser.State {
 
         this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
         this.soundButton.scale.setTo(0.25);
+        this.soundButton.fixedToCamera = true;
         this.homeButton = this.game.add.button(this.game.width - 100, 5, 'home', this.goHome, this);
         this.homeButton.scale.setTo(0.25);
+        this.homeButton.fixedToCamera = true;
 
         // Inputs
         this.cursors = this.game.input.keyboard.createCursorKeys();

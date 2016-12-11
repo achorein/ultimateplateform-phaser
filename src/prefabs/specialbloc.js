@@ -36,6 +36,7 @@ class SpecialBloc extends Moving {
             this.alpha = tile.properties.alpha;
         }
         this.switchname = tile.properties.switchname;
+        this.bloc = true;
 
         this.init();
     }

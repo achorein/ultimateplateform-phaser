@@ -16,10 +16,14 @@ class Moving extends Phaser.Sprite {
     changeDirection() {
         if (this.velocityX != 0) {
             if (this.body.touching.left || this.body.blocked.left) {
-                this.scale.x *= -1; // symetrie verticale
+                if (!this.bloc) {
+                    this.scale.x *= -1; // symetrie verticale
+                }
                 this.body.velocity.x = Math.abs(this.velocityX);
             } else if (this.body.touching.right || this.body.blocked.right) {
-                this.scale.x *= -1; // symetrie verticale
+                if (!this.bloc) {
+                    this.scale.x *= -1; // symetrie verticale
+                }
                 this.body.velocity.x = -Math.abs(this.velocityX);
 
             }
