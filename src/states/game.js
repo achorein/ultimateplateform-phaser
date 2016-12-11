@@ -9,6 +9,7 @@ class Game extends Phaser.State {
 
     create() {
         var style = { font: "bold 18px Arial", fill: "#888", boundsAlignH: "center", boundsAlignV: "middle" };
+        var styleBig = { font: "bold 56px Lucida Console", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         this.game.global.player.collected = [];
 
         // Sprites
@@ -56,6 +57,16 @@ class Game extends Phaser.State {
             this.playerLifeGroup.add(life);
         }
         this.updateLives();
+
+        // Ajout du nom du niveau !
+        if (this.config.name) {
+            var levelNameText = this.game.add.text(this.game.centerX, this.game.centerY, this.config.name, styleBig);
+            levelNameText.fixedToCamera = true;
+            levelNameText.anchor.set(0.5);
+            levelNameText.stroke = '#000000';
+            levelNameText.strokeThickness = 6;
+            this.game.add.tween(levelNameText).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true); // fondu
+        }
 
         // Ajout de l'aide si première partie
         if (!this.game.global.helpShown) {

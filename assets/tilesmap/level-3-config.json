@@ -1,4 +1,5 @@
 {
+    "name": "Castle",
     "sky": false,
     "trees": {
         "height": 3000,

@@ -22,7 +22,9 @@ class PNJ extends Moving {
             this.scale.x *= -1; // symetrie verticale
         }
         this.anchor.setTo(.5, 0);
-        this.body.gravity.set(0, -this.game.global.level.gravity);
+        if (!tile.properties.gravity) {
+            this.body.gravity.set(0, -this.game.global.level.gravity); // annulation de la gravité
+        }
         this.body.immovable = true;
 
         if (tile.properties.atlas) {

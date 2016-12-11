@@ -1,4 +1,5 @@
 {
+    "name": "desert",
     "sky": true,
     "trees": {
         "height": 1500,

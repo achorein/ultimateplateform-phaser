@@ -20,6 +20,9 @@ class SpecialBloc extends Moving {
             this.body.bounce.set(0.8, 0.1);
             //this.body.friction.set(1000);
         }
+        if (tile.properties.friction) {
+            this.body.friction.x = tile.properties.friction;
+        }
         if (tile.properties.fallingTime) {
             this.fallingTime = tile.properties.fallingTime;
         }
