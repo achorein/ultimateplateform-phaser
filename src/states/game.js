@@ -99,7 +99,7 @@ class Game extends Phaser.State {
             this.pad = new Pad(this.game);
             //this.game.add.existing(this.pad);
         } else {
-            this.pad = {right: null, left: null, up: null, down: null, buttonA: null, buttonB: null};
+            this.pad = {right: {}, left: {}, up: {}, down: {}, buttonA: {}, buttonB: {}};
         }
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.cursors.up.onDown.add(function(){

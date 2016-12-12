@@ -1,10 +1,3 @@
-var line = [];
-var wordIndex = 0;
-var lineIndex = 0;
-
-var wordDelay = 180;
-var lineDelay = 500;
-
 class Menu extends Phaser.State {
 
     constructor() {
