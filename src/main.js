@@ -10,7 +10,7 @@ var conf = {
     width: 1024,
     height: 768,
     renderer: Phaser.AUTO,
-    parent: 'phaserdemo-game',
+    parent: 'phaser-game',
     transparent: false,
     antialias: false,
     state: this,
@@ -18,7 +18,6 @@ var conf = {
 };
 
 const game = new Phaser.Game(conf);
-
 game.state.add('boot', new Boot());
 game.state.add('game', new Game());
 game.state.add('menu', new Menu());

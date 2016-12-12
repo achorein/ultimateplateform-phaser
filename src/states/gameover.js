@@ -65,6 +65,10 @@ class GameOver extends Phaser.State {
         this.soundButton.scale.setTo(0.25);
         this.homeButton = this.game.add.button(5, 5, 'home', this.goHome, this);
         this.homeButton.scale.setTo(0.25);
+        this.infoButton = this.game.add.button(this.game.width - 100, 5, 'info', function() {
+            window.open('http://github.com/achorein/phaserdemo','_blank');
+        }, this);
+        this.infoButton.scale.setTo(0.25);
 
         this.homeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.homeKey.onDown.add(this.goHome, this);

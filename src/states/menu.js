@@ -11,18 +11,13 @@ class Menu extends Phaser.State {
         super();
         this.cursorPos = 1;
         this.timer = 0;
-    }
 
-    create() {
-        //add background image
-        this.background = this.game.add.sprite(0,0, 'background-menu');
-        this.background.height = this.game.height;
-        this.background.width = this.game.width;
-        this.background.alpha = 0.25;
+        this.menuBox = {
+            width: 250,
+            heigth: 250,
+            length: 4
+        };
 
-        this.cursorPos = 1;
-
-        // Ajout personnages
         this.menu = [
             {index: 1, name:'SB', description:[
                 'Se faufiller dans des situations peu confortables est votre quotidien,',
@@ -41,19 +36,28 @@ class Menu extends Phaser.State {
                 'pour collecter un trésor qui n\'a d\'égal que votre ambition.'
             ], texture:'knight'}
         ];
+    }
+
+    create() {
+        //add background image
+        this.background = this.game.add.sprite(0,0, 'background-menu');
+        this.background.height = this.game.height;
+        this.background.width = this.game.width;
+        this.background.alpha = 0.25;
+
+        this.cursorPos = 1;
+
+        // Ajout personnages
+
 
         var offset = 15;
         this.game.add.sprite(this.game.centerX, 100, 'logo').anchor.set(0.5);
         this.game.add.sprite(offset, this.game.height - 100 - offset, 'vikings').alpha = 0.5;
         this.game.add.sprite(this.game.width - 117 - offset , this.game.height - 100 - offset, 'phaser').alpha = 0.5;
 
-        /*var font = this.createFont('CHOOSE YOUR PLAYER');
-        var img = this.game.add.image(this.game.centerX, 200, font);
-        img.anchor.set(0.5);*/
-
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         this.menu.forEach(function(player) {
-            var sprite = this.game.add.button(this.computePosition(player.index), this.game.centerY - 50, player.texture, function(sprite){
+            var sprite = this.game.add.button(this.computePosition(player.index).x, this.game.centerY - 50, player.texture, function(sprite){
                 this.cursorPos = sprite.cursorPos;
                 this.goNextState();
             }, this, 'idle/01.png');
@@ -62,7 +66,7 @@ class Menu extends Phaser.State {
             sprite.animations.add('idle', Phaser.Animation.generateFrameNames('idle/', 1, 10, '.png', 2), 10, true, false);
             sprite.scale.setTo(1);
             player.sprite = sprite;
-            var text = this.game.add.text(this.computePosition(player.index), this.game.centerY + 100, player.name, style);
+            var text = this.game.add.text(this.computePosition(player.index).x, this.game.centerY + 100, player.name, style);
             text.anchor.set(0.5);
             player.text = text;
             sprite.onInputOver.add(function(sprite){
@@ -77,6 +81,10 @@ class Menu extends Phaser.State {
 
         this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
         this.soundButton.scale.setTo(0.25);
+        this.infoButton = this.game.add.button(this.game.width - 100, 5, 'info', function() {
+            window.open('http://github.com/achorein/phaserdemo','_blank');
+        }, this);
+        this.infoButton.scale.setTo(0.25);
 
         this.selectPlayer(true);
 
@@ -142,9 +150,9 @@ class Menu extends Phaser.State {
                 if (!ignoreSound) {
                     this.game.add.audio('miscMenu').play();
                 }
-                wordIndex = -1;
+                /*wordIndex = -1;
                 lineIndex = -1;
-                this.game.time.events.add(lineDelay, this.writeText, this);
+                this.game.time.events.add(lineDelay, this.writeText, this);*/
             } else {
                 player.sprite.animations.stop();
                 player.sprite.scale.setTo(0.8);
@@ -153,61 +161,57 @@ class Menu extends Phaser.State {
         }, this);
     }
 
-    computePosition(index) {
+    /*computePosition(index) {
         var squareWidth = 250;
         var min = this.menu.length/2 * squareWidth/2;
         var value = this.cursorPos;
         if (index) {
             value = index;
         }
-        var pos = (this.game.centerY - min) + (value-1)*squareWidth;
+        var pos = (this.game.centerX - min) + (value-1)*squareWidth;
         return pos;
-    }
+    }*/
 
-    writeText(){
-        var barX = 128;
-        var barY = this.game.height - 250;
-        var bar = this.game.add.graphics();
-        bar.beginFill(0xEEEEEE, 1);
-        bar.drawRoundedRect(barX, barY, 800, 100, 5);
-        this.text = this.game.add.text(barX + 18, barY + 18, '', { font: "18px Arial", fill: "#666" });
-        line = [];
-        wordIndex = 0;
-        lineIndex = 0;
-        this.nextLine();
-    }
+    computePosition(index, position) {
+        var pos = this.cursorPos;
+        if (index) {
+            pos = index;
+        }
 
-    nextLine() {
-        var content = this.menu[this.cursorPos-1].description;
-        if (lineIndex<0 || lineIndex >= content.length) {
-            //  We're finished
-            return;
-        }
-        //  Split the current line on spaces, so one word per array element
-        line = content[lineIndex].split(' ');
-        //  Reset the word index to zero (the first word in the line)
-        wordIndex = 0;
-        //  Call the 'nextWord' function once for each word in the line (line.length)
-        this.game.time.events.repeat(wordDelay, line.length, this.nextWord, this);
-        //  Advance to the next line
-        lineIndex++;
-    }
+        var paddingX = Math.floor(this.menuBox.width*0.1);
+        var paddingY = Math.floor(this.menuBox.heigth*0.3);
 
-    nextWord() {
-        if (wordIndex<0 || !line[wordIndex]) {
-            return;
+        var boxWidth = this.menuBox.width + paddingX;
+        var boxHeight = this.menuBox.heigth + paddingY;
+        //console.log(this.menuBox.height + ','+ paddingY + ',' + boxHeight);
+
+        var marginX =  Math.floor((this.game.width - (this.menuBox.length * boxWidth))/2);
+        var marginY =  marginX;
+
+        //var nbByLine = Math.floor((this.game.width - (marginX*2)) / boxWidth);
+
+        var linePos = Math.floor(pos/(this.menuBox.length+1)) + 1;
+        var colPos = ((pos-1) % this.menuBox.length) + 1;
+
+        var posX =  marginX + ((colPos - 1)*boxWidth);
+        var posY = marginY + ((linePos - 1)*boxHeight);
+        if (!position || position == 'center') {
+            posX += Math.floor(this.menuBox.width/2);
+            posY += Math.floor(this.menuBox.heigth/2);
+        } else if (position == 'bottom') {
+            posY += this.menuBox.heigth;
+        } else if (position == 'bottom-center') {
+            posX += Math.floor(this.menuBox.width/2);
+            posY += this.menuBox.heigth;
         }
-        //  Add the next word onto the text string, followed by a space
-        this.text.text = this.text.text.concat(line[wordIndex] + " ");
-        //  Advance the word index to the next word in the line
-        wordIndex++;
-        //  Last word?
-        if (wordIndex >= line.length) {
-            //  Add a carriage return
-            this.text.text = this.text.text.concat("\n");
-            //  Get the next line after the lineDelay amount of ms has elapsed
-            this.game.time.events.add(lineDelay, this.nextLine, this);
-        }
+
+        var point = {
+            line: linePos,
+            col: colPos,
+            x: posX,
+            y: posY + 75
+        };
+        return point;
     }
 
     shutdown() {

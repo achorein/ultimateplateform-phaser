@@ -3,9 +3,12 @@ canvas {
   cursor: none;
 }
 
-.game {
-  width: 1024px;
-  height: 768px;
-  display: block;
+body {
+  padding: 0;
+  margin: 0;
 }
+
+.game {
+  height:100vh; /* Hauteur de la page et non de l'écran. */
+  display: block;
 }

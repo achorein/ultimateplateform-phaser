@@ -6,57 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A simple game in order to test phase framework feactures">
   <meta name="author" content="Anselme Chorein">
-  <title>Vikings - Phaser Game Demo</title>
+  <title>Ultimate Plateform</title>
 
   <!-- build:css main.min.css -->
   <link rel="stylesheet" href="css/main.css">
-  <!-- /build -->
-  <!-- build:css bootstrap.min.css -->
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
   <!-- /build -->
 
 </head>
 
 <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="https://blog.v1kings.io">
-          <img src="https://blog.v1kings.io/wp-content/uploads/2016/03/viking_mini.png" width="50" height="50" class="pull-left" style="margin-top: -14px; margin-right: 0.5em">
-          Vikings - Phaser Demo
-        </a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="https://github.com/achorein/phaserdemo">Github</a></li>
-        </ul>
-        <form class="navbar-form navbar-left">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Loading..." id="playerName" value="">
-          </div>
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <span id="score-max">Loading...</span> <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" id="score-top">
-            </ul>
-          </li>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
-  </nav>
-
-  <div class="container" style="margin-top: 50px">
-    <div id="phaserdemo-game" class="game" style="width: 1024px; heigth:768px"></div>
-  </div>
+  <div id="phaser-game" class="game"></div>
 
   <!-- build:remove -->
   <script src="http://localhost:35729/livereload.js"></script>
@@ -67,9 +26,6 @@
   <!-- /build -->
   <!-- build:js jquery.min.js -->
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <!-- /build -->
-  <!-- build:js bootstrap.min.js -->
-  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- /build -->
 
   <!-- build:js bundle.min.js -->

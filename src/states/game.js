@@ -1,5 +1,6 @@
 import LevelMap from '../prefabs/level';
 import SpecialBloc from '../prefabs/specialbloc';
+import Pad from '../prefabs/pad';
 
 class Game extends Phaser.State {
 
@@ -87,8 +88,19 @@ class Game extends Phaser.State {
         this.homeButton = this.game.add.button(this.game.width - 100, 5, 'home', this.goHome, this);
         this.homeButton.scale.setTo(0.25);
         this.homeButton.fixedToCamera = true;
+        this.infoButton = this.game.add.button(this.game.width - 100, 5, 'info', function() {
+            window.open('http://github.com/achorein/phaserdemo','_blank');
+        }, this);
+        this.infoButton.scale.setTo(0.25);
+        this.infoButton.fixedToCamera = true;
 
         // Inputs
+        if (this.game.global.enablePad) {
+            this.pad = new Pad(this.game);
+            //this.game.add.existing(this.pad);
+        } else {
+            this.pad = {right: null, left: null, up: null, down: null, buttonA: null, buttonB: null};
+        }
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.cursors.up.onDown.add(function(){
             var tile = this.map.getTileOnSprite(this.player, this.map.backLayer);
@@ -189,20 +201,20 @@ class Game extends Phaser.State {
         if (this.player.onEchelle) {
             this.player.body.velocity.y = 0;
         }
-        if (this.actionButton.isDown) {
+        if (this.actionButton.isDown || this.pad.buttonB.isDown) {
             this.player.action();
-        } else if (this.cursors.left.isDown) { // fleche de gauche
+        } else if (this.cursors.left.isDown || this.pad.left.isDown) { // fleche de gauche
             this.player.left();
-        } else if (this.cursors.right.isDown) { // fleche de droite
+        } else if (this.cursors.right.isDown || this.pad.right.isDown) { // fleche de droite
             this.player.right();
-        } else if (this.cursors.up.isDown) { // fleche du haut
+        } else if (this.cursors.up.isDown || this.pad.up.isDown) { // fleche du haut
             this.player.up();
-        } else if (this.cursors.down.isDown) { // fleche du bas
+        } else if (this.cursors.down.isDown || this.pad.down.isDown) { // fleche du bas
             this.player.down();
         } else { // si aucune touche appuyée
             this.player.idle();
         }
-        if (this.jumpButton.isDown) {
+        if (this.jumpButton.isDown || this.pad.buttonA.isDown) {
             this.player.jump();
         }
     }

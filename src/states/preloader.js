@@ -69,6 +69,14 @@ class Preloader extends Phaser.State {
         this.game.load.image('heartEmpty', 'assets/hud/hud_heartEmpty.png');
         this.game.load.image('keys', 'assets/hud/keys.png');
 
+        this.game.load.image('pad', 'assets/hud/pad.png');
+        this.game.load.image('pad-up', 'assets/hud/pad-up.png');
+        this.game.load.image('pad-down', 'assets/hud/pad-down.png');
+        this.game.load.image('pad-right', 'assets/hud/pad-right.png');
+        this.game.load.image('pad-left', 'assets/hud/pad-left.png');
+        this.game.load.image('button-a', 'assets/hud/button-a.png');
+        this.game.load.image('button-b', 'assets/hud/button-b.png');
+
         // menu
         this.game.load.image('background-menu','assets/menu/background.png');
         this.game.load.image('bloc', 'assets/menu/bloc.png');
@@ -82,6 +90,7 @@ class Preloader extends Phaser.State {
         this.game.load.image('sound-on', 'assets/menu/sound-on.png');
         this.game.load.image('sound-off', 'assets/menu/sound-off.png');
         this.game.load.image('home', 'assets/menu/home.png');
+        this.game.load.image('info', 'assets/menu/info.png');
 
         /*
          * Sons

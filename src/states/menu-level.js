@@ -94,6 +94,10 @@ class MenuLevel extends Phaser.State {
         this.soundButton.scale.setTo(0.25);
         this.homeButton = this.game.add.button(5, 5, 'home', this.goHome, this);
         this.homeButton.scale.setTo(0.25);
+        this.infoButton = this.game.add.button(this.game.width - 100, 5, 'info', function() {
+            window.open('http://github.com/achorein/phaserdemo','_blank');
+        }, this);
+        this.infoButton.scale.setTo(0.25);
 
         // inputs
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -182,7 +186,7 @@ class MenuLevel extends Phaser.State {
         //console.log(this.menuBox.height + ','+ paddingY + ',' + boxHeight);
 
         var marginX =  Math.floor((this.game.width - (this.menuBox.length * boxWidth))/2);
-        var marginY =  marginX;
+        var marginY =  Math.floor((this.game.height - (Math.ceil(this.game.global.level.max/this.menuBox.length) * boxHeight))/2);
 
         //var nbByLine = Math.floor((this.game.width - (marginX*2)) / boxWidth);
 
