@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="34" height="33" tilewidth="64" tileheight="64" nextobjectid="309">
+ <tileset firstgid="1" name="world-spritesheet" tilewidth="64" tileheight="64" tilecount="680" columns="8">
+  <image source="tilesmap.png" width="512" height="5440"/>
+  <tile id="5">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="destructable" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="switchname" value="gate1"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="fallingTime" type="int" value="1000"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="moves" type="bool" value="true"/>
+    <property name="pushable" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="fallingTime" type="int" value="1500"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="x" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="fallingTime" type="int" value="1000"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="x" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="fallingTime" type="int" value="2000"/>
+    <property name="x" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="moves" type="bool" value="true"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="moves" type="bool" value="true"/>
+    <property name="x" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="end" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="57">
+   <properties>
+    <property name="end" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="86">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="lock" value="blue"/>
+   </properties>
+  </tile>
+  <tile id="87">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="lock" value="green"/>
+   </properties>
+  </tile>
+  <tile id="88">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="lock" value="red"/>
+   </properties>
+  </tile>
+  <tile id="89">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="lock" value="yellow"/>
+   </properties>
+  </tile>
+  <tile id="102">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="x" type="int" value="50"/>
+   </properties>
+  </tile>
+  <tile id="113">
+   <properties>
+    <property name="atlas" type="bool" value="true"/>
+    <property name="gravity" type="bool" value="false"/>
+    <property name="miror" type="bool" value="true"/>
+    <property name="offset" type="int" value="-10"/>
+    <property name="offsetX" type="int" value="24"/>
+    <property name="offsetY" type="int" value="-2"/>
+    <property name="pnj" type="bool" value="true"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="ninja"/>
+    <property name="text" value="Attention ce niveau est très étrange ..."/>
+    <property name="textOffsetX" type="int" value="-64"/>
+    <property name="textOffsetY" type="int" value="-85"/>
+   </properties>
+  </tile>
+  <tile id="115">
+   <properties>
+    <property name="gravity" type="bool" value="true"/>
+    <property name="miror" type="bool" value="false"/>
+    <property name="offset" type="int" value="-10"/>
+    <property name="offsetX" type="int" value="24"/>
+    <property name="offsetY" type="int" value="0"/>
+    <property name="pnj" type="bool" value="true"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="ninjagirl"/>
+    <property name="text" value="Essaye d'appuyer sur ce bouton"/>
+    <property name="textOffsetX" type="int" value="-64"/>
+    <property name="textOffsetY" type="int" value="-85"/>
+   </properties>
+  </tile>
+  <tile id="116">
+   <properties>
+    <property name="gravity" type="bool" value="true"/>
+    <property name="miror" type="bool" value="false"/>
+    <property name="offset" type="int" value="-10"/>
+    <property name="offsetX" type="int" value="24"/>
+    <property name="offsetY" type="int" value="-1"/>
+    <property name="pnj" type="bool" value="true"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="ninja"/>
+    <property name="text" value="Ne jamais faire confiance à Ninja Girl !"/>
+    <property name="textOffsetX" type="int" value="-64"/>
+    <property name="textOffsetY" type="int" value="-85"/>
+   </properties>
+  </tile>
+  <tile id="153">
+   <properties>
+    <property name="start" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="155">
+   <properties>
+    <property name="teleportX" type="int" value="9"/>
+    <property name="teleportY" type="int" value="26"/>
+   </properties>
+  </tile>
+  <tile id="165">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="friction" type="float" value="0.5"/>
+   </properties>
+  </tile>
+  <tile id="260">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="y" type="int" value="75"/>
+   </properties>
+  </tile>
+  <tile id="284">
+   <properties>
+    <property name="atlas" type="bool" value="true"/>
+    <property name="miror" type="bool" value="false"/>
+    <property name="offsetX" type="int" value="24"/>
+    <property name="offsetY" type="int" value="-10"/>
+    <property name="pnj" type="bool" value="true"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="adventure_boy"/>
+    <property name="text" value="Cette mine recele de nombreux trésors, mais restez sur vos garde prudent !"/>
+    <property name="textOffsetX" type="int" value="-64"/>
+    <property name="textOffsetY" type="int" value="-85"/>
+   </properties>
+  </tile>
+  <tile id="310">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="fallingTime" type="int" value="750"/>
+   </properties>
+  </tile>
+  <tile id="401">
+   <properties>
+    <property name="teleportX" type="int" value="24"/>
+    <property name="teleportY" type="int" value="5"/>
+   </properties>
+  </tile>
+  <tile id="403">
+   <properties>
+    <property name="teleportX" type="int" value="68"/>
+    <property name="teleportY" type="int" value="6"/>
+   </properties>
+  </tile>
+  <tile id="404">
+   <properties>
+    <property name="teleportX" type="int" value="25"/>
+    <property name="teleportY" type="int" value="40"/>
+   </properties>
+  </tile>
+  <tile id="481">
+   <properties>
+    <property name="teleportX" type="int" value="32"/>
+    <property name="teleportY" type="int" value="57"/>
+   </properties>
+  </tile>
+  <tile id="482">
+   <properties>
+    <property name="teleportX" type="int" value="31"/>
+    <property name="teleportY" type="int" value="3"/>
+   </properties>
+  </tile>
+  <tile id="485">
+   <properties>
+    <property name="teleportX" type="int" value="8"/>
+    <property name="teleportY" type="int" value="30"/>
+   </properties>
+  </tile>
+  <tile id="488">
+   <properties>
+    <property name="teleportX" type="int" value="21"/>
+    <property name="teleportY" type="int" value="30"/>
+   </properties>
+  </tile>
+  <tile id="530">
+   <properties>
+    <property name="switchaction" value="fire"/>
+    <property name="switchname" value="trap1"/>
+    <property name="switchonlyonce" type="bool" value="true"/>
+    <property name="tileOff" type="int" value="530"/>
+    <property name="tileOn" type="int" value="531"/>
+   </properties>
+  </tile>
+  <tile id="534">
+   <properties>
+    <property name="switchaction" value="fire"/>
+    <property name="switchname" value="trap2"/>
+    <property name="switchonlyonce" type="bool" value="true"/>
+    <property name="tileOff" type="int" value="534"/>
+    <property name="tileOn" type="int" value="535"/>
+   </properties>
+  </tile>
+  <tile id="540">
+   <properties>
+    <property name="points" type="int" value="1"/>
+   </properties>
+  </tile>
+  <tile id="541">
+   <properties>
+    <property name="points" type="int" value="10"/>
+   </properties>
+  </tile>
+  <tile id="542">
+   <properties>
+    <property name="points" type="int" value="5"/>
+   </properties>
+  </tile>
+  <tile id="556">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="557">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="558">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="559">
+   <properties>
+    <property name="points" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="560">
+   <properties>
+    <property name="key" value="blue"/>
+   </properties>
+  </tile>
+  <tile id="561">
+   <properties>
+    <property name="key" value="green"/>
+   </properties>
+  </tile>
+  <tile id="562">
+   <properties>
+    <property name="key" value="red"/>
+   </properties>
+  </tile>
+  <tile id="563">
+   <properties>
+    <property name="key" value="yellow"/>
+   </properties>
+  </tile>
+  <tile id="591">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="destructable" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="598">
+   <properties>
+    <property name="atlas" type="bool" value="false"/>
+    <property name="enemy" type="bool" value="true"/>
+    <property name="gravity" type="bool" value="false"/>
+    <property name="miror" type="bool" value="true"/>
+    <property name="offset" type="int" value="0"/>
+    <property name="offsetY" type="int" value="11"/>
+    <property name="scale" type="float" value="1"/>
+    <property name="sprite" value="bat"/>
+    <property name="velocity" type="int" value="50"/>
+   </properties>
+  </tile>
+  <tile id="603">
+   <properties>
+    <property name="atlas" type="bool" value="true"/>
+    <property name="enemy" type="bool" value="true"/>
+    <property name="gravity" type="bool" value="true"/>
+    <property name="invincible" type="bool" value="true"/>
+    <property name="miror" type="bool" value="true"/>
+    <property name="offset" type="int" value="-20"/>
+    <property name="offsetX" type="int" value="2"/>
+    <property name="offsetY" type="int" value="31"/>
+    <property name="scale" type="float" value="0.39"/>
+    <property name="sprite" value="zombiefemale"/>
+    <property name="velocity" type="int" value="-50"/>
+   </properties>
+  </tile>
+  <tile id="606">
+   <properties>
+    <property name="angularVelocity" type="int" value="720"/>
+    <property name="bulletSpeed" type="int" value="300"/>
+    <property name="fireAngle" value="left"/>
+    <property name="fireRate" type="int" value="1500"/>
+    <property name="holdfire" type="bool" value="true"/>
+    <property name="sprite" value="bullet-fire"/>
+    <property name="switchname" value="trap1"/>
+   </properties>
+  </tile>
+  <tile id="607">
+   <properties>
+    <property name="angularVelocity" type="int" value="720"/>
+    <property name="bulletSpeed" type="int" value="300"/>
+    <property name="fireAngle" value="left"/>
+    <property name="fireRate" type="int" value="1500"/>
+    <property name="holdfire" type="bool" value="true"/>
+    <property name="sprite" value="bullet-fire"/>
+    <property name="switchname" value="trap2"/>
+   </properties>
+  </tile>
+  <tile id="610">
+   <properties>
+    <property name="enemy" type="bool" value="true"/>
+    <property name="offsetX" type="int" value="2"/>
+    <property name="offsetY" type="int" value="24"/>
+    <property name="scale" type="float" value="0.7"/>
+    <property name="sprite" value="snail"/>
+   </properties>
+  </tile>
+  <tile id="613">
+   <properties>
+    <property name="angularVelocity" type="int" value="720"/>
+    <property name="bulletSpeed" type="int" value="300"/>
+    <property name="fireAngle" value="right"/>
+    <property name="fireRate" type="int" value="1500"/>
+    <property name="sprite" value="bullet-fire"/>
+   </properties>
+  </tile>
+  <tile id="614">
+   <properties>
+    <property name="angularVelocity" type="int" value="720"/>
+    <property name="bulletSpeed" type="int" value="200"/>
+    <property name="fireAngle" value="right"/>
+    <property name="fireRate" type="int" value="1500"/>
+    <property name="holdfire" type="bool" value="false"/>
+    <property name="switchname" value="trap1"/>
+   </properties>
+  </tile>
+  <tile id="619">
+   <properties>
+    <property name="switchaction" value="destroy"/>
+    <property name="switchname" value="gate1"/>
+    <property name="switchtimer" type="int" value="3000"/>
+    <property name="tileOff" type="int" value="619"/>
+    <property name="tileOn" type="int" value="620"/>
+   </properties>
+  </tile>
+  <tile id="623">
+   <properties>
+    <property name="angularVelocity" type="int" value="720"/>
+    <property name="bulletSpeed" type="int" value="100"/>
+    <property name="fireAngle" value="up"/>
+    <property name="fireRate" type="int" value="4000"/>
+    <property name="gravity" type="int" value="250"/>
+    <property name="sprite" value="bullet-water"/>
+   </properties>
+  </tile>
+  <tile id="625">
+   <properties>
+    <property name="enemy" type="bool" value="true"/>
+    <property name="offsetX" type="int" value="4"/>
+    <property name="offsetY" type="int" value="8"/>
+    <property name="sprite" value="bat"/>
+   </properties>
+  </tile>
+  <tile id="651">
+   <properties>
+    <property name="life" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="678">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </tile>
+  <tile id="679">
+   <properties>
+    <property name="bloc" type="bool" value="true"/>
+    <property name="x" type="int" value="100"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="back" width="34" height="33">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,573,0,0,0,573,0,0,0,573,0,0,0,573,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,573,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,93,0,0,0,0,0,0,0,535,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,573,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,58,0,
+0,0,0,0,0,0,0,531,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,57,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,93,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,93,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,489,0,0,0,0,0,0,0,0,0,0,0,486,0,0,0,0,0,0,0,0,0,0,0,483,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="blocs" width="34" height="33">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
+  <data encoding="csv">
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,630,0,0,0,0,0,0,0,0,0,0,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,0,0,0,0,0,0,0,0,0,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,630,0,0,0,0,0,0,0,0,0,0,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,630,0,630,630,630,630,630,630,630,630,630,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,630,0,0,0,0,0,0,0,630,630,630,630,
+630,0,0,0,630,0,0,0,630,0,0,0,630,0,0,0,630,0,0,0,630,0,0,0,0,0,0,0,0,0,0,0,630,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,0,630,630,0,0,632,0,0,630,0,630,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,0,0,630,0,0,0,0,0,630,0,630,630,
+630,630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,0,0,630,630,630,630,630,630,630,0,630,630,
+630,0,0,0,0,0,630,630,630,630,630,630,630,630,630,630,0,0,0,0,630,630,0,0,0,0,0,0,0,0,0,0,608,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,0,0,0,0,630,0,0,0,0,0,0,0,0,0,0,608,630,
+630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,0,0,0,0,630,630,0,630,631,630,631,630,631,630,631,630,630,
+630,0,0,630,0,0,0,0,0,607,615,0,0,0,0,630,0,0,0,0,0,630,630,0,630,0,0,0,0,0,0,0,630,630,
+630,0,0,0,0,0,630,630,630,630,630,630,630,630,0,630,0,0,0,0,0,630,630,0,630,630,630,630,630,630,630,630,630,630,
+630,0,0,0,0,630,630,0,0,0,0,0,630,630,0,630,0,0,0,0,0,630,630,0,0,0,0,0,0,0,0,0,0,630,
+0,0,0,0,630,630,630,0,0,0,0,0,0,0,0,630,0,0,0,0,0,630,614,0,0,0,0,0,0,0,0,0,0,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,0,0,630,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,630,630,0,630,630,630,630,630,630,
+630,630,0,0,630,0,0,0,0,630,0,0,0,0,0,0,0,630,0,630,0,0,0,0,0,0,0,0,0,0,0,0,0,630,
+630,630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,0,630,630,630,630,630,630,630,630,0,0,0,0,630,
+630,630,0,0,630,0,0,0,0,0,0,0,630,630,0,0,0,0,0,630,0,0,0,0,0,0,0,0,0,0,0,0,0,630,
+630,630,0,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,0,0,0,0,0,0,0,0,0,0,630,630,630,
+630,615,0,0,0,0,0,0,0,607,630,630,630,630,630,630,630,630,630,630,0,0,0,0,0,0,0,0,0,0,0,0,0,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,0,0,0,0,0,0,630,630,630,630,
+630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,630,0,0,0,0,0,0,0,630,630,630,630
+</data>
+ </layer>
+ <layer name="game" width="34" height="33">
+  <properties>
+   <property name="pnj" type="bool" value="true"/>
+   <property name="sprite" value="ninja"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,0,0,541,0,0,0,0,0,
+0,0,0,0,557,0,0,0,557,0,0,0,557,0,0,0,557,0,0,0,0,0,0,0,0,0,541,116,0,0,541,0,0,0,
+0,0,0,0,0,0,599,0,0,0,599,0,0,0,599,0,0,0,599,0,0,0,0,543,0,0,0,0,0,0,0,0,0,0,
+0,0,560,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,543,0,0,542,0,542,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,0,0,0,0,0,0,0,542,0,0,90,558,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,0,0,0,0,0,0,0,0,0,0,0,558,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,543,0,0,0,0,0,0,0,0,0,0,0,0,0,558,0,0,
+0,0,0,599,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,543,0,0,559,0,0,543,0,0,542,0,0,543,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,599,0,0,0,0,0,542,0,543,0,542,564,0,0,
+0,0,0,0,0,0,0,0,0,541,541,0,0,0,0,0,0,0,541,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,541,541,0,0,0,0,541,541,0,0,599,543,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,599,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,543,542,543,0,0,0,0,0,599,0,0,0,0,0,0,0,0,599,0,0,0,599,0,558,0,0,
+0,154,114,0,0,0,0,0,0,611,116,0,0,611,541,0,0,0,0,0,0,0,0,0,0,0,542,0,542,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,564,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,543,543,0,0,0,0,543,543,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,541,0,
+0,0,0,0,0,0,117,541,611,541,0,0,0,0,0,541,611,541,0,0,0,0,0,0,0,0,0,0,0,0,0,543,542,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,599,559,0,0,0,559,599,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="front" width="34" height="33">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,632,630,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,630,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,630,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,630,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,630,631,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,644,631,0,0,630,630,0,630,630,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,0,0,0,571,571,571,571,571,0,0,0,0,
+0,0,0,0,0,0,571,571,571,571,571,571,571,571,571,571,0,0,0,0,644,644,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,0,0,0,0,0,0,0,0,0,0,632,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,0,0,0,0,0,0,0,0,0,0,632,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,630,630,0,0,0,0,0,0,0,0,0,0,0,0,0,0,571,571,571,571,571,571,571,0,0,
+0,0,0,0,0,671,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,671,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,671,0,0,0,0,0,0,0,0,0,0,0,0,571,571,571,571,571,0,630,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,631,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,644,644,644,644,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,0,0,0,0,0,0,644,632,632,644,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,644,644,644,644,644,644,644,632,644,644,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,644,644,644,644,644,644,644,644,644,644,0,0,0,0,
+0,0,0,0,632,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,644,644,644,644,644,644,644,644,644,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,631,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,644,644,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,630,0,0,0,0,0,0,0,630,0,0,0,0,0,0,0,0,0,644,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,631,644,631,644,631,644,631,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,571,571,571,571,571,571,571,0,0,0,0
+</data>
+ </layer>
+ <objectgroup color="#ffff00" name="stairCollision">
+  <object id="250" x="327.217" y="944.782" width="5.83502" height="6.40896"/>
+  <object id="251" x="314.759" y="956.98" width="5.83502" height="6.40896"/>
+  <object id="252" x="271.752" y="999.917" width="5.83502" height="6.40896"/>
+  <object id="253" x="296.331" y="975.37" width="5.83502" height="6.40896"/>
+  <object id="254" x="210.501" y="1061.05" width="5.83502" height="6.40896"/>
+  <object id="255" x="284.179" y="987.709" width="5.83502" height="6.40896"/>
+  <object id="256" x="259.599" y="1012.25" width="5.83502" height="6.40896"/>
+  <object id="257" x="191.982" y="1079.35" width="5.83502" height="6.40896"/>
+  <object id="258" x="222.653" y="1048.71" width="5.83502" height="6.40896"/>
+  <object id="259" x="185.952" y="1085.56" width="5.83502" height="6.40896"/>
+  <object id="260" x="216.531" y="1054.83" width="5.83502" height="6.40896"/>
+  <object id="261" x="376.315" y="895.987" width="5.83502" height="6.40896"/>
+  <object id="262" x="363.857" y="908.185" width="5.83502" height="6.40896"/>
+  <object id="263" x="369.979" y="902.063" width="5.83502" height="6.40896"/>
+  <object id="264" x="357.827" y="914.402" width="5.83502" height="6.40896"/>
+  <object id="265" x="241.08" y="1030.55" width="5.83502" height="6.40896"/>
+  <object id="266" x="253.539" y="1018.35" width="5.83502" height="6.40896"/>
+  <object id="267" x="265.63" y="1006.04" width="5.83502" height="6.40896"/>
+  <object id="268" x="198.104" y="1073.22" width="5.83502" height="6.40896"/>
+  <object id="269" x="228.989" y="1042.64" width="5.83502" height="6.40896"/>
+  <object id="270" x="278.088" y="993.841" width="5.83502" height="6.40896"/>
+  <object id="271" x="345.43" y="926.575" width="5.83502" height="6.40896"/>
+  <object id="272" x="204.44" y="1067.15" width="5.83502" height="6.40896"/>
+  <object id="273" x="333.278" y="938.914" width="5.83502" height="6.40896"/>
+  <object id="274" x="247.202" y="1024.43" width="5.83502" height="6.40896"/>
+  <object id="275" x="351.766" y="920.499" width="5.83502" height="6.40896"/>
+  <object id="276" x="235.05" y="1036.77" width="5.83502" height="6.40896"/>
+  <object id="277" x="308.728" y="963.197" width="5.83502" height="6.40896"/>
+  <object id="278" x="339.308" y="932.697" width="5.83502" height="6.40896"/>
+  <object id="279" x="302.668" y="969.294" width="5.83502" height="6.40896"/>
+  <object id="280" x="320.881" y="950.858" width="5.83502" height="6.40896"/>
+  <object id="281" x="290.209" y="981.492" width="5.83502" height="6.40896"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="playerCollision"/>
+ <objectgroup color="#aa0000" name="gameCollision">
+  <object id="205" x="959.939" y="1025.42" width="12.1212" height="60"/>
+  <object id="208" x="637.939" y="1026" width="12.1212" height="60"/>
+  <object id="215" x="496.439" y="1793.5" width="12.1212" height="60"/>
+  <object id="288" x="1770" y="964" width="12" height="60"/>
+  <object id="291" x="1730" y="1860" width="12" height="60"/>
+  <object id="292" x="1424" y="1858" width="12" height="60"/>
+  <object id="293" x="1656" y="1858" width="12" height="60"/>
+  <object id="298" x="350.34" y="578.849" width="11.6604" height="58.3019"/>
+  <object id="300" x="535.34" y="258.849" width="11.6604" height="58.3019"/>
+  <object id="301" x="275" y="260.849" width="11.6604" height="58.3019"/>
+  <object id="302" x="789.34" y="260.849" width="11.6604" height="58.3019"/>
+  <object id="304" x="1049.34" y="256.849" width="11.6604" height="58.3019"/>
+  <object id="308" x="753.939" y="1026" width="12.1212" height="60"/>
+ </objectgroup>
+ <objectgroup name="deathCollision">
+  <object id="202" x="1024" y="1054" width="127.667" height="32"/>
+  <object id="204" x="1215.33" y="1054" width="127.667" height="34"/>
+  <object id="282" x="1473" y="2076" width="448" height="32"/>
+  <object id="284" x="383" y="604" width="638" height="32"/>
+  <object id="285" x="1599" y="538" width="318" height="36"/>
+ </objectgroup>
+</map>
