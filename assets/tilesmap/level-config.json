@@ -64,5 +64,16 @@
         },
         "bestTime": 40,
         "bestScore": 1000
+    },
+    {
+        "id": 7,
+        "name": "Castle Area",
+        "sky": false,
+        "trees": {
+            "height": 1143,
+            "offset": 0
+        },
+        "bestTime": 40,
+        "bestScore": 1822
     }
 ]
