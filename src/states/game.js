@@ -14,7 +14,7 @@ class Game extends Phaser.State {
         this.game.global.player.collected = [];
 
         // Sprites
-        this.config = this.game.cache.getJSON('level-'+this.game.global.level.current+'-config');
+        this.config = this.game.cache.getJSON('level-config')[this.game.global.level.current-1];
 
         if (this.config.sky) {
             this.sky = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background-sky-level-' + this.game.global.level.current); // repeat background
@@ -85,14 +85,14 @@ class Game extends Phaser.State {
         this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
         this.soundButton.scale.setTo(0.25);
         this.soundButton.fixedToCamera = true;
-        this.homeButton = this.game.add.button(this.game.width - 100, 5, 'home', this.goHome, this);
-        this.homeButton.scale.setTo(0.25);
-        this.homeButton.fixedToCamera = true;
         this.infoButton = this.game.add.button(this.game.width - 100, 5, 'info', function() {
             window.open('http://github.com/achorein/phaserdemo','_blank');
         }, this);
         this.infoButton.scale.setTo(0.25);
         this.infoButton.fixedToCamera = true;
+        this.homeButton = this.game.add.button(this.game.width - 150, 5, 'home', this.goHome, this);
+        this.homeButton.scale.setTo(0.25);
+        this.homeButton.fixedToCamera = true;
 
         // Inputs
         if (this.game.global.enablePad) {

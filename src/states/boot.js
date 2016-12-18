@@ -33,8 +33,8 @@ class Boot extends Phaser.State {
                 elapsedTime: 0
             },
             player: {
-                life: 2,
-                maxlife: 3,
+                life: 1,
+                maxlife: 1,
                 speed: 250,
                 nbBullet: 1,
                 sprite: '',
@@ -44,11 +44,14 @@ class Boot extends Phaser.State {
                 url: '/api'
             },
             devMode: true,
+            enableRest: true,
             enablePad: false
         };
         if (this.game.global.devMode) {
             this.game.global.level.max = 6;
             this.game.global.enablePad = true;
+            //this.game.global.enableRest = false;
+            this.game.global.server.url = 'http://localhost:7312/api'
         }
     }
 

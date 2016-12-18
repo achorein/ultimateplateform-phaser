@@ -1,9 +1,0 @@
-{
-    "name": "Ice Mountain Zone",
-    "sky": true,
-    "trees": {
-        "height": 893,
-        "offset": 0
-    },
-    "bestTime": 40
-}

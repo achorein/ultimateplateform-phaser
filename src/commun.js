@@ -16,38 +16,23 @@ class Commun {
     }
 
     // actualisation des scores globaux
-    refreshScore() {
-        if (!this.game.global.devMode) {
-            $.ajax({
-                url: this.url + '/score/max',
-                type: 'GET',
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    $('#score-max').html('#1 - ' + data.playername + ' - ' + data.score + ' points');
-                },
-                failure: function (err) {
-                    console.log('Erreur de récupération du score max !');
-                }
-            });
+    refreshScore(callback, callbackContext) {
+        if (this.game.global.enableRest) {
             $.ajax({
                 url: this.url + '/score/top',
                 type: 'GET',
                 contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    $('#score-top').html('');
-                    for (var i = 1; i < data.length; i++) {
-                        $('#score-top').append('<li><a href="#">#' + (i + 1) + ' - ' + data[i].playername + ' - ' + data[i].score + '</a></li>');
-                    }
-                },
+                context: callbackContext,
+                success: callback,
                 failure: function (err) {
-                    console.log('Erreur de récupération des scores !');
+                    console.log('Erreur de récupération des scores ! ' + err);
                 }
             });
         }
     }
 
     getLevelScore(level, text) {
-        if (!this.game.global.devMode) {
+        if (this.game.global.enableRest) {
             $.ajax({
                 url: this.url + '/score/level/' + level + '/max?playername=' + localStorage.getItem('playerName'),
                 type: 'GET',
@@ -63,11 +48,36 @@ class Commun {
         }
     }
 
-    saveScore() {
-        if (!this.game.global.devMode) {
-            var maxlevelScore = localStorage.getItem('level' + this.game.global.level.current)
-            if (!maxlevelScore || parseInt(maxlevelScore) < this.game.global.score) {
-                localStorage.setItem('level' + this.game.global.level.current, this.game.global.score);
+    getlevelData(level) {
+        var data = localStorage.getItem('level' + level)
+        return (data)?JSON.parse(data):null;
+    }
+
+    saveScore(score, time, finished) {
+        var levelData = this.getlevelData(this.game.global.level.current);
+        var config = this.game.cache.getJSON('level-config')[this.game.global.level.current-1];
+
+        var star = 0;
+        if (finished) {
+            star = 1;
+        }
+        if (score/config.bestScore >= 1) {
+            star = 3
+        } else if (score/config.bestScore >= 0.5) {
+            star = 2
+        }
+        var currentData = {
+            score: score,
+            time: time,
+            finished: finished,
+            star: star
+        };
+        if (!levelData || parseInt(levelData.score) < currentData.score) {
+            // sauvegarde du score en local
+            localStorage.setItem('level' + this.game.global.level.current, JSON.stringify(currentData));
+
+            if (this.game.global.enableRest) {
+                // sauvegarde du score sur le serveur
                 $.ajax({
                     url: this.game.global.server.url + '/score',
                     type: 'PUT',
@@ -75,7 +85,7 @@ class Commun {
                     data: JSON.stringify({
                         playername: this.game.global.player.name,
                         player: this.game.global.player.sprite,
-                        score: this.game.global.score,
+                        score: currentData.score,
                         level: this.game.global.level.current
                     }),
                     contentType: "application/json; charset=utf-8",
@@ -86,13 +96,17 @@ class Commun {
                         console.log('Erreur de sauvegarde du score level !');
                     }
                 });
+                // calcul du score total (ciummul de tous les niveaux pour le leaderboard)
                 var scoreTotal = 0;
                 for (var i = 0; i < this.game.global.level.max; i++) {
-                    var scoreLevel = localStorage.getItem('level' + (i + 1));
+                    var scoreLevel = this.getlevelData(i + 1);
                     if (scoreLevel) {
-                        scoreTotal += parseInt(scoreLevel);
+                        scoreTotal += parseInt(scoreLevel.score);
                     }
                 }
+                // sauvegarde en local
+                localStorage.setItem('scoreTotal', scoreTotal);
+                // sauvegarde sur le serveur
                 $.ajax({
                     url: this.game.global.server.url + '/score',
                     type: 'PUT',
@@ -112,6 +126,8 @@ class Commun {
                 });
             }
         }
+        // retourne les données calculées (ex: nb etoiles)
+        return currentData;
     }
 }
 

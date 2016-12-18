@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "name": "Green Hill Zone",
+        "sky": true,
+        "trees": {
+            "height": 1500,
+            "offset": 0
+        },
+        "bestTime": 40,
+        "bestScore": 1852
+    },
+    {
+        "id": 2,
+        "name": "Dust Hill Zone",
+        "sky": true,
+        "trees": {
+            "height": 1500,
+            "offset": 1000
+        },
+        "bestTime": 40,
+        "bestScore": 3075
+    },
+    {
+        "id": 3,
+        "name": "DarkCastle Area",
+        "sky": false,
+        "trees": {
+            "height": 3000,
+            "offset": 0
+        },
+        "bestTime": 40,
+        "bestScore": 3390
+    },
+    {
+        "id": 4,
+        "name": "Ice Mountain Zone",
+        "sky": true,
+        "trees": {
+            "height": 893,
+            "offset": 0
+        },
+        "bestTime": 40,
+        "bestScore": 1000
+    },
+    {
+        "id": 5,
+        "name": "The Dead Zone",
+        "sky": false,
+        "trees": {
+            "height": 1143,
+            "offset": 0
+        },
+        "bestTime": 40,
+        "bestScore": 1000
+    },
+    {
+        "id": 6,
+        "name": "Candy Training Zone",
+        "sky": false,
+        "trees": {
+            "height": 1143,
+            "offset": 0
+        },
+        "bestTime": 40,
+        "bestScore": 1000
+    }
+]

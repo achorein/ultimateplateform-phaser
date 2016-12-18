@@ -1,18 +1,13 @@
-class GameOver extends Phaser.State {
+import GameEnd from '../states/commun/gameend';
+
+class GameOver extends GameEnd {
 
     constructor() {
         super();
     }
 
     create() {
-        var styleBig = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-        var styleSmall = { font: "bold 18px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-
-        //add background image
-        this.background = this.game.add.sprite(0,0,'background-menu');
-        this.background.height = this.game.height;
-        this.background.width = this.game.width;
-        this.background.alpha = 0.25;
+        super.create();
 
         // Ajout texte
         if (this.game.global.player.life > 0) {
@@ -21,26 +16,15 @@ class GameOver extends Phaser.State {
             var img = this.game.add.sprite(this.game.centerX, 100, 'gameover');
         }
         img.anchor.set(0.5);
+        img.fixedToCamera = true;
 
-        // Ajout du score
-        this.score = this.game.add.text(this.game.centerX, this.computePos(2),
-            this.game.global.score + ' points', styleBig);
-        this.score.anchor.set(0.5);
+        // CALCUL DU SCORE REEL ET DES HAUTS FAITS
+        this.computeAndSaveScore();
 
-        // ajout des vies restantes
-        for (var i=0; i<this.game.global.player.life; i++) {
-            var sprite = this.game.add.sprite(this.game.centerX - 30 + 30*i, this.computePos(3), 'heartFull');
-            sprite.scale.setTo(0.5);
-            sprite.anchor.setTo(0.5);
-        }
-        for (;i<this.game.global.player.maxlife;i++) {
-            sprite = this.game.add.sprite(this.game.centerX - 30 + 30*i, this.computePos(3), 'heartEmpty');
-            sprite.scale.setTo(0.5);
-            sprite.anchor.setTo(0.5);
-        }
+        this.addScoreAndStars();
 
         // Ajout personnage mort
-        sprite = this.game.add.sprite(this.game.centerX, this.game.centerY, this.game.global.player.sprite, 'idle/01.png');
+        var sprite = this.game.add.sprite(this.game.centerX, this.game.centerY, this.game.global.player.sprite, 'idle/01.png');
         sprite.anchor.set(0.5);
         sprite.animations.add('dead', Phaser.Animation.generateFrameNames('dead/', 1, 10, '.png', 2), 10, false, false);
         sprite.animations.play('dead');
@@ -48,38 +32,26 @@ class GameOver extends Phaser.State {
 
         // Ajout temps écoulé
         this.time = this.game.add.text(this.game.centerX, this.game.centerY + 200,
-            this.game.global.level.elapsedTime + ' seconde' + ((this.game.global.level.elapsedTime>1)?'s':''), styleSmall);
+            this.game.global.level.elapsedTime + ' seconde' + ((this.game.global.level.elapsedTime>1)?'s':''), this.styleSmall);
         this.time.anchor.set(0.5);
 
         // Lecture du son dédié à l'écran
         this.game.add.audio('failedSound').play('', 0, 0.5);
 
-        // on sauvegarde le score sur le serveur
-        this.game.commun.saveScore();
-
-        //prevent accidental click-thru by not allowing state transition for a short time
-        this.canContinueToNextState = false;
-        this.game.time.events.add(Phaser.Timer.SECOND*0.25, function(){ this.canContinueToNextState = true; }, this);
-
-        this.soundButton = this.game.add.button(this.game.width - 50, 5, (this.game.sound.mute)?'sound-off':'sound-on', this.toggleSound, this);
-        this.soundButton.scale.setTo(0.25);
-        this.homeButton = this.game.add.button(5, 5, 'home', this.goHome, this);
-        this.homeButton.scale.setTo(0.25);
-        this.infoButton = this.game.add.button(this.game.width - 100, 5, 'info', function() {
-            window.open('http://github.com/achorein/phaserdemo','_blank');
-        }, this);
-        this.infoButton.scale.setTo(0.25);
-
-        this.homeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-        this.homeKey.onDown.add(this.goHome, this);
-        this.soundKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F8);
-        this.soundKey.onDown.add(this.toggleSound, this);
+        this.addButtons();
 
         // press any key
         this.game.input.keyboard.callbackContext = this;
         this.game.input.keyboard.onDownCallback = function(e) {
             this.onInputDown();
         }
+        // click anywhere
+        this.game.input.onDown.addOnce(this.game.input.keyboard.onDownCallback, this);
+    }
+
+    computeAndSaveScore() {
+        // on sauvegarde le score sur le serveur
+        this.levelData = this.game.commun.saveScore(this.game.global.score, this.game.global.level.elapsedTime, false);
     }
 
     goHome() {
@@ -112,9 +84,6 @@ class GameOver extends Phaser.State {
         }
     }
 
-    computePos(index) {
-        return this.game.centerY - 200 + ((index - 1) * 48);
-    }
 }
 
 export default GameOver;

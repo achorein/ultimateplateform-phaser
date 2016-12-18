@@ -28,8 +28,9 @@ class Preloader extends Phaser.State {
          * Images
          */
         // carte
+        this.game.load.json('level-config', 'assets/tilesmap/level-config.json');
         for (var i=1;i<=this.game.global.level.max;i++) {
-            this.game.load.json('level-'+i+'-config', 'assets/tilesmap/level-'+i+'-config.json');
+            //this.game.load.json('level-'+i+'-config', 'assets/tilesmap/level-'+i+'-config.json');
             this.game.load.tilemap('tilemap-level-'+i, 'assets/tilesmap/level-'+i+'.json', null, Phaser.Tilemap.TILED_JSON);
             this.game.load.image('background-trees-level-'+i, 'assets/tilesmap/level-'+i+'-background-trees.png');
             this.game.load.image('background-sky-level-'+i, 'assets/tilesmap/level-'+i+'-background-sky.png');
@@ -91,6 +92,12 @@ class Preloader extends Phaser.State {
         this.game.load.image('sound-off', 'assets/menu/sound-off.png');
         this.game.load.image('home', 'assets/menu/home.png');
         this.game.load.image('info', 'assets/menu/info.png');
+        this.game.load.image('score', 'assets/menu/score.png');
+        this.game.load.image('star', 'assets/menu/star.png');
+        this.game.load.image('leaderboard-score', 'assets/menu/leaderboard-score.png');
+        this.game.load.image('star-empty', 'assets/menu/star-empty.png');
+        this.game.load.image('button-gold', 'assets/menu/button-gold.png');
+        this.game.load.image('button-normal', 'assets/menu/button-normal.png');
 
         /*
          * Sons
@@ -107,6 +114,7 @@ class Preloader extends Phaser.State {
         this.game.load.audio('collectSound','assets/sounds/collect.mp3');
         this.game.load.audio('attackSound','assets/sounds/attack.mp3');
         this.game.load.audio('hitSound','assets/sounds/hit.mp3');
+        this.game.load.audio('starSound','assets/sounds/star.wav');
     }
 
     onLoadComplete() {

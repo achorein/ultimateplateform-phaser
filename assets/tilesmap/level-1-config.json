@@ -1,9 +1,0 @@
-{
-    "name": "Green Hill Zone",
-    "sky": true,
-    "trees": {
-        "height": 1500,
-        "offset": 0
-    },
-    "bestTime": 40
-}

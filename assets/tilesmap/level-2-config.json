@@ -1,9 +1,0 @@
-{
-    "name": "Dust Hill Zone",
-    "sky": true,
-    "trees": {
-        "height": 1500,
-        "offset": 1000
-    },
-    "bestTime": 40
-}

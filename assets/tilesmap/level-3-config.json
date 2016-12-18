@@ -1,9 +1,0 @@
-{
-    "name": "DarkCastle Area",
-    "sky": false,
-    "trees": {
-        "height": 3000,
-        "offset": 0
-    },
-    "bestTime": 40
-}
