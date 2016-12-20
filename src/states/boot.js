@@ -51,7 +51,8 @@ class Boot extends Phaser.State {
             this.game.global.level.max = 7;
             this.game.global.enablePad = true;
             //this.game.global.enableRest = false;
-            this.game.global.server.url = 'http://localhost:7312/api'
+            //this.game.global.server.url = 'http://localhost:7312/api'
+            this.game.global.server.url = 'http://phaser.v1kings.io/api'
         }
     }
 

@@ -691,15 +691,14 @@
                  "atlas":true,
                  "gravity":false,
                  "miror":true,
-                 "offset":-10,
                  "offsetX":24,
-                 "offsetY":-2,
+                 "offsetY":-13,
                  "pnj":true,
                  "scale":0.39,
                  "sprite":"ninja",
                  "text":"Attention ce niveau est tr\u00e8s \u00e9trange ...",
-                 "textOffsetX":-64,
-                 "textOffsetY":-85
+                 "textOffsetX":-80,
+                 "textOffsetY":-64
                 },
              "115":
                 {
@@ -973,7 +972,7 @@
                 {
                  "enemy":true,
                  "offsetX":2,
-                 "offsetY":24,
+                 "offsetY":37,
                  "scale":0.7,
                  "sprite":"snail"
                 },
@@ -1075,7 +1074,6 @@
                  "atlas":"bool",
                  "gravity":"bool",
                  "miror":"bool",
-                 "offset":"int",
                  "offsetX":"int",
                  "offsetY":"int",
                  "pnj":"bool",

@@ -20,8 +20,16 @@ class Game extends Phaser.State {
             this.sky = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background-sky-level-' + this.game.global.level.current); // repeat background
             this.sky.fixedToCamera = true;
         }
-        this.trees = this.game.add.tileSprite(0, 0, this.game.width, this.config.trees.height || 1500, 'background-trees-level-'+this.game.global.level.current);
-        //this.trees = this.game.add.sprite(0,0,'background-trees-level-'+this.game.global.level.current);
+        if (this.config.sky) {
+            // ajout d'un fond en bas avec répetition horizontale
+            this.trees = this.game.add.tileSprite(0, 0, this.game.width, this.config.trees.height || 1500, 'background-trees-level-' + this.game.global.level.current);
+        } else {
+            // ajout d'un fond fixe étirer sur tout l'écran
+            this.trees = this.game.add.sprite(0,0,'background-trees-level-'+this.game.global.level.current);
+            this.trees.height = this.game.height;
+            this.trees.width = this.game.width;
+            this.trees.fixedToCamera = true;
+        }
 
         // tilemap
         this.map = new LevelMap(this, 'tilemap-level-'+this.game.global.level.current);
@@ -51,12 +59,12 @@ class Game extends Phaser.State {
 
         this.playerLifeGroup = this.game.add.group();
         // Ajout des vies
-        for (var i=0; i<this.game.global.player.maxlife; i++) {
+        /*for (var i=0; i<this.game.global.player.maxlife; i++) {
             var life = this.game.add.sprite(5 + 30*i, 59, 'heartEmpty');
             life.fixedToCamera = true;
             life.scale.setTo(0.5);
             this.playerLifeGroup.add(life);
-        }
+        }*/
         this.updateLives();
 
         // Ajout du nom du niveau !
@@ -220,14 +228,14 @@ class Game extends Phaser.State {
     }
 
     updateLives() {
-        for (var i=0; i<this.game.global.player.life; i++) {
+        /*for (var i=0; i<this.game.global.player.life; i++) {
             this.playerLifeGroup.children[i].key = 'heartFull';
             this.playerLifeGroup.children[i].loadTexture('heartFull');
         }
         for (;i<this.game.global.player.maxlife;i++) {
             this.playerLifeGroup.children[i].key = 'heartEmpty';
             this.playerLifeGroup.children[i].loadTexture('heartEmpty');
-        }
+        }*/
     }
 
     updateKeys() {

@@ -20,6 +20,7 @@ class Commun extends Phaser.State {
         }, this);
         this.infoButton.scale.setTo(0.25);
         this.scoreButton = this.game.add.button(this.game.width - 150, 5, 'score', function () {
+            this.music.stop();
             this.game.state.start('menu-leaderboard', true, false);
         }, this);
         this.scoreButton.scale.setTo(0.25);
@@ -44,7 +45,7 @@ class Commun extends Phaser.State {
     }
 
     goPreviousState() {
-        //this.music.stop();
+        this.music.stop();
         this.game.state.start('menu-level', true, false);
     }
 

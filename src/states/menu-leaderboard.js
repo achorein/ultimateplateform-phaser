@@ -39,7 +39,11 @@ class LeaderBoard extends Menu {
 
     goPreviousState(cursorPos) {
         super.goPreviousState(cursorPos);
-        this.game.state.start('menu-level', true, false);
+        if (this.game.global.player.sprite) {
+            this.game.state.start('menu-level', true, false);
+        } else {
+            this.game.state.start('menu', true, false);
+        }
     }
 
     computePosition(index, position) {

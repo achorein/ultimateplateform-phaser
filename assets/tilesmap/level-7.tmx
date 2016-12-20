@@ -117,15 +117,14 @@
     <property name="atlas" type="bool" value="true"/>
     <property name="gravity" type="bool" value="false"/>
     <property name="miror" type="bool" value="true"/>
-    <property name="offset" type="int" value="-10"/>
     <property name="offsetX" type="int" value="24"/>
-    <property name="offsetY" type="int" value="-2"/>
+    <property name="offsetY" type="int" value="-13"/>
     <property name="pnj" type="bool" value="true"/>
     <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="ninja"/>
     <property name="text" value="Attention ce niveau est très étrange ..."/>
-    <property name="textOffsetX" type="int" value="-64"/>
-    <property name="textOffsetY" type="int" value="-85"/>
+    <property name="textOffsetX" type="int" value="-80"/>
+    <property name="textOffsetY" type="int" value="-64"/>
    </properties>
   </tile>
   <tile id="115">
@@ -376,7 +375,7 @@
    <properties>
     <property name="enemy" type="bool" value="true"/>
     <property name="offsetX" type="int" value="2"/>
-    <property name="offsetY" type="int" value="24"/>
+    <property name="offsetY" type="int" value="37"/>
     <property name="scale" type="float" value="0.7"/>
     <property name="sprite" value="snail"/>
    </properties>
