@@ -32,6 +32,7 @@ class MenuLevel extends Menu {
         //this.game.global.player.name = this.game.commun.refreshPlayerName(false);
         //this.game.commun.refreshScore();
 
+        this.nbItem = this.game.global.level.max;
         this.menu = [];
         for (var i = 0; i<this.game.global.level.max; i++) {
             if (i+1 <= this.playerMaxLevel) {

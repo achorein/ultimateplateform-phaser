@@ -20,6 +20,7 @@ class MenuHome extends Menu {
     create() {
         super.create();
 
+        this.nbItem = this.menu.length;
         // Ajout des personnages
         this.menu.forEach(function(player) {
             var sprite = this.game.add.button(this.computePosition(player.index).x, this.game.centerY - 50, player.texture, function(sprite){

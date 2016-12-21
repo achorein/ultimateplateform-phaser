@@ -5,6 +5,8 @@ class Menu extends Commun {
     constructor() {
         super();
         this.cursorPos = 1;
+        this.timer = 0;
+        this.nbItem = 1;
 
         this.menuBox = {
             width: 250,
@@ -50,6 +52,20 @@ class Menu extends Commun {
                 this.cursorPos--;
                 if (this.cursorPos<1){
                     this.cursorPos = this.menu.length;
+                }
+                this.selectItem();
+                this.timer = this.game.time.now + 250;
+            } else if (this.cursors.up.isDown) { // fleche du haut
+                var newPos = this.cursorPos - this.menuBox.length;
+                if (newPos > 0) {
+                    this.cursorPos = newPos;
+                }
+                this.selectItem();
+                this.timer = this.game.time.now + 250;
+            } else if (this.cursors.down.isDown) { // fleche du bas
+                var newPos = this.cursorPos + this.menuBox.length;
+                if (newPos <= this.nbItem) {
+                    this.cursorPos = newPos;
                 }
                 this.selectItem();
                 this.timer = this.game.time.now + 250;
