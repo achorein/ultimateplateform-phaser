@@ -13,8 +13,12 @@ class LeaderBoard extends Menu {
 
     create() {
         super.create();
+        this.game.commun.refreshScore(this.showScore, this, this.loadingFailed);
+    }
 
-        this.game.commun.refreshScore(this.showScore, this);
+    loadingFailed(err) {
+        console.log(err);
+        this.game.add.text(this.game.centerX, this.game.centerY, 'IMPOSSIBLE DE CHARGER LES SCORES', this.style).anchor.set(0.5);
     }
 
     showScore(data) {
@@ -22,7 +26,7 @@ class LeaderBoard extends Menu {
             for (var i=1; i<=data.length; i++) {
                 this.game.add.sprite(this.computePosition(i).x, this.computePosition(i).y, 'leaderboard-score').anchor.set(0.5);
                 this.game.add.text(this.computePosition(i).x, this.computePosition(i).y, data[i-1].score, this.style).anchor.set(0.5);
-                this.game.add.sprite(this.computePosition(i, 'top').x + 8, this.computePosition(i, 'top').y + 13, 'score').scale.set(0.30);
+                this.game.add.sprite(this.computePosition(i, 'top').x + 8, this.computePosition(i, 'top').y + 13, (i==1)?'button-gold':'button-normal').scale.set(0.30);
                 this.game.add.text(this.computePosition(i, 'top').x + 25, this.computePosition(i, 'top').y + 22, i ,this.style);
             }
         }

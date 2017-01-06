@@ -16,7 +16,7 @@ class Commun {
     }
 
     // actualisation des scores globaux
-    refreshScore(callback, callbackContext) {
+    refreshScore(callback, callbackContext, failCallBack) {
         if (this.game.global.enableRest) {
             $.ajax({
                 url: this.url + '/score/top',
@@ -24,9 +24,7 @@ class Commun {
                 contentType: "application/json; charset=utf-8",
                 context: callbackContext,
                 success: callback,
-                failure: function (err) {
-                    console.log('Erreur de récupération des scores ! ' + err);
-                }
+                failure: failCallBack
             });
         }
     }

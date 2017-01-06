@@ -2664,7 +2664,7 @@
                  "pnj":true,
                  "scale":0.39,
                  "sprite":"adventure_boy",
-                 "text":"Cette mine recele de nombreux tr\u00e9sors, mais restez sur vos garde prudent !",
+                 "text":"Cette mine recele de nombreux tr\u00e9sors, mais restez sur vos garde elle est aussi tr\u00e8s dangereuse !",
                  "textOffsetX":-64,
                  "textOffsetY":-85
                 },

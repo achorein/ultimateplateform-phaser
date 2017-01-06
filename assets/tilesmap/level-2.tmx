@@ -82,7 +82,7 @@
     <property name="pnj" type="bool" value="true"/>
     <property name="scale" type="float" value="0.39"/>
     <property name="sprite" value="adventure_boy"/>
-    <property name="text" value="Cette mine recele de nombreux trésors, mais restez sur vos garde prudent !"/>
+    <property name="text" value="Cette mine recele de nombreux trésors, mais restez sur vos garde elle est aussi très dangereuse !"/>
     <property name="textOffsetX" type="int" value="-64"/>
     <property name="textOffsetY" type="int" value="-85"/>
    </properties>

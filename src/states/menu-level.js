@@ -108,7 +108,7 @@ class MenuLevel extends Menu {
 
     goNextState(cursorPos) {
         super.goNextState();
-        this.game.global.level.current = cursorPos;
+        this.game.global.level.current = (this.cursorPos)?this.cursorPos:cursorPos;
         this.game.global.score = 0;
         this.game.global.scoreLastLevel = 0;
         this.game.global.player.life = this.game.global.player.maxlife - 1;
