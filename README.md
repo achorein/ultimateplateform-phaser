@@ -1,11 +1,15 @@
-# Phaser Demo
+# Ultimate Plateform - Phaser Demo
 
 Petit jeu 2D pour tester le framework [Phaser](https://phaser.io/)
 
 <img src="https://phaser.io/images/img.png" height="100">
 
 # Let's play
-Le jeu est déployé à l'adresse suivante : http://phaser.v1kings.io
+
+<img src="https://github.com/achorein/ultimateplateform-phaser/raw/master/docs/assets/images/screen-01.png" height="150"/>
+
+- Le jeu est déployé à l'adresse suivante : http://game.ultimateplateform.v1kings.io/
+- Site vitrine : http://ultimateplateform.v1kings.io/
 
 ##Logiciels tiers
 
