@@ -21,9 +21,9 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: v1kings
 github_username: achorein
-repository: achorein/ultimateplateforme-phaser
+repository: achorein/ultimateplateform-phaser
 show_downloads: false
-web_platform_url: http://game.ultimateplateforme.v1kings.io/
+web_platform_url: http://game.ultimateplateform.v1kings.io/
 
 # Build settings
 markdown: kramdown

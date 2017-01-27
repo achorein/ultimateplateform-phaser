@@ -1,11 +1,11 @@
 ---
 layout: default
 images:
-  - image_path: https://github.com/achorein/ultimateplateforme-phaser/raw/master/docs/assets/images/screen-01.png
+  - image_path: https://github.com/achorein/ultimateplateform-phaser/raw/master/docs/assets/images/screen-01.png
 ---
 
 <p>
-    <img src="https://github.com/achorein/ultimateplateforme-phaser/raw/master/assets/menu/game-logo.png" height="200"/>
+    <img src="https://github.com/achorein/ultimateplateform-phaser/raw/master/assets/menu/game-logo.png" height="200"/>
 </p>
 
 Run, jump, shoot...
