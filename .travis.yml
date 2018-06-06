@@ -1,6 +1,8 @@
 language: node_js
+node_js:
+  - "lts/*"
 
 install:
   - npm install --only=dev
-  - sed -i "s/devMode:.*/devMode: false,/" src/states/boot.js
+  - sed -i "s/devMode:.*/devMode: false,/" ./src/states/boot.js
   - npm run-script build
