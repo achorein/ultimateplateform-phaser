@@ -4,5 +4,5 @@ node_js:
 
 install:
   - npm install --only=dev
-  - sed -i "s/devMode:.*/devMode: false,/" ./src/states/boot.js
+  - sed -i "s/devMode:.*/devMode: false,/" $TRAVIS_BUILD_DIR/src/states/boot.js
   - npm run-script build
