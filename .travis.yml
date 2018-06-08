@@ -3,5 +3,5 @@ node_js:
   - "lts/*"
 
 install:
-  - npm install --only=dev
+  - npm install
   - npm run-script build
