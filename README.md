@@ -14,7 +14,10 @@ Petit jeu 2D pour tester le framework [Phaser](https://phaser.io/)
 - Le jeu est déployé à l'adresse suivante : http://game.ultimateplateform.v1kings.io/
 - Site vitrine : http://ultimateplateform.v1kings.io/
 
-##Logiciels tiers
+## Gestion des scores
+- Utilisation d'une API REST simple pour la sauvegarde des scores : [achorein/game-keeper](https://github.com/achorein/game-keeper)
+
+## Logiciels tiers
 
 - [Tiled](http://www.mapeditor.org/) : Editeur de carte, création d'une tilemap pour générer les niveaux
 - [TexturePacker](https://www.codeandweb.com/texturepacker) : Création de spritesheet d'animation à partir d'un ensemble de sprites unitaire
