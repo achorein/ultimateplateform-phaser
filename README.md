@@ -4,7 +4,8 @@ Petit jeu 2D pour tester le framework [Phaser](https://phaser.io/)
 
 <img src="https://phaser.io/images/img.png" height="100">
 
-[![Build Status](https://travis-ci.org/achorein/ultimateplateform-phaser.svg?branch=master)](https://travis-ci.org/achorein/ultimateplateform-phaser)
+[![Build Status](https://travis-ci.org/achorein/ultimateplateform-phaser.svg?branch=master)](https://travis-ci.org/achorein/ultimateplateform-phaser) [![Inline docs](http://inch-ci.org/github/achorein/ultimateplateform-phaser.svg?branch=master)](http://inch-ci.org/github/achorein/ultimateplateform-phaser)
+
 
 # Let's play
 
