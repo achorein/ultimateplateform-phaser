@@ -2,6 +2,14 @@ language: node_js
 node_js:
   - "lts/*"
 
+services:
+  - docker
+
 install:
   - npm install
   - npm run-script build
+
+deploy:
+  - docker build -t achorein/ultimateplateform-phaser .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push achorein/ultimateplateform-phaser
