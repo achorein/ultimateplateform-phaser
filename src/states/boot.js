@@ -1,4 +1,5 @@
 import Commun from '../commun';
+import environement from '../env.json';
 
 class Boot extends Phaser.State {
 
@@ -47,13 +48,11 @@ class Boot extends Phaser.State {
             enableRest: true,
             enablePad: false
         };
-        if (this.game.global.devMode) {
-            this.game.global.level.max = 7;
-            this.game.global.enablePad = true;
-            //this.game.global.enableRest = false;
-            //this.game.global.server.url = 'http://localhost:7312/api'
-            this.game.global.server.url = 'http://api.game.ultimateplateform.v1kings.io'
-        }
+        
+        this.game.global.level.max = environement.level_max;
+        this.game.global.enablePad = environement.enable_pad;
+        //this.game.global.enableRest = false;
+        this.game.global.server.url = environement.server_url
     }
 
 }
