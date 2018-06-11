@@ -18,3 +18,4 @@ deploy:
   provider: firebase
   token:
     secure: "$FIREBASE_TOKEN"
+  project: "utlimate-plateform"
