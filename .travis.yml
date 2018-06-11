@@ -19,3 +19,6 @@ deploy:
   token:
     secure: "$FIREBASE_TOKEN"
   project: "utlimate-plateform"
+  skip_cleanup: true
+  on:
+    branch: master
