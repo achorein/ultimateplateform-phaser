@@ -11,9 +11,6 @@ Petit jeu 2D pour tester le framework [Phaser](https://phaser.io/)
 
 <img src="https://github.com/achorein/ultimateplateform-phaser/raw/master/docs/assets/images/screen-01.png" height="150"/>
 
-- Le jeu est déployé à l'adresse suivante : http://game.ultimateplateform.v1kings.io/
-- Site vitrine : http://ultimateplateform.v1kings.io/
-
 ## Gestion des scores
 - Utilisation d'une API REST simple pour la sauvegarde des scores : [achorein/game-keeper](https://github.com/achorein/game-keeper)
 
